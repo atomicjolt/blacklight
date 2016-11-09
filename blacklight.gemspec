@@ -2,11 +2,12 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'blacklight/version'
+require 'time'
 
 Gem::Specification.new do |spec|
   spec.name          = "blacklight"
   spec.version       = Blacklight::VERSION
-  spec.date        	 = time.strftime("%Y-%m-%d")
+  spec.date        	 = Time.new.strftime("%Y-%m-%d")
   spec.authors       = "Atomic Jolt"
 
   spec.summary       = "Converts Blackboard zip file to Canvas Common Cartridge"
@@ -23,6 +24,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.12"
   spec.add_development_dependency "rake", "~> 10.0"
 
-  s.metadata['allowed_push_host'] = 'https://github.com/atomicjolt/'
+  spec.metadata['allowed_push_host'] = 'https://github.com/atomicjolt/'
 
 end
