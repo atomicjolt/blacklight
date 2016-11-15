@@ -19,19 +19,11 @@ module Blacklight
 		resources[0].children.each do |resource|
 			file_name = resource.attributes["file"].value
 			data_file = course.open_file(file_name)
-			parse_data_file(data_file, course)
+			data = Nokogiri::XML.parse(data_file)
+			data_details = data.children.first
+			type = data_details.name.downcase
+			Blacklight.send(FUNCTION_CALL[type.to_sym], data_details) if FUNCTION_CALL[type.to_sym]
 		end
-	end
-
-	def self.parse_data_file(data_file, course)
-		data = Nokogiri::XML.parse(data_file)
-		data_details = data.children.first
-		type = data_details.name.downcase
-		call_function(type, data_details)
-	end
-
-	def self.call_function(type, data_details)
-		Blacklight.send(FUNCTION_CALL[type.to_sym], data_details) if FUNCTION_CALL[type.to_sym]
 	end
 
 	def self.iterate_course(data_details)
