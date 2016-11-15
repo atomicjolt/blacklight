@@ -12,3 +12,4 @@
 /coverage/
 /pkg/
 /doc/
+.byebug_history

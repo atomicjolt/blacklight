@@ -33,8 +33,26 @@ describe Blacklight do
 		end
 	end
 
-	describe "#opens_dir" do
+	describe "#set_correct_dir_location" do
+		it "should return file ending in /" do
+			pathname = '/path/to/dir'
+			assert_equal Blacklight.set_correct_dir_location(pathname), pathname+'/'
+		end
 
+		it "should return file ending in /" do
+			pathname = '/path/to/dir/'
+			assert_equal Blacklight.set_correct_dir_location(pathname), pathname
+		end
+	end
+
+	describe "#opens_dir" do
+		it "should not exist" do
+			pathname = '/path/to/dir/'
+			assert_equal Blacklight.opens_dir(pathname), nil
+		end
+
+		it "should iterate through" do
+		end
 	end
 
 end

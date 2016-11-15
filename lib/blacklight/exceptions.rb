@@ -8,4 +8,12 @@ module Exceptions
 
 	end
 
+	class MissingFileError < StandardError
+
+		def initialize(msg="Couldn't find file")
+			super(msg)
+		end
+
+	end
+
 end

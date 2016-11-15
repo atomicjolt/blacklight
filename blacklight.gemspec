@@ -27,4 +27,9 @@ Gem::Specification.new do |spec|
 
   spec.metadata['allowed_push_host'] = 'https://github.com/atomicjolt/'
 
+  [
+    ['canvas_cc', '~> 0'],
+    ['rubyzip', '~> 1.1'],
+    ['nokogiri', '~> 1.6.6']
+  ].each { |d| spec.add_runtime_dependency(*d) }
 end
