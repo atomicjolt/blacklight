@@ -22,24 +22,27 @@ module Blacklight
 			data = Nokogiri::XML.parse(data_file)
 			data_details = data.children.first
 			type = data_details.name.downcase
-			Blacklight.send(FUNCTION_CALL[type.to_sym], data_details) if FUNCTION_CALL[type.to_sym]
+			Blacklight.send(FUNCTION_CALL[type.to_sym], data_details, course) if FUNCTION_CALL[type.to_sym]
 		end
 	end
 
-	def self.iterate_course(data_details)
+	def self.iterate_course(data_details, course)
 		data_details.children.each do |data|
-			type = data.name.downcase
-			if type == 'courseid'
+			name = data.name.downcase
+			if name == 'courseid'
 				value = data.attributes["value"].value
+				course.set_course_values('identification', value)
+			elsif name == 'title'
+				value = data.attributes["value"].value
+				course.set_course_values(name, value)
 			end
 		end
 	end
 
-	def self.iterate_ssda(data)
+	def self.iterate_ssda(data_details, course)
 	end
 
-	def self.iterate_navigateapplications(data)
-
+	def self.iterate_navigateapplications(data_details, course)
 	end
 
 end

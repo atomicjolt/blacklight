@@ -5,7 +5,6 @@ require_relative 'exceptions'
 module Blacklight
 
 	class Course
-		attr_accessor :zip_file
  	  ##
 	  # This class represents a reader for one zip file, and allows the usage of
 	  # individual files within zip file
@@ -13,7 +12,7 @@ module Blacklight
     def initialize(zip_path)
     	@path = zip_path
     	@zip_file = Zip::File.open(zip_path)
-    	@values = {}
+    	@canvas_course = CanvasCc::CanvasCC::Models::Course.new
     end
 
     def open_file(file_name)
@@ -25,10 +24,9 @@ module Blacklight
 	    end
 	  end
 
+	  def set_course_values(name, value)
+	  	@canvas_course.send(name+'=', value)
+	  end
   end
-
-	def self.create_canvas_cc_course
-		CanvasCc::CanvasCC::Models::Course.new
-	end
 
 end
