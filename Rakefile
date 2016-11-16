@@ -11,28 +11,31 @@ end
 
 
 ## CHANGED THESE TO CHANGE THE FOLDER LOCATIONS
-SOURCE_FILE = 'sources'
-OUTPUT_FILE = 'outputs'
+SOURCE_DIRECTORY = 'sources'
+OUTPUT_DIRECTORY = 'canvas'
 
 
 
-SOURCE_FILES = Rake::FileList.new("#{SOURCE_FILE}/*.zip")
+SOURCE_NAME = SOURCE_DIRECTORY.split('/').last
+OUTPUT_NAME = OUTPUT_DIRECTORY.split('/').last
+SOURCE_FILES = Rake::FileList.new("#{SOURCE_DIRECTORY}/*.zip")
 
-task :imscc => SOURCE_FILES.pathmap("%{^#{SOURCE_FILE}/,#{OUTPUT_FILE}/}X.imscc")
+task :imscc => SOURCE_FILES.pathmap("%{^#{SOURCE_NAME}/,#{OUTPUT_DIRECTORY}/}X.imscc")
 
-directory OUTPUT_FILE
+directory OUTPUT_NAME
 
-rule ".imscc" => [->(f){source_for_html(f)}, OUTPUT_FILE] do |t|
+rule ".imscc" => [->(f){source_for_imscc(f)}, OUTPUT_NAME] do |t|
   mkdir_p t.name.pathmap("%d")
-  sh "ruby -Ilib ./bin/import_blackboard ./#{SOURCE_FILE}/"
+  mkdir_p OUTPUT_DIRECTORY
+  sh "ruby -Ilib ./bin/import_blackboard #{SOURCE_DIRECTORY}/ #{OUTPUT_DIRECTORY}/"
 end
 
-def source_for_html(html_file)
+def source_for_imscc(imscc_file)
   SOURCE_FILES.detect{|f|
-    f.ext('') == html_file.pathmap("%{^#{OUTPUT_FILE}/,#{SOURCE_FILE}/}X")
+    f.ext('') == imscc_file.pathmap("%{^#{OUTPUT_DIRECTORY}/,#{SOURCE_DIRECTORY}/}X")
   }
 end
 
 task :clean do
-  rm_rf OUTPUT_FILE
+  rm_rf OUTPUT_DIRECTORY
 end
