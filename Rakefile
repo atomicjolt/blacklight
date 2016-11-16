@@ -9,23 +9,30 @@ Rake::TestTask.new do |t|
   t.warning = false
 end
 
-SOURCE_FILES = Rake::FileList.new("sources/*.zip")
 
-task :imscc => SOURCE_FILES.pathmap("%{^sources/,outputs/}X.imscc")
+## CHANGED THESE TO CHANGE THE FOLDER LOCATIONS
+SOURCE_FILE = 'sources'
+OUTPUT_FILE = 'outputs'
 
-directory "outputs"
 
-rule ".imscc" => [->(f){source_for_html(f)}, "outputs"] do |t|
+
+SOURCE_FILES = Rake::FileList.new("#{SOURCE_FILE}/*.zip")
+
+task :imscc => SOURCE_FILES.pathmap("%{^#{SOURCE_FILE}/,#{OUTPUT_FILE}/}X.imscc")
+
+directory OUTPUT_FILE
+
+rule ".imscc" => [->(f){source_for_html(f)}, OUTPUT_FILE] do |t|
   mkdir_p t.name.pathmap("%d")
-  sh "ruby -Ilib ./bin/import_blackboard ./sources"
+  sh "ruby -Ilib ./bin/import_blackboard ./#{SOURCE_FILE}/"
 end
 
 def source_for_html(html_file)
   SOURCE_FILES.detect{|f|
-    f.ext('') == html_file.pathmap("%{^outputs/,sources/}X")
+    f.ext('') == html_file.pathmap("%{^#{OUTPUT_FILE}/,#{SOURCE_FILE}/}X")
   }
 end
 
 task :clean do
-  rm_rf "outputs"
+  rm_rf OUTPUT_FILE
 end
