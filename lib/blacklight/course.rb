@@ -30,9 +30,8 @@ module Blacklight
 	  	@canvas_course.send(name+'=', value)
 	  end
 
-	  def output_to_dir
-		  dirname = Dir.pwd + '/outputs'
-	    output_dir = CanvasCc::CanvasCC::CartridgeCreator.new(@canvas_course).create(dirname)
+	  def output_to_dir(output_folder)
+	    output_dir = CanvasCc::CanvasCC::CartridgeCreator.new(@canvas_course).create(output_folder)
 	    original_name = switch_file_name(output_dir)
 	    puts "Created a file in #{original_name}"
 		end

@@ -15,7 +15,7 @@ SOURCE_DIRECTORY = 'sources'
 OUTPUT_DIRECTORY = 'canvas'
 
 
-
+## Don't change these, these are just getting the last of the folder name for the script below's use
 SOURCE_NAME = SOURCE_DIRECTORY.split('/').last
 OUTPUT_NAME = OUTPUT_DIRECTORY.split('/').last
 SOURCE_FILES = Rake::FileList.new("#{SOURCE_DIRECTORY}/*.zip")
