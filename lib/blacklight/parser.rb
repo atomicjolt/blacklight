@@ -43,6 +43,7 @@ module Blacklight
   		course = Course.new(zipfile)
   		manifest = course.open_file("imsmanifest.xml")
   		Blacklight.parse_manifest(manifest, course)
+  		course.output_to_dir
   	end
   end
 

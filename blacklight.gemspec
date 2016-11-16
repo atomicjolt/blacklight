@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   [
     ['canvas_cc', '~> 0'],
     ['rubyzip', '~> 1.1'],
-    ['nokogiri', '~> 1.6.6']
+    ['nokogiri', '~> 1.6.6'],
+    ['fileutils']
   ].each { |d| spec.add_runtime_dependency(*d) }
 end

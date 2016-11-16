@@ -20,7 +20,21 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Run the rake task to convert from .zip to .imscc
+```sh
+	rake imscc
+```
+This will take all your files in your source folder and convert them to your outputs folder
+
+Run converting files in parallel
+```sh
+time rake imscc -m
+```
+
+Delete entire outputs folder
+```sh
+rake clean
+```
 
 ## Development
 

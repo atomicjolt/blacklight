@@ -6,7 +6,7 @@ include Blacklight
 
 describe Blacklight do
 
-	describe "parse_xml" do
+	describe "iterate_course" do
 		it "should " do
 		end
 	end
