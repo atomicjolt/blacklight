@@ -6,21 +6,6 @@ include Blacklight
 
 describe Blacklight do
 
-	describe "#pull_dir_location" do
-		it "returns an exception" do
-			args = ''
-			err = assert_raises(Exception) { Blacklight.pull_dir_location(args) }
-			assert_match /Bad File Name/, err.message
-		end
-
-		it "returns the filename string" do
-			pathname = '/path/to/dir'
-			args = Array.new
-			args.push(pathname)
-			assert_equal Blacklight.pull_dir_location(args), pathname
-		end
-	end
-
 	describe "#directory_exists?" do
 		it "should not exist" do
 			pathname = '/path/to/dir'
@@ -47,11 +32,9 @@ describe Blacklight do
 
 	describe "#opens_dir" do
 		it "should not exist" do
-			pathname = '/path/to/dir/'
-			assert_equal Blacklight.opens_dir(pathname), nil
-		end
-
-		it "should iterate through" do
+			source_dir = '/path/to/dir/source'
+			output_dir = '/path/to/dir/output'
+			assert_equal Blacklight.opens_dir(source_dir, output_dir), nil
 		end
 	end
 
