@@ -4,7 +4,6 @@ module Blacklight
 
 	FUNCTION_TYPE_CALL = {
 	  "course": :iterate_course,
-	  "standard_sub_document_association": :iterate_sub_document_association,
 	  "navigationapplications":  :iterate_navigateapplications,
 	  "navigationsettings": :iterate_navigationsettings,
 	  "coursetoc": :iterate_coursetoc,
@@ -36,6 +35,12 @@ module Blacklight
 	  "safeassign": :iterate_safeassign
 	};
 
+	COURSE_LOOKUP = {
+		"isavailable": "is_public",
+		"title": "title",
+		"description": "description"
+	}
+
 	def self.parse_manifest(manifest, course)
 		doc = Nokogiri::XML.parse(manifest)
 		resources = doc.xpath("//*[resource]")
@@ -58,10 +63,10 @@ module Blacklight
 		xml_data.children.each do |data|
 			name = data.name.downcase
 			case name
-			when 'title'
+			when 'title','isavailable'
 				if data.attributes
 					value = data.attributes["value"].value
-					course.set_course_values(name, value)
+					course.set_course_values(COURSE_LOOKUP[name.to_sym], value)
 				end
 			when 'dates'
 				data.children.each do |date|
@@ -75,7 +80,7 @@ module Blacklight
 				end
 			when 'description'
 				value = data.text
-				course.set_course_values('description', value)
+				course.set_course_values(COURSE_LOOKUP[name.to_sym], value)
 			else
 				puts name + 'is not found or is not used'
 			end

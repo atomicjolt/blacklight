@@ -22,7 +22,7 @@ Or install it yourself as:
 
 Run the rake task to convert from .zip to .imscc
 ```sh
-	rake imscc
+rake imscc
 ```
 This will take all your files in your source folder and convert them to your outputs folder
 

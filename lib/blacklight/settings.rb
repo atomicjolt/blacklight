@@ -2,9 +2,6 @@ require_relative 'exceptions'
 
 module Blacklight
 
-	def self.iterate_sub_document_association(xml_data, course)
-	end
-
 	def self.iterate_navigateapplications(xml_data, course)
 	end
 
