@@ -4,17 +4,12 @@ module Blacklight
 
 	FUNCTION_TYPE_CALL = {
 	  "course": :iterate_course,
-	  "navigationapplications":  :iterate_navigateapplications,
-	  "navigationsettings": :iterate_navigationsettings,
-	  "coursetoc": :iterate_coursetoc,
-	  "contenthandlers": :iterate_contenthandlers,
+	  "groups": :iterate_groups,
+	  "blog": :iterate_blog,
+
 	  "categories": :iterate_categories,
 	  "itemcategories": :iterate_itemcategories,
-	  "groups": :iterate_groups,
-	  "groupapplications": :iterate_groupapplications,
-	  "blog": :iterate_blog,
 	  "questestinterop": :iterate_questestinterop,
-	  "assessmentcreationsettings": :iterate_assessmentcreationsettings,
 	  "announcement": :iterate_announcement,
 	  "conferences": :iterate_conferences,
 	  "forum": :iterate_forum,

@@ -11,9 +11,6 @@ module Blacklight
 	def self.iterate_wiki(xml_data, course)
   end
 
-  def self.iterate_blog(xml_data, course)
-  end
-
   def self.iterate_conferences(xml_data, course)
   end
 

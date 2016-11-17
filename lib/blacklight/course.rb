@@ -14,6 +14,7 @@ module Blacklight
     	@name = zip_path.split('/').last.gsub('.zip', '')
     	@zip_file = Zip::File.open(zip_path)
     	@canvas_course = CanvasCc::CanvasCC::Models::Course.new
+    	@values = {}
     	set_course_values('course_code', @name)
     end
 
@@ -24,6 +25,11 @@ module Blacklight
 	    rescue NoMethodError
 	    	raise Exceptions::MissingFileError
 	    end
+	  end
+
+	  def add_to_values(name, values)
+	  	@values[name] = {} unless @values[name]
+	  	@values[name] = @values[name].merge(values)
 	  end
 
 	  def set_course_values(name, value)
