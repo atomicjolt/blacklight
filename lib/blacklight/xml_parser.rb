@@ -42,7 +42,9 @@ module Blacklight
       data = Nokogiri::XML.parse(data_file)
       xml_data = data.children.first
       type = xml_data.name.downcase
-      Blacklight.send(FUNCTION_TYPE_CALL[type.to_sym], xml_data, course) if FUNCTION_TYPE_CALL[type.to_sym]
+      if FUNCTION_TYPE_CALL[type.to_sym]
+        Blacklight.send(FUNCTION_TYPE_CALL[type.to_sym], xml_data, course)
+      end
     end
   end
 

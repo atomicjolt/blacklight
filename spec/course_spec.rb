@@ -34,11 +34,11 @@ describe Blacklight do
       end
     end
 
-    describe "#set_course_values" do
+    describe "#set_values" do
       it "should set the canvas course values" do
         name = "identification"
         value = "RandomID23joirjeowijafoi"
-        @course.set_course_values(name, value)
+        @course.set_values(name, value)
         canvas_course = @course.instance_variable_get :@canvas_course
         assert_equal canvas_course.send(name.to_sym), value
       end
@@ -46,10 +46,10 @@ describe Blacklight do
       it "should not override previous settings" do
         name = "identification"
         value = "RandomID23joirjeowijafoi"
-        @course.set_course_values(name, value)
+        @course.set_values(name, value)
         name2 = "title"
         value2 = "The Randomest Course"
-        @course.set_course_values(name2, value2)
+        @course.set_values(name2, value2)
         canvas_course = @course.instance_variable_get :@canvas_course
         assert_equal canvas_course.send(name.to_sym), value
         assert_equal canvas_course.send(name2.to_sym), value2

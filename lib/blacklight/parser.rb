@@ -27,7 +27,9 @@ module Blacklight
   end
 
   def self.set_correct_dir_location(dir_location)
-    dir_location = dir_location + "/" unless dir_location[dir_location.length - 1] == "/"
+    unless dir_location[dir_location.length - 1] == "/"
+      dir_location = dir_location + "/"
+    end
     dir_location
   end
 

@@ -15,7 +15,7 @@ module Blacklight
       @zip_file = Zip::File.open(zip_path)
       @canvas_course = CanvasCc::CanvasCC::Models::Course.new
       @values = {}
-      set_course_values("course_code", @name)
+      set_values("course_code", @name)
     end
 
     def open_file(file_name)
@@ -32,7 +32,7 @@ module Blacklight
       @values[name] = @values[name].merge(values)
     end
 
-    def set_course_values(name, value)
+    def set_values(name, value)
       @canvas_course.send(name + "=", value)
     end
 
