@@ -1,4 +1,4 @@
-# Blacklight Converter
+# Blacklight Converter [![Build Status](https://travis-ci.org/atomicjolt/blacklight.svg?branch=master)](https://travis-ci.org/atomicjolt/blacklight)
 
 TODO: Describe the gem
 
