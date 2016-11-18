@@ -1,4 +1,4 @@
-require_relative 'exceptions'
+require_relative "exceptions"
 
 module Blacklight
 
@@ -47,7 +47,7 @@ module Blacklight
 	end
 
 	def self.create_random_hex
-    'i' + SecureRandom.hex
+    "i" + SecureRandom.hex
   end
 
   def self.get_attribute_value(xml_data, type)
@@ -55,11 +55,11 @@ module Blacklight
   end
 
   def self.get_text(xml_data)
-    xml_data.children.at('DESCRIPTION').children.at('TEXT').text
+    xml_data.children.at("DESCRIPTION").children.at("TEXT").text
   end
 
   def self.get_description(xml_data)
-    xml_data.children.at('DESCRIPTION').text
+    xml_data.children.at("DESCRIPTION").text
   end
 
   def self.iterate_categories(xml_data, course)

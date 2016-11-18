@@ -1,6 +1,6 @@
 require "minitest/autorun"
 require "blacklight"
-require 'pry'
+require "pry"
 
 include Blacklight
 
@@ -8,7 +8,7 @@ describe Blacklight do
 
 	describe "Course" do
 		before do
-			@file_path = File.expand_path('../fixtures/', __FILE__) + '/test.zip'
+			@file_path = File.expand_path("../fixtures/", __FILE__) + "/test.zip"
 			file = Minitest::Mock.new
 			Zip::File.stub :open, file do
 		    @course = Course.new(@file_path)
@@ -38,7 +38,7 @@ describe Blacklight do
 		describe "#set_course_values" do
 			it "should set the canvas course values" do
 				name = "identification"
-				value = 'RandomID23joirjeowijafoi'
+				value = "RandomID23joirjeowijafoi"
 				@course.set_course_values(name, value)
 				canvas_course = @course.instance_variable_get :@canvas_course
 				assert_equal canvas_course.send(name.to_sym), value
@@ -46,10 +46,10 @@ describe Blacklight do
 
 			it "should not override previous settings" do
 				name = "identification"
-				value = 'RandomID23joirjeowijafoi'
+				value = "RandomID23joirjeowijafoi"
 				@course.set_course_values(name, value)
 				name2 = "title"
-				value2 = 'The Randomest Course'
+				value2 = "The Randomest Course"
 				@course.set_course_values(name2, value2)
 				canvas_course = @course.instance_variable_get :@canvas_course
 				assert_equal canvas_course.send(name.to_sym), value
@@ -65,13 +65,13 @@ describe Blacklight do
 
 		describe "#switch_file_name" do
 			it "should switch out file name" do
-				original_name = ''
-				name = '/this_name.imscc'
-				canvas_path = File.expand_path('../fixtures/', __FILE__) + name
+				original_name = ""
+				name = "/this_name.imscc"
+				canvas_path = File.expand_path("../fixtures/", __FILE__) + name
 				File.stub :rename, canvas_path do
 		    	original_name = @course.switch_file_name(canvas_path)
 		  	end
-				assert_equal @file_path.gsub('.zip', '.imscc'), original_name
+				assert_equal @file_path.gsub(".zip", ".imscc"), original_name
 			end
 		end
 

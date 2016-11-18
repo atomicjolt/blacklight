@@ -1,10 +1,10 @@
-require 'optparse'
-require 'ostruct'
-require 'nokogiri'
-require 'pry'
-require 'zip'
+require "optparse"
+require "ostruct"
+require "nokogiri"
+require "pry"
+require "zip"
 
-require_relative 'exceptions'
+require_relative "exceptions"
 
 module Blacklight
 
@@ -27,13 +27,13 @@ module Blacklight
   end
 
   def self.set_correct_dir_location(dir_location)
-  	dir_location = dir_location + '/' unless dir_location[dir_location.length-1] == '/'
+  	dir_location = dir_location + "/" unless dir_location[dir_location.length-1] == "/"
   	dir_location
   end
 
   def self.opens_dir(source_folder, output_folder)
-  	Dir.glob(source_folder +'*.zip') do |zipfile|
-  		next if zipfile == '.' or zipfile == '..'
+  	Dir.glob(source_folder +"*.zip") do |zipfile|
+  		next if zipfile == "." or zipfile == ".."
   		# do work on real items
   		course = Course.new(zipfile)
   		manifest = course.open_file("imsmanifest.xml")

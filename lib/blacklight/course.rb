@@ -1,6 +1,6 @@
-require 'canvas_cc'
-require 'fileutils'
-require_relative 'exceptions'
+require "canvas_cc"
+require "fileutils"
+require_relative "exceptions"
 
 
 module Blacklight
@@ -11,11 +11,11 @@ module Blacklight
     # individual files within zip file
     ##
     def initialize(zip_path)
-      @name = zip_path.split('/').last.gsub('.zip', '')
+      @name = zip_path.split("/").last.gsub(".zip", "")
       @zip_file = Zip::File.open(zip_path)
       @canvas_course = CanvasCc::CanvasCC::Models::Course.new
       @values = {}
-      set_course_values('course_code', @name)
+      set_course_values("course_code", @name)
     end
 
     def open_file(file_name)
@@ -33,7 +33,7 @@ module Blacklight
     end
 
     def set_course_values(name, value)
-      @canvas_course.send(name+'=', value)
+      @canvas_course.send(name + "=", value)
     end
 
     def add_resource(name, resource)
@@ -47,7 +47,7 @@ module Blacklight
     end
 
     def switch_file_name(canvas_name)
-      name = canvas_name.split('/').last.gsub('.imscc', '')
+      name = canvas_name.split("/").last.gsub(".imscc", "")
       original_name = canvas_name.gsub(name, @name)
       File.rename(canvas_name, original_name)
       original_name

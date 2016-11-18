@@ -1,6 +1,6 @@
 require "minitest/autorun"
 require "blacklight"
-require 'pry'
+require "pry"
 
 include Blacklight
 
