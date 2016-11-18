@@ -46,14 +46,21 @@ module Blacklight
 		end
 	end
 
-	def self.iterate_course(xml_data, course)
-		course.set_course_values('identifier', xml_data["id"])
-		course.set_course_values('title', xml_data.children.at('TITLE').attributes["value"].value)
-		course.set_course_values('description', xml_data.children.at('DESCRIPTION').text)
-		course.set_course_values('is_public', xml_data.children.at('ISAVAILABLE').attributes["value"].value)
-		course.set_course_values('start_at', xml_data.children.at('COURSESTART').attributes["value"].value)
-		course.set_course_values('conclude_at', xml_data.children.at('COURSEEND').attributes["value"].value)
-	end
+	def self.create_random_hex
+  	'i' + SecureRandom.hex
+  end
+
+  def self.get_attribute_value(xml_data, type)
+  	xml_data.children.at(type).attributes["value"].value
+  end
+
+  def self.get_text(xml_data)
+  	xml_data.children.at('DESCRIPTION').children.at('TEXT').text
+  end
+
+  def self.get_description(xml_data)
+  	xml_data.children.at('DESCRIPTION').text
+  end
 
   def self.iterate_categories(xml_data, course)
   end

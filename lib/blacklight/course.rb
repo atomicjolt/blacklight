@@ -40,23 +40,10 @@ module Blacklight
 	  	@canvas_course.send(name.to_sym) << resource
 	  end
 
-	  def output_to_dir(output_folder, announcement_directory)
+	  def output_to_dir(output_folder)
 	    output_dir = CanvasCc::CanvasCC::CartridgeCreator.new(@canvas_course).create(output_folder)
-	    output_dir = add_announcements_to_zip(output_dir, announcement_directory)
 	    original_name = switch_file_name(output_dir)
 	    puts "Created a file in #{original_name}"
-		end
-
-		private
-
-		def add_announcements_to_zip(output_dir, announcement_directory)
-			entries = Dir.entries(announcement_directory) - %w(. ..)
-			Zip::File.open(output_dir, Zip::File::CREATE) do |zip_file|
-			  entries.each do |filename|
-			    zip_file.add(filename, announcement_directory + '/' + filename)
-			  end
-			end
-			output_dir
 		end
 
 		def switch_file_name(canvas_name)

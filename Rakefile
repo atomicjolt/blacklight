@@ -14,7 +14,6 @@ task default: :spec
 ## CHANGED THESE TO CHANGE THE FOLDER LOCATIONS
 SOURCE_DIRECTORY = 'sources'
 OUTPUT_DIRECTORY = 'canvas'
-ANNOUNCEMENTS_DIRECTORY = 'announcements'
 
 
 ## Don't change these, these are just getting the last of the folder name for the script below's use
@@ -29,7 +28,7 @@ directory OUTPUT_NAME
 rule ".imscc" => [->(f){source_for_imscc(f)}, OUTPUT_NAME] do |t|
   mkdir_p t.name.pathmap("%d")
   mkdir_p OUTPUT_DIRECTORY
-  sh "ruby -Ilib ./bin/import_blackboard #{SOURCE_DIRECTORY}/ #{OUTPUT_DIRECTORY}/ #{ANNOUNCEMENTS_DIRECTORY}/"
+  sh "ruby -Ilib ./bin/import_blackboard #{SOURCE_DIRECTORY}/ #{OUTPUT_DIRECTORY}/"
 end
 
 def source_for_imscc(imscc_file)
@@ -40,5 +39,4 @@ end
 
 task :clean do
   rm_rf OUTPUT_DIRECTORY
-  rm_rf ANNOUNCEMENTS_DIRECTORY
 end
