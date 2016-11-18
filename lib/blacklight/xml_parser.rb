@@ -30,12 +30,6 @@ module Blacklight
 	  "safeassign": :iterate_safeassign
 	};
 
-	COURSE_LOOKUP = {
-		"isavailable": "is_public",
-		"title": "title",
-		"description": "description"
-	}
-
 	def self.parse_manifest(manifest, course)
 		doc = Nokogiri::XML.parse(manifest)
 		resources = doc.xpath("//*[resource]")
@@ -55,31 +49,11 @@ module Blacklight
 
 	def self.iterate_course(xml_data, course)
 		course.set_course_values('identifier', xml_data["id"])
-		xml_data.children.each do |data|
-			name = data.name.downcase
-			case name
-			when 'title','isavailable'
-				if data.attributes
-					value = data.attributes["value"].value
-					course.set_course_values(COURSE_LOOKUP[name.to_sym], value)
-				end
-			when 'dates'
-				data.children.each do |date|
-					if data.name.downcase == 'coursestart'
-						value = data.attributes['value'].value
-						course.set_course_values('start_at', value)
-					elsif data.name.downcase == 'courseend'
-						value = data.attributes['value'].value
-						course.set_course_values('conclude_at', value)
-					end
-				end
-			when 'description'
-				value = data.text
-				course.set_course_values(COURSE_LOOKUP[name.to_sym], value)
-			else
-				puts name + 'is not found or is not used'
-			end
-		end
+		course.set_course_values('title', xml_data.children.at('TITLE').attributes["value"].value)
+		course.set_course_values('description', xml_data.children.at('DESCRIPTION').text)
+		course.set_course_values('is_public', xml_data.children.at('ISAVAILABLE').attributes["value"].value)
+		course.set_course_values('start_at', xml_data.children.at('COURSESTART').attributes["value"].value)
+		course.set_course_values('conclude_at', xml_data.children.at('COURSEEND').attributes["value"].value)
 	end
 
   def self.iterate_categories(xml_data, course)
@@ -119,6 +93,30 @@ module Blacklight
   end
 
   def self.iterate_safeassign(xml_data, course)
+  end
+
+  def self.iterate_forum(xml_data, course)
+  end
+
+	def self.iterate_wiki(xml_data, course)
+  end
+
+  def self.iterate_conferences(xml_data, course)
+  end
+
+  def self.iterate_coursemodulepages(xml_data, course)
+  end
+
+  def self.iterate_notificationrules(xml_data, course)
+  end
+
+  def self.iterate_staffinfo(xml_data, course)
+  end
+
+  def self.iterate_groupcontentlist(xml_data, course)
+  end
+
+  def self.iterate_content(xml_data, course)
   end
 
 

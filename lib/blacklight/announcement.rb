@@ -6,11 +6,21 @@ module Blacklight
 
 	def self.iterate_announcement(xml_data, course)
 		title = xml_data.children.at('TITLE').attributes["value"].value
-		text = xml_data.children.at('DESCRIPTION').children.at('TEXT').text
-		posted_at = xml_data.children.at('DATES').children.at('CREATED').attributes["value"].value
-		delayed_post = xml_data.children.at('DATES').children.at('RESTRICTSTART').attributes["value"].value
 		identifier = 'i' + SecureRandom.hex
-		File.open("announcements/#{identifier}.xml", "w") do |file|
+		create_identifier_file(xml_data, identifier, title)
+		dependency = 'i' + SecureRandom.hex
+		create_dependency_file(xml_data, identifier, dependency, title)
+
+		announcement = CanvasCc::CanvasCC::Models::Announcement.new
+		announcement.identifier = identifier
+		announcement.dependency = dependency
+		course.add_announcement(announcement)
+  end
+
+  def self.create_identifier_file(xml_data, identifier, title)
+  	text = xml_data.children.at('DESCRIPTION').children.at('TEXT').text
+
+  	File.open("announcements/#{identifier}.xml", "w") do |file|
 			file.puts(<<-CONTENTS)
 <?xml version="1.0" encoding="UTF-8"?>
 <topic xmlns="http://www.imsglobal.org/xsd/imsccv1p1/imsdt_v1p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsccv1p1/imsdt_v1p1  http://www.imsglobal.org/profile/cc/ccv1p1/ccv1p1_imsdt_v1p1.xsd">
@@ -19,8 +29,12 @@ module Blacklight
 </topic>
 CONTENTS
 		end
+  end
 
-		dependency = 'i' + SecureRandom.hex
+  def self.create_dependency_file(xml_data, identifier, dependency, title)
+  	delayed_post = xml_data.children.at('DATES').children.at('RESTRICTSTART').attributes["value"].value
+  	posted_at = xml_data.children.at('DATES').children.at('CREATED').attributes["value"].value
+
 		File.open("announcements/#{dependency}.xml", "w") do |file|
 			file.puts(<<-CONTENTS)
 <?xml version="1.0" encoding="UTF-8"?>
@@ -41,23 +55,6 @@ CONTENTS
 </topicMeta>
 CONTENTS
 		end
-
-		announcement = CanvasCc::CanvasCC::Models::Announcement.new
-		announcement.identifier = identifier
-		announcement.dependency = dependency
-		course.add_announcement(announcement)
-  end
-
-	def self.iterate_forum(xml_data, course)
-  end
-
-	def self.iterate_wiki(xml_data, course)
-  end
-
-  def self.iterate_conferences(xml_data, course)
-  end
-
-  def self.iterate_coursemodulepages(xml_data, course)
   end
 
 end
