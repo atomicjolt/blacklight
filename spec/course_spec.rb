@@ -15,7 +15,7 @@ describe Blacklight do
       end
     end
 
-    describe "#initialize" do
+    describe "initialize" do
       it "should initialize course" do
         assert_equal (@course.is_a? Object), true
       end
@@ -27,14 +27,14 @@ describe Blacklight do
     end
 
 
-    describe "#open_file" do
+    describe "open_file" do
       it "should return with an error" do
         err = assert_raises(Exception) { @course.open_file("") }
         assert_match /Couldn't find file/, err.message
       end
     end
 
-    describe "#set_values" do
+    describe "set_values" do
       it "should set the canvas course values" do
         name = "identification"
         value = "RandomID23joirjeowijafoi"
@@ -56,13 +56,13 @@ describe Blacklight do
       end
     end
 
-    describe "#output_to_dir" do
+    describe "output_to_dir" do
       it "should output file to outputs directory" do
         #TODO
       end
     end
 
-    describe "#switch_file_name" do
+    describe "switch_file_name" do
       it "should switch out file name" do
         original_name = ""
         name = "/this_name.imscc"

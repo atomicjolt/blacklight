@@ -6,7 +6,7 @@ include Blacklight
 
 describe Blacklight do
 
-  describe "#directory_exists?" do
+  describe "directory_exists?" do
     it "should not exist" do
       pathname = "/path/to/dir"
       assert_equal Blacklight.directory_exists?(pathname), false
@@ -18,7 +18,7 @@ describe Blacklight do
     end
   end
 
-  describe "#set_correct_dir_location" do
+  describe "set_correct_dir_location" do
     it "should return file ending in /" do
       pathname = "/path/to/dir"
       assert_equal Blacklight.set_correct_dir_location(pathname), pathname + "/"
@@ -30,7 +30,7 @@ describe Blacklight do
     end
   end
 
-  describe "#opens_dir" do
+  describe "opens_dir" do
     it "should not exist" do
       source_dir = "/path/to/dir/source"
       output_dir = "/path/to/dir/output"
