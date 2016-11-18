@@ -35,7 +35,7 @@ module Blacklight
 
   def self.opens_dir(source_folder, output_folder)
     Dir.glob(source_folder + "*.zip") do |zipfile|
-      next if zipfile == "." or zipfile == ".."
+      next if zipfile == "." || zipfile == ".."
       # do work on real items
       course = Course.new(zipfile)
       manifest = course.open_file("imsmanifest.xml")
