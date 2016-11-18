@@ -47,6 +47,8 @@ module Blacklight
 	    puts "Created a file in #{original_name}"
 		end
 
+		private
+
 		def add_announcements_to_zip(output_dir, announcement_directory)
 			entries = Dir.entries(announcement_directory) - %w(. ..)
 			Zip::File.open(output_dir, Zip::File::CREATE) do |zip_file|
