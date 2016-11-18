@@ -9,6 +9,7 @@ Rake::TestTask.new do |t|
   t.warning = false
 end
 
+task default: :spec
 
 ## CHANGED THESE TO CHANGE THE FOLDER LOCATIONS
 SOURCE_DIRECTORY = 'sources'
