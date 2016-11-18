@@ -1,19 +1,18 @@
 module Exceptions
 
-	class BadFileNameError < StandardError
+  class BadFileNameError < StandardError
 
-		def initialize(msg="Bad File Name")
-			super(msg)
-		end
+    def initialize(msg="Bad File Name")
+      super(msg)
+    end
 
-	end
+  end
 
-	class MissingFileError < StandardError
+  class MissingFileError < StandardError
 
-		def initialize(msg="Couldn't find file")
-			super(msg)
-		end
+    def initialize(msg="Couldn't find file")
+      super(msg)
+    end
 
-	end
-
+  end
 end

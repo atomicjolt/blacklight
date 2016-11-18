@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "optparse"
 require "ostruct"
 require "nokogiri"
@@ -15,9 +16,9 @@ module Blacklight
   end
 
   def self.validates_source_directory(directory)
-    if directory_exists?(directory)
+    begin
       dir_location = set_correct_dir_location(directory)
-    else
+    rescue
      raise Exceptions::BadFileNameError
     end
   end

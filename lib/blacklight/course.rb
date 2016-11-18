@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "canvas_cc"
 require "fileutils"
 require_relative "exceptions"
@@ -41,8 +42,7 @@ module Blacklight
     end
 
     def output_to_dir(output_folder)
-      output_dir = CanvasCc::CanvasCC::CartridgeCreator.new(@canvas_course)
-                    .create(output_folder)
+      output_dir = CanvasCc::CanvasCC::CartridgeCreator.new(@canvas_course).create(output_folder)
       original_name = switch_file_name(output_dir)
       puts "Created a file in #{original_name}"
     end
