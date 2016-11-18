@@ -27,7 +27,7 @@ module Blacklight
     # notificationrules: :iterate_notificationrules,
     # wiki: :iterate_wiki,
     # safeassign: :iterate_safeassign,
-  };
+  }
 
   def self.parse_manifest(manifest, course)
     doc = Nokogiri::XML.parse(manifest)

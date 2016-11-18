@@ -3,7 +3,6 @@ require "securerandom"
 require_relative "exceptions"
 
 module Blacklight
-
   def self.iterate_course(xml_data, course)
     course.set_course_values("identifier", xml_data["id"])
     course.set_course_values("title", get_attribute_value(xml_data, "TITLE"))
