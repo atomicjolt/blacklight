@@ -12,7 +12,11 @@ module Blacklight
 		announcement.posted_at = xml_data.children.at('DATES').children.at('CREATED').attributes["value"].value
 		announcement.identifier = 'i' + SecureRandom.hex
 		announcement.dependency = 'i' + SecureRandom.hex
-		course.add_announcement(announcement)
+		course.add_resource('announcements', announcement)
+  end
+
+  def self.iterate_forum(xml_data, course)
+
   end
 
 

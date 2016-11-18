@@ -36,8 +36,8 @@ module Blacklight
 	  	@canvas_course.send(name+'=', value)
 	  end
 
-	  def add_announcement(announcement)
-	  	@canvas_course.announcements << announcement
+	  def add_resource(name, resource)
+	  	@canvas_course.send(name.to_sym) << resource
 	  end
 
 	  def output_to_dir(output_folder, announcement_directory)

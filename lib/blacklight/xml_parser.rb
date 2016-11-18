@@ -7,12 +7,11 @@ module Blacklight
 	  "groups": :iterate_groups,
 	  "blog": :iterate_blog,
 	  "announcement": :iterate_announcement,
+	  "forum": :iterate_forum,
 
 	  "categories": :iterate_categories,
 	  "itemcategories": :iterate_itemcategories,
 	  "questestinterop": :iterate_questestinterop,
-	  "conferences": :iterate_conferences,
-	  "forum": :iterate_forum,
 	  "staffinfo": :iterate_staffinfo,
 	  "coursemodulepages": :iterate_coursemodulepages,
 	  "content": :iterate_content,
@@ -93,9 +92,6 @@ module Blacklight
   end
 
   def self.iterate_safeassign(xml_data, course)
-  end
-
-  def self.iterate_forum(xml_data, course)
   end
 
 	def self.iterate_wiki(xml_data, course)
