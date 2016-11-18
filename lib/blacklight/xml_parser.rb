@@ -6,11 +6,11 @@ module Blacklight
 	  "course": :iterate_course,
 	  "groups": :iterate_groups,
 	  "blog": :iterate_blog,
+	  "announcement": :iterate_announcement,
 
 	  "categories": :iterate_categories,
 	  "itemcategories": :iterate_itemcategories,
 	  "questestinterop": :iterate_questestinterop,
-	  "announcement": :iterate_announcement,
 	  "conferences": :iterate_conferences,
 	  "forum": :iterate_forum,
 	  "staffinfo": :iterate_staffinfo,

@@ -11,7 +11,8 @@ module Blacklight
   def self.parse(args)
   	source_directory = validates_source_directory(args[0])
   	output_directory = args[1]
-  	opens_dir(source_directory, output_directory)
+  	announcement_directory = args[2]
+  	opens_dir(source_directory, output_directory, announcement_directory)
   end
 
   def self.validates_source_directory(directory)
@@ -31,15 +32,18 @@ module Blacklight
   	dir_location
   end
 
-  def self.opens_dir(source_folder, output_folder)
+  def self.opens_dir(source_folder, output_folder, announcement_directory)
   	Dir.glob(source_folder +'*.zip') do |zipfile|
   		next if zipfile == '.' or zipfile == '..'
   		# do work on real items
   		course = Course.new(zipfile)
+  		FileUtils.rm_rf(announcement_directory)
+  		FileUtils.mkdir(announcement_directory)
   		manifest = course.open_file("imsmanifest.xml")
   		Blacklight.parse_manifest(manifest, course)
-  		course.output_to_dir(output_folder)
+  		course.output_to_dir(output_folder, announcement_directory)
   	end
+  	FileUtils.rm_rf(announcement_directory)
   end
 
 

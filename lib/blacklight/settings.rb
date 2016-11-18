@@ -33,6 +33,7 @@ module Blacklight
   end
 
   def self.iterate_blog(xml_data, course)
+  	# this is only supported with 3rd party integration at this point so just storing
   	values = {}
   	id = xml_data.attributes["id"].value
   	values[id] = {}
