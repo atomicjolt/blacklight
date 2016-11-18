@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 require "optparse"
 require "ostruct"
 require "nokogiri"
@@ -16,10 +15,10 @@ module Blacklight
   end
 
   def self.validates_source_directory(directory)
-    begin
-      dir_location = set_correct_dir_location(directory)
-    rescue
-     raise Exceptions::BadFileNameError
+    if directory_exists?(directory)
+      set_correct_dir_location(directory)
+    else
+      raise Exceptions::BadFileNameError
     end
   end
 
@@ -28,18 +27,18 @@ module Blacklight
   end
 
   def self.set_correct_dir_location(dir_location)
-    dir_location = dir_location + "/" unless dir_location[dir_location.length-1] == "/"
+    dir_location = dir_location + "/" unless dir_location[dir_location.length - 1] == "/"
     dir_location
   end
 
   def self.opens_dir(source_folder, output_folder)
-    Dir.glob(source_folder +"*.zip") do |zipfile|
-     next if zipfile == "." or zipfile == ".."
-     # do work on real items
-     course = Course.new(zipfile)
-     manifest = course.open_file("imsmanifest.xml")
-     Blacklight.parse_manifest(manifest, course)
-     course.output_to_dir(output_folder)
+    Dir.glob(source_folder + "*.zip") do |zipfile|
+      next if zipfile == "." or zipfile == ".."
+      # do work on real items
+      course = Course.new(zipfile)
+      manifest = course.open_file("imsmanifest.xml")
+      Blacklight.parse_manifest(manifest, course)
+      course.output_to_dir(output_folder)
     end
   end
 

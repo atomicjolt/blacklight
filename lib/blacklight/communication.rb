@@ -32,5 +32,4 @@ module Blacklight
     forum.discussion_type = "threaded"
     course.add_resource("discussions", forum)
   end
-
 end

@@ -2,7 +2,7 @@ module Exceptions
 
   class BadFileNameError < StandardError
 
-    def initialize(msg="Bad File Name")
+    def initialize(msg = "Bad File Name")
       super(msg)
     end
 
@@ -10,7 +10,7 @@ module Exceptions
 
   class MissingFileError < StandardError
 
-    def initialize(msg="Couldn't find file")
+    def initialize(msg = "Couldn't find file")
       super(msg)
     end
 
