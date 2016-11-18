@@ -3,30 +3,30 @@ require_relative "exceptions"
 module Blacklight
 
 	FUNCTION_TYPE_CALL = {
-	  "course": :iterate_course,
-	  "groups": :iterate_groups,
-	  "blog": :iterate_blog,
-	  "announcement": :iterate_announcement,
-	  "forum": :iterate_forum,
+	  course: :iterate_course,
+	  groups: :iterate_groups,
+	  blog: :iterate_blog,
+	  announcement: :iterate_announcement,
+	  forum: :iterate_forum,
 
-	  "categories": :iterate_categories,
-	  "itemcategories": :iterate_itemcategories,
-	  "questestinterop": :iterate_questestinterop,
-	  "staffinfo": :iterate_staffinfo,
-	  "coursemodulepages": :iterate_coursemodulepages,
-	  "content": :iterate_content,
-	  "groupcontentlist": :iterate_groupcontentlist,
-	  "learnrubrics": :iterate_learnrubrics,
-	  "gradebook": :iterate_gradebook,
-	  "courseassessment": :iterate_courseassessment,
-	  "collabsessions": :iterate_collabsessions,
-	  "link": :iterate_link,
-	  "cms_resource_link_list": :iterate_resource_link_list,
-	  "courserubricassociations": :iterate_courserubricassociations,
-	  "partentcontextinfo": :iterate_parentcontextinfo,
-	  "notificationrules": :iterate_notificationrules,
-	  "wiki": :iterate_wiki,
-	  "safeassign": :iterate_safeassign
+	  categories: :iterate_categories,
+	  itemcategories: :iterate_itemcategories,
+	  questestinterop: :iterate_questestinterop,
+	  staffinfo: :iterate_staffinfo,
+	  coursemodulepages: :iterate_coursemodulepages,
+	  content: :iterate_content,
+	  groupcontentlist: :iterate_groupcontentlist,
+	  learnrubrics: :iterate_learnrubrics,
+	  gradebook: :iterate_gradebook,
+	  courseassessment: :iterate_courseassessment,
+	  collabsessions: :iterate_collabsessions,
+	  link: :iterate_link,
+	  cms_resource_link_list: :iterate_resource_link_list,
+	  courserubricassociations: :iterate_courserubricassociations,
+	  partentcontextinfo: :iterate_parentcontextinfo,
+	  notificationrules: :iterate_notificationrules,
+	  wiki: :iterate_wiki,
+	  safeassign: :iterate_safeassign
 	};
 
 	def self.parse_manifest(manifest, course)
