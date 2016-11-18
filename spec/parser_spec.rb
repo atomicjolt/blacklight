@@ -21,7 +21,7 @@ describe Blacklight do
   describe "#set_correct_dir_location" do
     it "should return file ending in /" do
       pathname = "/path/to/dir"
-      assert_equal Blacklight.set_correct_dir_location(pathname), pathname+"/"
+      assert_equal Blacklight.set_correct_dir_location(pathname), pathname + "/"
     end
 
     it "should return file ending in /" do
@@ -37,5 +37,4 @@ describe Blacklight do
       assert_equal Blacklight.opens_dir(source_dir, output_dir), nil
     end
   end
-
 end
