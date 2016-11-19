@@ -39,7 +39,7 @@ describe Blacklight do
         name = "identification"
         value = "RandomID23joirjeowijafoi"
         @course.set_values(name, value)
-        canvas_course = @course.instance_variable_get :@canvas_course
+        canvas_course = @course.instance_variable_get :@canvas
         assert_equal canvas_course.send(name.to_sym), value
       end
 
@@ -50,7 +50,7 @@ describe Blacklight do
         name2 = "title"
         value2 = "The Randomest Course"
         @course.set_values(name2, value2)
-        canvas_course = @course.instance_variable_get :@canvas_course
+        canvas_course = @course.instance_variable_get :@canvas
         assert_equal canvas_course.send(name.to_sym), value
         assert_equal canvas_course.send(name2.to_sym), value2
       end
