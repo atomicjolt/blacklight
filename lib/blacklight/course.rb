@@ -33,7 +33,7 @@ module Blacklight
     end
 
     def set_values(name, value)
-      @canvas.send(name + "=", value)
+      @canvas.send("#{name}=", value)
     end
 
     def add_resource(name, resource)

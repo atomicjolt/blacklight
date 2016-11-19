@@ -49,7 +49,7 @@ module Blacklight
   end
 
   def self.create_random_hex
-    "i" + SecureRandom.hex
+    SecureRandom.hex
   end
 
   def self.get_attribute_value(xml_data, type)
