@@ -13,7 +13,7 @@ module Blacklight
     def initialize(zip_path)
       @name = zip_path.split("/").last.gsub(".zip", "")
       @zip_file = Zip::File.open(zip_path)
-      @canvas_course = CanvasCc::CanvasCC::Models::Course.new
+      @canvas = CanvasCc::CanvasCC::Models::Course.new
       @values = {}
       set_values("course_code", @name)
     end
@@ -33,16 +33,16 @@ module Blacklight
     end
 
     def set_values(name, value)
-      @canvas_course.send(name + "=", value)
+      @canvas.send(name + "=", value)
     end
 
     def add_resource(name, resource)
-      @canvas_course.send(name.to_sym) << resource
+      @canvas.send(name.to_sym) << resource
     end
 
-    def output_to_dir(output_folder)
-      output_dir = CanvasCc::CanvasCC::CartridgeCreator.new(@canvas_course).create(output_folder)
-      original_name = switch_file_name(output_dir)
+    def output_to_dir(folder)
+      out_dir = CanvasCc::CanvasCC::CartridgeCreator.new(@canvas).create(folder)
+      original_name = switch_file_name(out_dir)
       puts "Created a file in #{original_name}"
     end
 

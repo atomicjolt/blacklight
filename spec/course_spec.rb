@@ -58,7 +58,7 @@ describe Blacklight do
 
     describe "output_to_dir" do
       it "should output file to outputs directory" do
-        #TODO
+        # TODO
       end
     end
 
