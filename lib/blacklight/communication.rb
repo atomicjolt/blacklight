@@ -15,7 +15,7 @@ module Blacklight
   def self.iterate_announcement(xml_data, course)
     dates = xml_data.children.at("DATES")
     announcement = CanvasCc::CanvasCC::Models::Announcement.new
-    announcement.text = get_text(xml_data)
+    announcement.text = get_text(xml_data, "TEXT")
     announcement.title = get_attribute_value(xml_data, "TITLE")
     announcement.delayed_post = get_attribute_value(dates, "RESTRICTSTART")
     announcement.posted_at = get_attribute_value(dates, "CREATED")
@@ -28,7 +28,7 @@ module Blacklight
     forum = CanvasCc::CanvasCC::Models::Discussion.new
     forum.identifier = create_random_hex
     forum.title = get_attribute_value(xml_data, "TITLE")
-    forum.text = get_text(xml_data)
+    forum.text = get_text(xml_data, "TEXT")
     forum.discussion_type = "threaded"
     course.add_resource("discussions", forum)
   end

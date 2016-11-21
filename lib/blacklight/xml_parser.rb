@@ -52,14 +52,26 @@ module Blacklight
   end
 
   def self.get_attribute_value(xml_data, type)
-    xml_data.children.at(type).attributes["value"].value
+    value = ""
+    if xml_data.children.at(type).attributes["value"]
+      value = xml_data.children.at(type).attributes["value"].value
+    end
+    value
   end
 
-  def self.get_text(xml_data)
-    xml_data.children.at("DESCRIPTION").children.at("TEXT").text
+  def self.get_text(xml_data, type)
+    value = ""
+    if xml_data.children.at(type)
+      value = xml_data.children.at(type).text
+    end
+    value
   end
 
   def self.get_description(xml_data)
-    xml_data.children.at("DESCRIPTION").text
+    value = ""
+    if xml_data.children.at("DESCRIPTION")
+      value = xml_data.children.at("DESCRIPTION").text
+    end
+    value
   end
 end
