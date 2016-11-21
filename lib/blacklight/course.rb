@@ -2,9 +2,7 @@ require "canvas_cc"
 require "fileutils"
 require_relative "exceptions"
 
-
 module Blacklight
-
   class Course
     ##
     # This class represents a reader for one zip file, and allows the usage of
@@ -52,7 +50,5 @@ module Blacklight
       File.rename(canvas_name, original_name)
       original_name
     end
-
   end
-
 end

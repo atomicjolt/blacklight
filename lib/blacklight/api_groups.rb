@@ -1,7 +1,6 @@
 require_relative "exceptions"
 
 module Blacklight
-
   def self.iterate_groups(xml_data, course)
     # can't do with canvas_cc as far as I know might need
     # to do it through the api just storing for now
@@ -27,7 +26,4 @@ module Blacklight
     values[id]["is_public"] = data.at("ISAVAILABLE").attributes["value"].value
     course.add_to_values("blogs", values)
   end
-
-
-
 end

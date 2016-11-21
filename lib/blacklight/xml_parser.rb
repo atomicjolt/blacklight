@@ -1,7 +1,6 @@
 require_relative "exceptions"
 
 module Blacklight
-
   FUNCTION_TYPE_CALL = {
     course: :iterate_course,
     groups: :iterate_groups,
@@ -63,6 +62,4 @@ module Blacklight
   def self.get_description(xml_data)
     xml_data.children.at("DESCRIPTION").text
   end
-
-
 end

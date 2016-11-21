@@ -6,6 +6,4 @@ require "blacklight/communication"
 require "blacklight/api_groups"
 
 module Blacklight
-
-
 end

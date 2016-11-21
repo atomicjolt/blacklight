@@ -11,14 +11,16 @@ Gem::Specification.new do |spec|
   spec.authors       = "Atomic Jolt"
 
   spec.summary       = "Converts Blackboard zip file to Canvas Common Cartridge"
-  spec.description   = "Commandline tool that convert blackboard course export to canvas imscc file"
+  spec.description   = "Commandline tool for converting blackboard to canvas"
   spec.homepage      = "https://github.com/atomicjolt/blacklight"
   spec.license       = "MIT"
   spec.extra_rdoc_files = ["README.md"]
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.files         = `git ls-files -z`.split("\x0").
+    reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.executables   = spec.files.
+    grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.12"
@@ -30,6 +32,6 @@ Gem::Specification.new do |spec|
   [
     ["rubyzip", "~> 1.1"],
     ["nokogiri", "~> 1.6.6"],
-    ["fileutils"]
+    ["fileutils"],
   ].each { |d| spec.add_runtime_dependency(*d) }
 end

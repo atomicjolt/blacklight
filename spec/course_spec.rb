@@ -5,7 +5,6 @@ require "pry"
 include Blacklight
 
 describe Blacklight do
-
   describe "Course" do
     before do
       @file_path = File.expand_path("../fixtures/", __FILE__) + "/test.zip"
@@ -25,7 +24,6 @@ describe Blacklight do
         assert_equal (canvas_course.is_a? Object), true
       end
     end
-
 
     describe "open_file" do
       it "should return with an error" do

@@ -5,7 +5,6 @@ require "pry"
 include Blacklight
 
 describe Blacklight do
-
   describe "directory_exists?" do
     it "should not exist" do
       pathname = "/path/to/dir"
