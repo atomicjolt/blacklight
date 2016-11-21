@@ -7,7 +7,6 @@ require "zip"
 require_relative "exceptions"
 
 module Blacklight
-
   def self.parse(args)
     source_directory = validates_source_directory(args[0])
     output_directory = args[1]
@@ -43,7 +42,4 @@ module Blacklight
       course.output_to_dir(output_folder)
     end
   end
-
-
-
 end

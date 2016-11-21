@@ -2,5 +2,5 @@
 
 require "blacklight"
 
-#ruby -Ilib ./bin/import_blackboard ~/blackboard
-config = Blacklight.parse ARGV
+# ruby -Ilib ./bin/import_blackboard ~/blackboard
+Blacklight.parse ARGV
