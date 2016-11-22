@@ -1,8 +1,6 @@
 require "blacklight/version"
-require "blacklight/course"
 require "blacklight/xml_parser"
-require "blacklight/communication"
-require "blacklight/api_groups"
+require "canvas_cc"
 require "optparse"
 require "ostruct"
 require "nokogiri"
@@ -38,13 +36,46 @@ module Blacklight
   end
 
   def self.opens_dir(source_folder, output_folder)
-    Dir.glob(source_folder + "*.zip") do |zipfile|
-      next if zipfile == "." || zipfile == ".."
+    Dir.glob(source_folder + "*.zip") do |zip_path|
+      next if zip_path == "." || zip_path == ".."
       # do work on real items
-      course = Course.new(zipfile)
-      manifest = course.open_file("imsmanifest.xml")
-      Blacklight.parse_manifest(manifest, course)
-      course.output_to_dir(output_folder)
+      zip_name = zip_path.split("/").last.gsub(".zip", "")
+      zip_file = Zip::File.open(zip_path)
+      manifest = open_file(zip_file, "imsmanifest.xml")
+      resources = Blacklight.parse_manifest(zip_file, manifest)
+      course = create_canvas_course(resources, zip_name)
+      output_to_dir(course, output_folder, zip_name)
     end
+  end
+
+  def self.open_file(zip_file, file_name)
+    puts "Opening #{file_name}"
+    begin
+      zip_file.find_entry(file_name).get_input_stream.read
+    rescue NoMethodError
+      raise Exceptions::MissingFileError
+    end
+  end
+
+  def self.output_to_dir(course, folder, zip_name)
+    out_dir = CanvasCc::CanvasCC::CartridgeCreator.new(course).create(folder)
+    original_name = switch_file_name(out_dir, zip_name)
+    puts "Created a file in #{original_name}"
+  end
+
+  def self.switch_file_name(canvas_name, zip_name)
+    name = canvas_name.split("/").last.gsub(".imscc", "")
+    original_name = canvas_name.gsub(name, zip_name)
+    File.rename(canvas_name, original_name)
+    original_name
+  end
+
+  def self.create_canvas_course(resources, zip_name)
+    course = CanvasCc::CanvasCC::Models::Course.new
+    course.course_code = zip_name
+    resources.each do |resource|
+      course = resource.canvas_conversion(course)
+    end
+    course
   end
 end
