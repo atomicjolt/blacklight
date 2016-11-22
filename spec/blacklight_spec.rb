@@ -36,4 +36,30 @@ describe Blacklight do
       assert_equal Blacklight.opens_dir(source_dir, output_dir), nil
     end
   end
+
+  describe "open_file" do
+    it "should return with an error" do
+      file_path = File.expand_path("../fixtures/", __FILE__) + "/test.zip"
+      err = assert_raises(Exception) { Blacklight.open_file(file_path, "") }
+      assert_match /Couldn't find file/, err.message
+    end
+  end
+
+  describe "switch_file_name" do
+    before do
+      @file_name = "test"
+      @file_path = File.expand_path("../fixtures/", __FILE__) +
+        "/#{@file_name}.zip"
+    end
+
+    it "should switch out file name" do
+      original_name = ""
+      name = "/this_name.imscc"
+      canvas_path = File.expand_path("../fixtures/", __FILE__) + name
+      File.stub :rename, canvas_path do
+        original_name = Blacklight.switch_file_name(canvas_path, @file_name)
+      end
+      assert_equal @file_path.gsub(".zip", ".imscc"), original_name
+    end
+  end
 end
