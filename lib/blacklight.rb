@@ -42,7 +42,10 @@ module Blacklight
       zip_name = zip_path.split("/").last.gsub(".zip", "")
       zip_file = Zip::File.open(zip_path)
       manifest = open_file(zip_file, "imsmanifest.xml")
+
       resources = Blacklight.parse_manifest(zip_file, manifest)
+      resources.concat(Blacklight.iterate_files(zip_file))
+
       course = create_canvas_course(resources, zip_name)
       output_to_dir(course, output_folder, zip_name)
     end

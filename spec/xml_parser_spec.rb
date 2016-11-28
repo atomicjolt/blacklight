@@ -4,6 +4,23 @@ require "pry"
 
 include Blacklight
 
+class MockZip
+  class MockEntry
+    attr_accessor(:name)
+    def initialize(name = "fake/path__xid-12.jpg")
+      @name = name
+    end
+  end
+
+  def initialize(entries = nil)
+    @entries = entries || [MockEntry.new, MockEntry.new, MockEntry.new]
+  end
+
+  def entries
+    @entries
+  end
+end
+
 describe Blacklight do
   describe "create_random_hex" do
     it "should return a random string" do
@@ -166,6 +183,16 @@ describe Blacklight do
       end.to_xml
       xml_data = Nokogiri::XML.parse(xml_content)
       assert_equal Blacklight.get_description(xml_data), description
+    end
+  end
+
+  describe "iterate_files" do
+    it "should return array of files" do
+      result = Blacklight.iterate_files(MockZip.new)
+      assert_equal(result.size, 3)
+      assert_equal(result.first.id, "xid-12")
+      assert_equal(result.first.name, "path__xid-12.jpg")
+      assert_equal(result.first.location, "fake/path__xid-12.jpg")
     end
   end
 end

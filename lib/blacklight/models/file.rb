@@ -1,3 +1,4 @@
+require "blacklight/exceptions"
 module Blacklight
   class BlacklightFile
     attr_accessor(:id, :location, :name)
@@ -11,9 +12,8 @@ module Blacklight
 
     def initialize(path)
       name = File.basename(path)
-
-      id = name.scan(/__xid-([0-9]+)/).first
-      throw BadFileNameError.new unless id.size == 1
+      id = name.scan(/__(xid-[0-9]+)/).first
+      throw Exceptions::BadFileNameError.new unless id && id.size == 1
 
       @location = path # Location of file on local filesystem
       @name = name

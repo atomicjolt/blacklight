@@ -9,7 +9,7 @@ describe "Content" do
     path = "fake/path/to/file__xid-1234.txt"
     file = Blacklight::BlacklightFile.new(path)
 
-    assert_equal(file.id, "1234")
+    assert_equal(file.id, "xid-1234")
     assert_equal(file.name, File.basename(path))
     assert_equal(file.location, path)
   end
