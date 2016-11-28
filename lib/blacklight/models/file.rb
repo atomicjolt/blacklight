@@ -3,13 +3,6 @@ module Blacklight
   class BlacklightFile
     attr_accessor(:id, :location, :name)
 
-    # def iterate_xml(xml)
-      # @title = xml.xpath("/CONTENT/TITLE/@value").first.text
-      # @body = xml.xpath("/CONTENT/BODY/TEXT").first.text
-      # @id = xml.xpath("/CONTENT/@id").first.text
-      # @files = []
-    # end
-
     def initialize(path)
       name = File.basename(path)
       id = name.scan(/__(xid-[0-9]+)/).first
@@ -20,7 +13,15 @@ module Blacklight
       @id = id.first
     end
 
-    def canvas_conversion
+    def canvas_conversion(course)
+      file = CanvasCc::CanvasCC::Models::CanvasFile.new
+      file.identifier = @id
+      file.file_location = @location
+      file.file_path = @name
+      file.hidden = false
+
+      course.files << file
+      course
     end
   end
 end
