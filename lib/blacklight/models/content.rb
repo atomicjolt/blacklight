@@ -21,6 +21,7 @@ module Blacklight
       xml.xpath("//FILES/FILE").each do |file|
         @files << ContentFile.new(file)
       end
+      self 
     end
 
     def canvas_conversion(course)

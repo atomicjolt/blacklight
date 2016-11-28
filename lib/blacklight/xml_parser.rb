@@ -4,13 +4,14 @@ require "blacklight/models/blog"
 require "blacklight/models/announcement"
 require "blacklight/models/forum"
 require "blacklight/models/file"
+require "blacklight/models/content"
 require_relative "exceptions"
 
 module Blacklight
   RESOURCE_TYPE = {
     groups: "Group",
     blog: "Blog",
-    announcement: "Announcement",
+    # announcement: "Announcement",
     forum: "Forum",
     course: "Course",
     content: "Content"
@@ -34,6 +35,8 @@ module Blacklight
     # wiki: :iterate_wiki,
     # safeassign: :iterate_safeassign,
   }.freeze
+
+  COURSE_FILES_PATH = "csfiles/home_dir"
 
   def self.parse_manifest(zip_file, manifest)
     doc = Nokogiri::XML.parse(manifest)
@@ -63,7 +66,8 @@ module Blacklight
   def self.iterate_files(zip_file)
     resources_array = []
 
-    zip_file.entries.each do |entry|
+    course_files = zip_file.entries.select{|i| i.name.include? COURSE_FILES_PATH}
+    course_files.entries.each do |entry|
       resources_array.push(BlacklightFile.new(entry.name))
     end
 
