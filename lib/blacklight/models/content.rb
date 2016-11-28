@@ -23,7 +23,14 @@ module Blacklight
       end
     end
 
-    def canvas_conversion
+    def canvas_conversion(course)
+      page = CanvasCc::CanvasCC::Models::Page.new
+      page.body = @body
+      page.identifier = @id
+      page.page_name = @title
+
+      course.pages << page
+      course
     end
   end
 end
