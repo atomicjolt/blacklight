@@ -18,6 +18,7 @@ describe "Content" do
     assert_equal(content.id, content_id)
     assert_equal(content.title, content_title)
     assert_equal(content.body, content_body)
-    assert_equal(content.files, ["_2030185_1"])
+    assert_equal(content.files.length, 1)
+    assert_equal(content.files.first.id, "_2030185_1")
   end
 end
