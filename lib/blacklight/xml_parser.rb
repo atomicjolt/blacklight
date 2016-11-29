@@ -65,10 +65,9 @@ module Blacklight
 
   def self.iterate_files(zip_file)
     resources_array = []
-
     course_files = zip_file.entries.select{|i| i.name.include? COURSE_FILES_PATH}
     course_files.entries.each do |entry|
-      resources_array.push(BlacklightFile.new(entry.name))
+      resources_array.push(BlacklightFile.new(entry))
     end
 
     resources_array

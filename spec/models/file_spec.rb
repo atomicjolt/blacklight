@@ -2,12 +2,14 @@ require "minitest/autorun"
 require "blacklight"
 require "pry"
 
+require_relative "../mocks/mockzip"
 require_relative "../../lib/blacklight/models/file"
 
 describe "Content" do
   it "should iterate_xml" do
     path = "fake/path/to/file__xid-1234.txt"
-    file = Blacklight::BlacklightFile.new(path)
+    entry = MockZip::MockEntry.new(path)
+    file = Blacklight::BlacklightFile.new(entry)
 
     assert_equal(file.id, "xid-1234")
     assert_equal(file.name, File.basename(path))
@@ -16,7 +18,8 @@ describe "Content" do
 
   it "should convert to canvas file " do
     path = "fake/path/to/file__xid-1234.txt"
-    file = Blacklight::BlacklightFile.new(path)
+    entry = MockZip::MockEntry.new(path)
+    file = Blacklight::BlacklightFile.new(entry)
     course = CanvasCc::CanvasCC::Models::Course.new
 
     result = file.canvas_conversion(course)
