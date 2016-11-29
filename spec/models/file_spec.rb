@@ -13,7 +13,7 @@ describe "Content" do
 
     assert_equal(file.id, "xid-1234")
     assert_equal(file.name, File.basename(path))
-    assert_equal(file.location, path)
+    assert_includes(file.location, path)
   end
 
   it "should convert to canvas file " do

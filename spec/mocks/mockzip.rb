@@ -4,6 +4,9 @@ class MockZip
     def initialize(name = "fake/path__xid-12.jpg")
       @name = name
     end
+
+    def extract(dummy = nil)
+    end
   end
 
   def initialize(entries = nil)

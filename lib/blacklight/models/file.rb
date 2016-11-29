@@ -9,22 +9,20 @@ module Blacklight
       id = name.scan(/__(xid-[0-9]+)/).first
       throw Exceptions::BadFileNameError.new unless id && id.size == 1
 
-      @location = path # Location of file on local filesystem
+      @location = extract_file(zip_entry) # Location of file on local filesystem
       @name = name
       @id = id.first
     end
 
-    # def extract_file(entry)
-      # @@dir ||= Dir.mktmpdir
+    def extract_file(entry)
+      @@dir ||= Dir.mktmpdir
 
-      # FileUtils.mkdir_p (dir+'/csfiles/home_dir/')
-      # Dir.exist?(dir+'/csfiles/home_dir/')
-        # name = "#{@@dir}/#{e.name}"
-        # path = File.dirname(name)
-        #
-        # FileUtils.mkdir_p (path) unless Dir.exist? path
-        # e.extract(name)
-      # end
+      name = "#{@@dir}/#{entry.name}"
+      path = File.dirname(name)
+      FileUtils.mkdir_p (path) unless Dir.exist? path
+      entry.extract(name)
+      name
+    end
 
     def canvas_conversion(course)
       file = CanvasCc::CanvasCC::Models::CanvasFile.new
@@ -37,6 +35,9 @@ module Blacklight
       course
     end
 
-    # TODO add a cleanup method to delete course temp directory
+    def self.cleanup
+      # TODO add a cleanup method to delete course temp directory
+    end
+
   end
 end
