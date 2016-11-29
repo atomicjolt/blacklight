@@ -6,12 +6,12 @@ module Blacklight
     def initialize(zip_entry)
       path = zip_entry.name
       name = File.basename(path)
-      id = name.scan(/__(xid-[0-9]+)/).first
-      throw Exceptions::BadFileNameError.new unless id && id.size == 1
+      # id = name.scan(/__(xid-[0-9]+)/).first
+      # throw Exceptions::BadFileNameError.new unless id && id.size == 1
 
       @location = extract_file(zip_entry) # Location of file on local filesystem
-      @name = name
-      @id = id.first
+      @name = name # NOTE name and ID are now the same thing, consider removing name
+      @id = name
     end
 
     def extract_file(entry)

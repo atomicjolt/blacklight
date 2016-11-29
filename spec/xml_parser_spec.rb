@@ -179,8 +179,7 @@ describe Blacklight do
 
       result = Blacklight.iterate_files(MockZip.new(mock_entries))
       assert_equal(result.size, 2)
-      assert_equal(result.first.id, "xid-12")
-      assert_equal(result.first.name, "test__xid-12.jpg")
+      assert_equal(result.first.id, "test__xid-12.jpg")
       assert_includes(result.first.location, "csfiles/home_dir/test__xid-12.jpg")
     end
   end
