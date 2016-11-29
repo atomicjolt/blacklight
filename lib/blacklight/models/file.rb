@@ -6,11 +6,10 @@ module Blacklight
     def initialize(zip_entry)
       path = zip_entry.name
       id = File.basename(path)
-      # id = name.scan(/__(xid-[0-9]+)/).first
-      # throw Exceptions::BadFileNameError.new unless id && id.size == 1
       name = id.gsub(/__xid-[0-9]+_[0-9]+/, "")
+
       @location = extract_file(zip_entry) # Location of file on local filesystem
-      @name = name # NOTE name and ID are now the same thing, consider removing name
+      @name = name
       @id = id
     end
 
@@ -19,7 +18,7 @@ module Blacklight
 
       name = "#{@@dir}/#{entry.name}"
       path = File.dirname(name)
-      FileUtils.mkdir_p (path) unless Dir.exist? path
+      FileUtils.mkdir_p path unless Dir.exist? path
       entry.extract(name)
       name
     end
@@ -38,6 +37,5 @@ module Blacklight
     def self.cleanup
       # TODO add a cleanup method to delete course temp directory
     end
-
   end
 end
