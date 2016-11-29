@@ -63,6 +63,7 @@ module Blacklight
   def self.output_to_dir(course, folder, zip_name)
     out_dir = CanvasCc::CanvasCC::CartridgeCreator.new(course).create(folder)
     original_name = switch_file_name(out_dir, zip_name)
+    cleanup
     puts "Created a file in #{original_name}"
   end
 
@@ -71,6 +72,13 @@ module Blacklight
     original_name = canvas_name.gsub(name, zip_name)
     File.rename(canvas_name, original_name)
     original_name
+  end
+
+  ##
+  # Perform any necessary cleanup from creating canvas cartridge
+  ##
+  def self.cleanup
+    BlacklightFile.cleanup
   end
 
   def self.create_canvas_course(resources, zip_name)

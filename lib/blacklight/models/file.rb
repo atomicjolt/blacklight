@@ -34,8 +34,11 @@ module Blacklight
       course
     end
 
+    ##
+    # Remove temporary files
+    ##
     def self.cleanup
-      # TODO add a cleanup method to delete course temp directory
+      FileUtils.rm_r @@dir unless @@dir.nil?
     end
   end
 end

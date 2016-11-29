@@ -1,5 +1,4 @@
 module Blacklight
-
   class ContentFile
     attr_accessor(:id, :name, :linkname)
 
@@ -35,7 +34,7 @@ module Blacklight
       page.page_name = @title
 
       # Add page links to page body
-      @files.each {|f| page.body << f.canvas_conversion}
+      @files.each { |f| page.body << f.canvas_conversion }
 
       course.pages << page
       course

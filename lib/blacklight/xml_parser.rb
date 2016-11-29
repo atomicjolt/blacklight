@@ -36,8 +36,6 @@ module Blacklight
     # safeassign: :iterate_safeassign,
   }.freeze
 
-  COURSE_FILES_PATH = "csfiles/home_dir"
-
   def self.parse_manifest(zip_file, manifest)
     doc = Nokogiri::XML.parse(manifest)
     resources = doc.xpath("//*[resource]")
@@ -65,8 +63,7 @@ module Blacklight
 
   def self.iterate_files(zip_file)
     resources_array = []
-    course_files = zip_file.entries.select{|i| i.name.include? COURSE_FILES_PATH}
-    course_files.entries.each do |entry|
+    zip_file.entries.each do |entry|
       resources_array.push(BlacklightFile.new(entry))
     end
 
