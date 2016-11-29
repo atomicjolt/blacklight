@@ -5,7 +5,7 @@ require "pry"
 require_relative "../mocks/mockzip"
 require_relative "../../lib/blacklight/models/file"
 
-describe "Content" do
+describe "BlacklightFile" do
   it "should iterate_xml" do
     path = "fake/path/to/file__xid-1234.txt"
     entry = MockZip::MockEntry.new(path)

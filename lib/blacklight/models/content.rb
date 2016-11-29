@@ -8,6 +8,10 @@ module Blacklight
       @name = xml.xpath('./NAME').first.text
       @linkname = xml.xpath('./LINKNAME/@value').first.text
     end
+
+    def canvas_conversion
+      "<a href='$IMS_CC_FILEBASE$/#{@linkname}'>#{@linkname}</a>"
+    end
   end
 
   class Content
@@ -21,7 +25,7 @@ module Blacklight
       xml.xpath("//FILES/FILE").each do |file|
         @files << ContentFile.new(file)
       end
-      self 
+      self
     end
 
     def canvas_conversion(course)
