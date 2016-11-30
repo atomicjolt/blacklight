@@ -3,5 +3,5 @@ def get_fixture(name)
 end
 
 def get_fixture_xml(name)
- Nokogiri::XML(get_fixture(name))
+  Nokogiri::XML(get_fixture(name))
 end

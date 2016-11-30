@@ -3,9 +3,9 @@ module Blacklight
     attr_accessor(:id, :name, :linkname)
 
     def initialize(xml)
-      @id = xml.xpath('./@id').first.text
-      @name = xml.xpath('./NAME').first.text
-      @linkname = xml.xpath('./LINKNAME/@value').first.text
+      @id = xml.xpath("./@id").first.text
+      @name = xml.xpath("./NAME").first.text
+      @linkname = xml.xpath("./LINKNAME/@value").first.text
     end
 
     def canvas_conversion
