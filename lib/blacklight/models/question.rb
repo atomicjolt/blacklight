@@ -6,11 +6,11 @@ module Blacklight
       "Multiple Choice" => "multiple_choice_question",
       "Multiple Answer" => "multiple_answers_question",
       "Matching" => "matching_question",
-      "Fill in the Blank" => "essay_question",
+      "Fill in the Blank" => "short_answer_question",
       "Fill in the Blank Plus" => "fill_in_multiple_blanks_question",
       "File Upload" => "file_upload_question",
       "Essay" => "essay_question",
-      "Calculated" => "formula_question",
+      "Calculated" => "short_answer_question",
       "Jumbled Sentence" => "multiple_dropdowns_question",
       "Either/Or" => "multiple_choice_question",
       "Hot Spot" => "text_only_question",
@@ -69,44 +69,44 @@ module Blacklight
       @blackboard_type = data.children.at("bbmd_questiontype").text
       @question_type = QUESTION_TYPE[@blackboard_type]
       @points_possible = data.children.at("qmd_absolutescore_max").text
-      @general_feedback = data.children.at("qmd_instructornotes").text
       @title = data.attributes["title"].value
       iterate_item(data)
       self
     end
 
     def canvas_conversion(assessment)
-      unless @question_type == "multiple_dropdowns_question"
-        @question = CanvasCc::CanvasCC::Models::Question.create(@question_type)
-        @question.identifier = Blacklight.create_random_hex
-        @question.title = @title
-        @question.points_possible = @points_possible
-        @question.material = @material
-        if @question_type == "numerical_question"
-          @question.tolerances = @tolerances
-          @question.ranges = @ranges
-        end
-        @question.general_feedback = @general_feedback
-        @question.general_correct_feedback = @general_correct_feedback
-        @question.general_incorrect_feedback = @general_incorrect_feedback
-        @question.answers = []
-        @answers.each do |answer|
-          @question = answer.canvas_conversion(@question)
-        end
-        assessment.items << @question
+      @question = CanvasCc::CanvasCC::Models::Question.create(@question_type)
+      @question.identifier = Blacklight.create_random_hex
+      @question.title = stripe_html(@title)
+      @question.points_possible = @points_possible
+      @question.material = stripe_html(@material)
+      @question.general_feedback = stripe_html(@general_feedback)
+      @general_correct_feedback = stripe_html(@general_correct_feedback)
+      @question.general_correct_feedback = @general_correct_feedback
+      @general_incorrect_feedback = stripe_html(@general_incorrect_feedback)
+      @question.general_incorrect_feedback = @general_incorrect_feedback
+      @question.answers = []
+      @answers.each do |answer|
+        @question = answer.canvas_conversion(@question)
       end
+      assessment.items << @question
       assessment
     end
 
-    def get_fraction(answer_text)
-      if @correct_answers.empty? && @incorrect_answers.empty?
-        if answer_text == @correct_answers["name"]
-          @correct_answers["fraction"]
-        else
-          @incorrect_answers["fraction"]
-        end
+    def stripe_html(contents)
+      if contents && !contents.empty?
+        Nokogiri::HTML(contents).text
+      else
+        contents
       end
-      @max_score
+    end
+
+    def get_fraction(answer_text)
+      if @correct_answers && answer_text == @correct_answers["name"]
+        @correct_answers["fraction"].to_f
+      else
+        @incorrect_answers["fraction"].to_f
+      end
     end
 
     def set_answers(resprocessing)
@@ -122,7 +122,7 @@ module Blacklight
         end
         score = correct.search("setvar") ? correct.search("setvar").text : 0
         score_number = score == "SCORE.max" ? @max_score.to_f : score.to_f
-        if score_number
+        if score_number > 0
           @correct_answers["fraction"] = score_number.to_f / @max_score.to_f
         else
           @correct_answers["fraction"] = 0
@@ -138,7 +138,7 @@ module Blacklight
         end
         score = incorrect.search("setvar") ? incorrect.search("setvar").text : 0
         score_number = score == "SCORE.max" ? @max_score.to_f : score.to_f
-        if score_number
+        if score_number > 0
           @incorrect_answers["fraction"] = score_number.to_f / @max_score.to_f
         else
           @incorrect_answers["fraction"] = 0

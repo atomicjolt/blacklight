@@ -12,14 +12,14 @@ module Blacklight
       if match_block = data.search("flow[@class=RIGHT_MATCH_BLOCK]")[0]
         match_block.children.each do |match|
           match_text = match.children.at("mat_formattedtext").text
-          matches_array.push(Nokogiri::HTML(match_text).text)
+          matches_array.push(stripe_html(match_text))
         end
       end
       if response_block = data.search("flow[@class=RESPONSE_BLOCK]")[0]
         response_block.children.each do |response|
           id = response.children.at("response_lid").attributes["ident"].value
           response_text = response.children.at("mat_formattedtext").text
-          question = Nokogiri::HTML(response_text).text
+          question = stripe_html(response_text)
           answer_id = @matching_answers[id]
           answer = ""
           flow_label = response.children.at("flow_label")
@@ -36,19 +36,21 @@ module Blacklight
 
     def canvas_conversion(assessment)
       super
-      if @question_type == "matching_question"
-        @question.matches = @matches
-      end
+      @question.matches = @matches
       assessment
     end
 
     def process_response(resprocessing)
       super
       respcondition = resprocessing.css("respcondition")
-      varequal = respcondition.children.at("varequal")
-      if varequal
-        id = varequal.attributes["respident"].value
-        @matching_answers[id] = varequal.text
+      respcondition.each do |condition|
+        if condition.attributes["title"] != "incorrect"
+          varequal = condition.children.at("varequal")
+          if varequal
+            id = varequal.attributes["respident"].value
+            @matching_answers[id] = varequal.text
+          end
+        end
       end
     end
   end

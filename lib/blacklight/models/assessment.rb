@@ -89,6 +89,7 @@ module Blacklight
       assignment.title = @title
       assignment.submission_types << "online_quiz"
       assignment.grading_type = "points"
+      assignment.workflow_state = "unpublished"
       assignment.points_possible = @points_possible
       assignment
     end

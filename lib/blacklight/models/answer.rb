@@ -1,7 +1,7 @@
 module Blacklight
   class Answer
     attr_reader :id
-    attr_accessor :fraction, :resp_ident
+    attr_accessor :fraction, :resp_ident, :feedback
 
     def initialize(text, id = nil)
       @answer_text = text
@@ -21,6 +21,8 @@ module Blacklight
       answer.answer_text = @answer_text
       answer.id = @id
       answer.fraction = @fraction
+      answer.feedback = @feedback
+      answer.resp_ident = @resp_ident
       question.answers << answer
       question
     end

@@ -7,7 +7,7 @@ module Blacklight
       @due_at = ""
       @lock_at = ""
       @unlock_at = ""
-      @workflow_state = "" # active, unpublished
+      @workflow_state = "unpublished"
       @points_possible = ""
       @assignment_group_identifier_ref = ""
       @submission_types = ""

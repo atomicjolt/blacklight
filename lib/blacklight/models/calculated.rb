@@ -6,7 +6,7 @@ module Blacklight
 
     def iterate_xml(data)
       super
-      @answer_text = Nokogiri::HTML(data.children.at("formula").text).text
+      @answer_text = data.children.at("formula").text
       answer = Answer.new(@answer_text)
       answer.fraction = 1
       @answers.push(answer)

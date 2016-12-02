@@ -2,6 +2,8 @@ module Blacklight
   class Numeric < Question
     def initialize
       super
+      @ranges = {}
+      @tolerances = {}
     end
 
     def iterate_xml(data)
@@ -16,7 +18,6 @@ module Blacklight
           text.to_i + max_difference
         @answer_text = conditionvar.search("varequal").text
         answer = Answer.new(@answer_text)
-        @tolerances = {}
         @ranges[answer.id] = range
         answer.fraction = @max_score
         @answers.push(answer)
@@ -26,6 +27,9 @@ module Blacklight
 
     def canvas_conversion(assessment)
       super
+      @question.tolerances = @tolerances
+      @question.ranges = @ranges
+      assessment
     end
 
     def process_response(resprocessing)
