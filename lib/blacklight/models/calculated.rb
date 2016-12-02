@@ -6,8 +6,8 @@ module Blacklight
 
     def iterate_xml(data)
       super
-      @answer_text = data.children.at("formula").text
-      answer = Answer.new(@answer_text)
+      answer_text = CGI.unescapeHTML(data.children.at("formula").text)
+      answer = Answer.new(answer_text)
       answer.fraction = 1
       @answers.push(answer)
       self
