@@ -8,12 +8,12 @@ module Blacklight
       @title = ""
       @description = ""
       @quiz_type = "assignment"
-      # practice_quiz, assignment, survey, graded_survey
       @points_possible = 0
       @items = []
       @group_name
       @group_id
-      @workflow_state = "unpublished"
+      @workflow_state = "published"
+      @available = true
     end
 
     def iterate_xml(data)
@@ -43,16 +43,13 @@ module Blacklight
     end
 
     def setup_assessment(assessment, assignment)
-      assessment.assignment = assignment
-      assessment.assignment_group_identifier_ref = assignment.
-        assignment_group_identifier_ref
       assessment.title = @title
       assessment.description = @description
-      assessment.workflow_state = @workflow_state
+      assessment.available = @available
       assessment.quiz_type = @quiz_type
-      assessment.assignment = assignment
       assessment.points_possible = @points_possible
       assessment = create_items(assessment)
+      assessment.assignment = assignment
       assessment
     end
 
@@ -87,9 +84,10 @@ module Blacklight
       assignment.identifier = Blacklight.create_random_hex
       assignment.assignment_group_identifier_ref = @group_id
       assignment.title = @title
+      assignment.position = 1
       assignment.submission_types << "online_quiz"
       assignment.grading_type = "points"
-      assignment.workflow_state = "unpublished"
+      assignment.workflow_state = @workflow_state
       assignment.points_possible = @points_possible
       assignment
     end
