@@ -122,7 +122,7 @@ module Blacklight
         end
         score = correct.search("setvar") ? correct.search("setvar").text : 0
         score_number = score == "SCORE.max" ? @max_score.to_f : score.to_f
-        if score_number > 0
+        if score_number.positive?
           @correct_answers["fraction"] = score_number.to_f / @max_score.to_f
         else
           @correct_answers["fraction"] = 0
@@ -138,7 +138,7 @@ module Blacklight
         end
         score = incorrect.search("setvar") ? incorrect.search("setvar").text : 0
         score_number = score == "SCORE.max" ? @max_score.to_f : score.to_f
-        if score_number > 0
+        if score_number.positive?
           @incorrect_answers["fraction"] = score_number.to_f / @max_score.to_f
         else
           @incorrect_answers["fraction"] = 0
