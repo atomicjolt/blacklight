@@ -3,15 +3,18 @@ require "blacklight/models/course"
 require "blacklight/models/blog"
 require "blacklight/models/announcement"
 require "blacklight/models/forum"
+require "blacklight/models/file"
+require "blacklight/models/content"
 require_relative "exceptions"
 
 module Blacklight
   RESOURCE_TYPE = {
     groups: "Group",
     blog: "Blog",
-    announcement: "Announcement",
+    # announcement: "Announcement",
     forum: "Forum",
     course: "Course",
+    content: "Content"
 
     # categories: :iterate_categories,
     # itemcategories: :iterate_itemcategories,
@@ -56,6 +59,15 @@ module Blacklight
       end
     end
     resources_array - ["", nil]
+  end
+
+  def self.iterate_files(zip_file)
+    resources_array = []
+    zip_file.entries.each do |entry|
+      resources_array.push(BlacklightFile.new(entry))
+    end
+
+    resources_array
   end
 
   def self.create_random_hex

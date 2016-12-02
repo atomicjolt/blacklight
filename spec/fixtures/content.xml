@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONTENT id="_2747582_1">
+  <TITLE value="IP-135"/>
+  <TITLECOLOR value="#000000"/>
+  <BODY>
+    <TEXT/>
+    <TYPE   value="S"/>
+  </BODY>
+  <DATES>
+    <CREATED value="2016-10-18 10:19:26 CDT"/>
+    <UPDATED value="2016-10-18 10:21:23 CDT"/>
+    <START   value=""/>
+    <END value=""/>
+  </DATES>
+  <FLAGS>
+    <ISAVAILABLE value="true"/>
+    <ISFROMCARTRIDGE value="false"/>
+    <ISFOLDER   value="false"/>
+    <ISDESCRIBED value="false"/>
+    <ISTRACKED value="true"/>
+    <ISLESSON value="false"/>
+    <ISSEQUENTIAL   value="false"/>
+    <ALLOWGUESTS value="true"/>
+    <ALLOWOBSERVERS value="true"/>
+    <LAUNCHINNEWWINDOW   value="true"/>
+    <ISREVIEWABLE value="false"/>
+    <ISGROUPCONTENT value="false"/>
+    <ISSAMPLECONTENT  value="false"/>
+  </FLAGS>
+  <CONTENTHANDLER value="resource/x-bb-file"/>
+  <RENDERTYPE value="REGULAR"/>
+  <URL  value=""/>
+  <VIEWMODE value="TEXT_ICON_ONLY"/>
+  <OFFLINENAME value=""/>
+  <OFFLINEPATH value=""/>
+  <LINKREF value=""/>
+  <PARENTID  value="_2747566_1"/>
+  <VERSION value="3"/>
+  <EXTENDEDDATA/>
+  <FILES>
+    <FILE id="_2030185_1">
+      <NAME>/xid-9002535_2</NAME>
+      <SIZE    value="2772200"/>
+      <FILEACTION value="EMBED"/>
+      <LINKNAME value="AY15 JAOP IP-135 Prt II, Info Ops.pdf"/>
+      <STORAGETYPE     value="CS"/>
+      <DATES>
+        <CREATED value=""/>
+        <UPDATED value="2016-10-18 10:19:27 CDT"/>
+      </DATES>
+      <REGISTRY/>
+    </FILE>
+  </FILES>
+</CONTENT>
