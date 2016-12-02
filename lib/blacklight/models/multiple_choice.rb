@@ -1,9 +1,5 @@
 module Blacklight
   class MultipleChoice < Question
-    def initialize
-      super
-    end
-
     def iterate_xml(data)
       super
       if response_block = data.children.search("flow[@class=RESPONSE_BLOCK]")
@@ -17,18 +13,6 @@ module Blacklight
         end
       end
       self
-    end
-
-    def canvas_conversion(assessment)
-      super
-    end
-
-    def process_response(resprocessing)
-      super
-    end
-
-    def set_answers(resprocessing)
-      super
     end
   end
 end

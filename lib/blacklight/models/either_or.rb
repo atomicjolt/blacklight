@@ -28,21 +28,5 @@ module Blacklight
       end
       self
     end
-
-    def get_fraction(answer_text)
-      super
-    end
-
-    def canvas_conversion(assessment)
-      super
-    end
-
-    def process_response(resprocessing)
-      super
-    end
-
-    def set_answers(resprocessing)
-      super
-    end
   end
 end

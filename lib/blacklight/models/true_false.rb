@@ -1,9 +1,5 @@
 module Blacklight
   class TrueFalse < Question
-    def initialize
-      super
-    end
-
     def iterate_xml(data)
       super
       answers_array = [true, false]
@@ -14,22 +10,6 @@ module Blacklight
         @answers.push(answer)
       end
       self
-    end
-
-    def get_fraction(answer_text)
-      super
-    end
-
-    def canvas_conversion(assessment)
-      super
-    end
-
-    def process_response(resprocessing)
-      super
-    end
-
-    def set_answers(resprocessing)
-      super
     end
   end
 end

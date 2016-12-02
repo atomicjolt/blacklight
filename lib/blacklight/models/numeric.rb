@@ -31,9 +31,5 @@ module Blacklight
       @question.ranges = @ranges
       assessment
     end
-
-    def process_response(resprocessing)
-      super
-    end
   end
 end

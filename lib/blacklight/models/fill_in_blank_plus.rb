@@ -1,9 +1,5 @@
 module Blacklight
   class FillInBlankPlus < Question
-    def initialize
-      super
-    end
-
     def iterate_xml(data)
       super
       conditionvar = data.search("resprocessing")[0].search("conditionvar")[0]
@@ -16,14 +12,6 @@ module Blacklight
         end
       end
       self
-    end
-
-    def canvas_conversion(assessment)
-      super
-    end
-
-    def process_response(resprocessing)
-      super
     end
   end
 end
