@@ -1,5 +1,5 @@
 require "require_all"
-require_all "lib/blacklight/models/*"
+require_all "lib/blacklight/models/**/*.rb"
 require_relative "exceptions"
 
 module Blacklight
