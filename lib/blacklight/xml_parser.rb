@@ -10,6 +10,7 @@ module Blacklight
     forum: "Forum",
     course: "Course",
     questestinterop: "Assessment",
+    content: "Content",
 
     # categories: :iterate_categories,
     # itemcategories: :iterate_itemcategories,
@@ -52,6 +53,15 @@ module Blacklight
       end
     end
     resources_array.flatten - ["", nil]
+  end
+
+  def self.iterate_files(zip_file)
+    resources_array = []
+    zip_file.entries.each do |entry|
+      resources_array.push(BlacklightFile.new(entry))
+    end
+
+    resources_array
   end
 
   def self.create_random_hex

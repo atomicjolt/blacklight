@@ -1,6 +1,8 @@
 require "minitest/autorun"
+
 require "blacklight"
 require "pry"
+require_relative "mocks/mockzip"
 
 include Blacklight
 
@@ -166,6 +168,23 @@ describe Blacklight do
       end.to_xml
       xml_data = Nokogiri::XML.parse(xml_content)
       assert_equal Blacklight.get_description(xml_data), description
+    end
+  end
+
+  describe "iterate_files" do
+    it "should return array of files" do
+      mock_entries = [
+        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
+        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
+      ]
+
+      result = Blacklight.iterate_files(MockZip.new(mock_entries))
+      assert_equal(result.size, 2)
+      assert_equal(result.first.id, "test__xid-12.jpg")
+      assert_includes(
+        result.first.location,
+        "csfiles/home_dir/test__xid-12.jpg",
+      )
     end
   end
 end
