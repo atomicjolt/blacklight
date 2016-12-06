@@ -37,7 +37,7 @@ module Blacklight
   }.freeze
 
   FILE_BLACK_LIST = [
-    ".dat",
+    "*.dat",
     "glossary",
     "imsmanifest.xml",
     ".bb-package-info",
@@ -70,15 +70,12 @@ module Blacklight
   end
 
   def self.black_listed?(name)
-    FILE_BLACK_LIST.each do |entry|
-      return false if name.include? entry
-    end
-    true
+    FILE_BLACK_LIST.any? { |b_list_item| File.fnmatch?(b_list_item, name) }
   end
 
   def self.iterate_files(zip_file)
     zip_file.
-      entries.select { |e| black_listed? e.name }.
+      entries.select { |e| !black_listed?(e.name) }.
       map { |entry| BlacklightFile.new(entry) }
   end
 
