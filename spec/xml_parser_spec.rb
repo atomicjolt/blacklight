@@ -191,7 +191,6 @@ describe Blacklight do
   describe "add_scorm" do
     it "should return array of resources" do
       zip = Zip::File.new("spec/fixtures/scorm_package.zip")
-
       result = Blacklight.add_scorm zip
       assert_equal(result, [1])
     end
