@@ -77,12 +77,9 @@ module Blacklight
   end
 
   def self.iterate_files(zip_file)
-    resources_array = []
-    filtered_entries = zip_file.entries.select { |e| black_listed? e.name }
-    filtered_entries.each do |entry|
-      resources_array.push(BlacklightFile.new(entry))
-    end
-    resources_array
+    zip_file.
+      entries.select { |e| black_listed? e.name }.
+      map { |entry| BlacklightFile.new(entry) }
   end
 
   def self.create_random_hex
