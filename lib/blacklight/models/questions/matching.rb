@@ -12,14 +12,14 @@ module Blacklight
       if match_block = data.search("flow[@class=RIGHT_MATCH_BLOCK]")[0]
         match_block.children.each do |match|
           match_text = match.children.at("mat_formattedtext").text
-          matches_array.push(stripe_html(match_text))
+          matches_array.push(convert_html(match_text))
         end
       end
       if response_block = data.search("flow[@class=RESPONSE_BLOCK]")[0]
         response_block.children.each do |response|
           id = response.children.at("response_lid").attributes["ident"].value
           response_text = response.children.at("mat_formattedtext").text
-          question = stripe_html(response_text)
+          question = convert_html(response_text)
           answer_id = @matching_answers[id]
           answer = ""
           flow_label = response.children.at("flow_label")

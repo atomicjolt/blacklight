@@ -12,7 +12,7 @@ module Blacklight
         response_block.children.at("render_choice").children.each do |choice|
           id = choice.children.at("response_label").attributes["ident"].value
           question = @order_answers[id].to_s
-          answer = stripe_html(choice.children.at("mat_formattedtext").text)
+          answer = convert_html(choice.children.at("mat_formattedtext").text)
           @matches << { id: id, question_text: question, answer_text: answer }
         end
         @matches = @matches.sort_by { |hsh| hsh[:question_text] }

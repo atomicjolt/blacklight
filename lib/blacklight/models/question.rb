@@ -77,13 +77,13 @@ module Blacklight
     def canvas_conversion(assessment)
       @question = CanvasCc::CanvasCC::Models::Question.create(@question_type)
       @question.identifier = Blacklight.create_random_hex
-      @question.title = stripe_html(@title)
+      @question.title = convert_html(@title)
       @question.points_possible = @points_possible
-      @question.material = stripe_html(@material)
-      @question.general_feedback = stripe_html(@general_feedback)
-      @general_correct_feedback = stripe_html(@general_correct_feedback)
+      @question.material = convert_html(@material)
+      @question.general_feedback = convert_html(@general_feedback)
+      @general_correct_feedback = convert_html(@general_correct_feedback)
       @question.general_correct_feedback = @general_correct_feedback
-      @general_incorrect_feedback = stripe_html(@general_incorrect_feedback)
+      @general_incorrect_feedback = convert_html(@general_incorrect_feedback)
       @question.general_incorrect_feedback = @general_incorrect_feedback
       @question.answers = []
       @answers.each do |answer|
@@ -93,7 +93,7 @@ module Blacklight
       assessment
     end
 
-    def stripe_html(contents)
+    def convert_html(contents)
       if contents && !contents.empty?
         Nokogiri::HTML(contents).text
       else
@@ -146,32 +146,53 @@ module Blacklight
       end
     end
 
-    def process_response(resprocessing)
-      outcomes = resprocessing.search("outcomes")
-      if outcomes && outcomes.search("decvar")
-        if outcomes.search("decvar")[0].attributes["maxvalue"]
-          @max_score = outcomes.search("decvar")[0].attributes["maxvalue"].value
-        end
+    def iterate_item(data)
+      @general_correct_feedback = set_correct_feedback(data)
+      @general_incorrect_feedback = set_incorrect_feedback(data)
+      @material = set_material(data)
+      resprocessing = data.children.at("resprocessing")
+      @max_score = set_max_score(resprocessing)
+    end
+
+    def set_correct_feedback(data)
+      correct_feedback = data.children.css("itemfeedback[ident=correct]").first
+      if correct_feedback && correct_feedback.search("mat_formattedtext")
+        correct_feedback.search("mat_formattedtext").text
+      else
+        ""
       end
     end
 
-    def iterate_item(data)
-      correct_feedback = data.children.css("itemfeedback[ident=correct]").first
-      if correct_feedback && correct_feedback.search("mat_formattedtext")
-        @general_correct_feedback = correct_feedback.
-          search("mat_formattedtext").text
-      end
+    def set_incorrect_feedback(data)
       incorrect_feedback = data.children.
         css("itemfeedback[ident=incorrect]").first
       incorrect_children = incorrect_feedback.children.at("mat_formattedtext")
       if incorrect_feedback && incorrect_children
-        @general_incorrect_feedback = incorrect_feedback.children.
-          at("mat_formattedtext").text
+        incorrect_feedback.children.at("mat_formattedtext").text
+      else
+        ""
       end
-      resprocessing = data.children.at("resprocessing")
-      process_response(resprocessing)
+    end
+
+    def set_material(data)
       if (question_block = data.children.css("flow[@class=QUESTION_BLOCK]"))
-        @material = question_block.children.at("mat_formattedtext").text
+        question_block.children.at("mat_formattedtext").text
+      else
+        ""
+      end
+    end
+
+    def set_max_score(resprocessing)
+      no_score = "0.0"
+      outcomes = resprocessing.search("outcomes")
+      if outcomes && !outcomes.search("decvar").empty?
+        if outcomes.search("decvar")[0].attributes["maxvalue"]
+          outcomes.search("decvar")[0].attributes["maxvalue"].value
+        else
+          no_score
+        end
+      else
+        no_score
       end
     end
   end

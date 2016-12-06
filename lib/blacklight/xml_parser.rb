@@ -16,7 +16,6 @@ module Blacklight
     # itemcategories: :iterate_itemcategories,
     # staffinfo: :iterate_staffinfo,
     # coursemodulepages: :iterate_coursemodulepages,
-    # content: :iterate_content,
     # groupcontentlist: :iterate_groupcontentlist,
     # learnrubrics: :iterate_learnrubrics,
     # gradebook: :iterate_gradebook,

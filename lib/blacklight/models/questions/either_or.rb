@@ -18,9 +18,8 @@ module Blacklight
 
     def iterate_xml(data)
       super
-      response_block = data.search("flow[@class=RESPONSE_BLOCK]")[0]
       set_answers(data.search("resprocessing"))
-      response_block.children.at("flow_label").children.each do |response|
+      data.search("flow_label").children.each do |response|
         answer_text = response.children.at("mattext").text
         answer = Answer.new(EITHER_OR[answer_text])
         answer.fraction = get_fraction(answer_text)
