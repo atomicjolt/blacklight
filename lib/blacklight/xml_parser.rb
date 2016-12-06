@@ -70,6 +70,10 @@ module Blacklight
     resources_array
   end
 
+  def add_scorm(zip_file)
+    []
+  end
+
   def self.create_random_hex
     SecureRandom.hex
   end

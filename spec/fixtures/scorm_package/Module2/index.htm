@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<link rel="stylesheet" type="text/css" href="../_sys/systemCheck.css" />
+<script src="../_sys/browser.js" type="text/javascript"></script>
+<script src="../_sys/flashDetect.js" type="text/javascript"></script>
+<script src="../_sys/systemCheck.js" type="text/javascript"></script>
+<script src="navigation.js" type="text/javascript"></script>
+<script>
+
+var mm_adl_API = null;
+var startPage = "";
+
+function mm_getAPI()
+{	
+	var myAPI = null;
+	var tries = 0, triesMax = 500;
+	
+	while (tries < triesMax && myAPI == null)
+	{
+		window.status = 'Looking for API object ' + tries + '/' + triesMax;
+		myAPI = findAPI(window);
+		
+		if (myAPI == null && typeof(window.parent) != 'undefined') 
+		{
+			myAPI = findAPI(window.parent);
+		}
+		
+		if (myAPI == null && typeof(window.top) != 'undefined') 
+		{
+			myAPI = findAPI(window.top);
+		}
+		
+		if (myAPI == null && typeof(window.opener) != 'undefined') 
+		{
+			if (window.opener != null && !window.opener.closed) 
+			{
+				myAPI = findAPI(window.opener);
+			}
+		}
+		tries++;
+	}
+	
+	if (myAPI == null)
+	{
+		window.status = 'API not found';
+	}
+	else
+	{
+		mm_adl_API = myAPI;
+		window.status = 'API found';
+		mm_adlOnload()
+	}
+}
+
+function findAPI(win)
+{
+	if (typeof(win) != 'undefined' ? typeof(win.API) != 'undefined' : false)
+	{
+		if (win.API != null )  
+		{
+			return win.API;
+		}
+	}
+	
+	if (win.frames.length > 0) 
+	{ 	
+		for (var i = 0 ; i < win.frames.length ; i++);
+		{
+			if (typeof(win.frames[i]) != 'undefined' ? typeof(win.frames[i].API) != 'undefined' : false)
+			{
+				if (win.frames[i].API != null)
+				{
+					return win.frames[i].API;
+				}
+			}
+		}
+	}
+	return null;
+}
+
+function mm_adlOnload()
+{		
+	mm_adl_API.LMSInitialize("");
+	mm_adl_API.LMSSetValue("cmi.core.lesson_status", "incomplete");
+	
+	var getComment = mm_adl_API.LMSGetValue("cmi.comments");
+	var suspendStatus = "";
+	
+	if (getComment == "")
+	{
+		mm_adl_API.LMSSetValue("cmi.core.lesson_location", "0");
+		mm_adl_API.LMSSetValue("cmi.suspend_data", "0");
+		mm_adl_API.LMSSetValue("cmi.comments", "1");
+		startPage = link_array[0];
+	}
+	else
+	{
+		var savedLoc = mm_adl_API.LMSGetValue("cmi.core.lesson_location")
+		suspendStatus = mm_adl_API.LMSGetValue("cmi.suspend_data")
+		startPage = link_array[savedLoc];
+		
+	}
+	  
+  	var p_status = mm_adl_API.LMSGetValue("cmi.core.lesson_status");
+		
+	while(p_status != "incomplete")
+	{
+		window.status = 'Initializing LMS';
+		document.write('<p>Initializing LMS</p>');
+	}
+	
+	if (suspendStatus == "2")
+	{
+		mm_adl_API.LMSSetValue("cmi.core.lesson_status", "completed");
+	}
+	
+	checkReq();
+}
+</script>
+</head>
+<body onload="mm_getAPI();">
+</body>
+</html>
