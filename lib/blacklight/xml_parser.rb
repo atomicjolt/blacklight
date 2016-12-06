@@ -61,7 +61,7 @@ module Blacklight
     resources_array - ["", nil]
   end
 
-  def self.iterate_files(zip_file)
+  def self.add_files(zip_file)
     resources_array = []
     zip_file.entries.each do |entry|
       resources_array.push(BlacklightFile.new(entry))

@@ -45,6 +45,7 @@ module Blacklight
 
       resources = Blacklight.parse_manifest(zip_file, manifest)
       resources.concat(Blacklight.iterate_files(zip_file))
+      resources.concat(Blacklight.add_scorm(zip_file))
 
       course = create_canvas_course(resources, zip_name)
       output_to_dir(course, output_folder, zip_name)
