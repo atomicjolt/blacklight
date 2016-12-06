@@ -5,6 +5,7 @@ require "blacklight/models/announcement"
 require "blacklight/models/forum"
 require "blacklight/models/file"
 require "blacklight/models/content"
+require "blacklight/models/scorm_package"
 require_relative "exceptions"
 
 module Blacklight
@@ -35,6 +36,8 @@ module Blacklight
     # wiki: :iterate_wiki,
     # safeassign: :iterate_safeassign,
   }.freeze
+
+  SCORM_SCHEMA = "adlscorm"
 
   def self.parse_manifest(zip_file, manifest)
     doc = Nokogiri::XML.parse(manifest)
@@ -70,8 +73,25 @@ module Blacklight
     resources_array
   end
 
-  def add_scorm(zip_file)
-    []
+  def scorm_manifest?(manifest)
+    parsed_manifest = Nokogiri::XML(manifest.get_input_stream.read)
+    schema_name = parsed_manifest.
+      xpath("//xmlns:metadata/xmlns:schema").
+      text.delete(" ").downcase
+    schema_name == SCORM_SCHEMA
+  end
+
+  def self.find_scorm_manifests(zip_file)
+    zip_file.
+      entries.select do |e|
+        File.fnmatch("imsmanifest.xml", e.name) && scorm_manifest?(e)
+      end
+  end
+
+  def self.add_scorm(zip_file)
+    find_scorm_manifests(zip_file).map do |package|
+      ScormPackage.new package
+    end
   end
 
   def self.create_random_hex
