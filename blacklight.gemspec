@@ -32,5 +32,6 @@ Gem::Specification.new do |spec|
     ["rubyzip", "~> 1.1"],
     ["nokogiri", "~> 1.6.6"],
     ["fileutils", "~> 0.7"],
+    ["require_all", "~> 1.3.3"],
   ].each { |d| spec.add_runtime_dependency(*d) }
 end
