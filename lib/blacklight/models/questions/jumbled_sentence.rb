@@ -30,9 +30,8 @@ module Blacklight
     end
 
     def canvas_conversion(assessment)
-      super
       @question.responses = @responses
-      assessment
+      super
     end
   end
 end

@@ -23,9 +23,8 @@ module Blacklight
     end
 
     def canvas_conversion(assessment)
-      super
       @question.matches = @matches
-      assessment
+      super
     end
 
     def set_order_answers(resprocessing)

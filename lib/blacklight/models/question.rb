@@ -69,6 +69,7 @@ module Blacklight
       @original_identifier = data.at("bbmd_asi_object_id").text
       @blackboard_type = data.at("bbmd_questiontype").text
       @question_type = QUESTION_TYPE[@blackboard_type]
+      @question = CanvasCc::CanvasCC::Models::Question.create(@question_type)
       @points_possible = data.at("qmd_absolutescore_max").text
       @title = data.attributes["title"].value
       iterate_item(data)
@@ -76,7 +77,6 @@ module Blacklight
     end
 
     def canvas_conversion(assessment)
-      @question = CanvasCc::CanvasCC::Models::Question.create(@question_type)
       @question.identifier = Blacklight.create_random_hex
       @question.title = convert_html(@title)
       @question.points_possible = @points_possible
