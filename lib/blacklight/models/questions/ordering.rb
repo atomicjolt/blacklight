@@ -8,13 +8,13 @@ module Blacklight
 
     def iterate_xml(data)
       super
-      resprocessing = data.children.at("resprocessing")
+      resprocessing = data.at("resprocessing")
       @order_answers = set_order_answers(resprocessing)
-      if response_block = data.children.search("flow[@class=RESPONSE_BLOCK]")
-        response_block.children.at("render_choice").children.each do |choice|
-          id = choice.children.at("response_label").attributes["ident"].value
+      if response_block = data.at("flow[@class=RESPONSE_BLOCK]")
+        response_block.at("render_choice").children.each do |choice|
+          id = choice.at("response_label").attributes["ident"].value
           question = @order_answers[id].to_s
-          answer = convert_html(choice.children.at("mat_formattedtext").text)
+          answer = convert_html(choice.at("mat_formattedtext").text)
           @matches << { id: id, question_text: question, answer_text: answer }
         end
         @matches = @matches.sort_by { |hsh| hsh[:question_text] }
@@ -30,8 +30,8 @@ module Blacklight
 
     def set_order_answers(resprocessing)
       order_answers = {}
-      correct = resprocessing.css("respcondition[title=correct]")
-      correct.search("and")[0].children.each_with_index do |varequal, index|
+      correct = resprocessing.at("respcondition[title=correct]")
+      correct.at("and").children.each_with_index do |varequal, index|
         id = varequal.text
         order_answers[id] = index + 1
       end

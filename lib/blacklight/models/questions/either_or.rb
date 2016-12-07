@@ -18,9 +18,9 @@ module Blacklight
 
     def iterate_xml(data)
       super
-      set_answers(data.search("resprocessing"))
-      data.search("flow_label").children.each do |response|
-        answer_text = response.children.at("mattext").text
+      set_answers(data.at("resprocessing"))
+      data.at("flow_label").children.each do |response|
+        answer_text = response.at("mattext").text
         answer = Answer.new(EITHER_OR[answer_text])
         answer.fraction = get_fraction(answer_text)
         @answers.push(answer)

@@ -22,7 +22,7 @@ describe Blacklight do
         @fill_plus = @fill_plus.iterate_xml(xml.children.first)
 
         answers = @fill_plus.instance_variable_get :@answers
-        assert_equal answers.count, 3
+        assert_equal answers.count, 5
       end
 
       it "should iterate through xml and have multiple answer" do
@@ -40,7 +40,7 @@ describe Blacklight do
 
         answers = @fill_plus.instance_variable_get :@answers
         assert_equal (answers.first.instance_variable_get :@answer_text), "Dear"
-        assert_equal (answers.first.instance_variable_get :@respident), "x"
+        assert_equal (answers.first.instance_variable_get :@resp_ident), "x"
       end
     end
   end

@@ -42,7 +42,7 @@ module Blacklight
     }.freeze
 
     def self.from(item)
-      type = item.search("bbmd_questiontype").children.text
+      type = item.at("bbmd_questiontype").children.text
       item_class = Blacklight.const_get ITEM_FUNCTION[type]
       item_class.new
     end
@@ -65,10 +65,10 @@ module Blacklight
     end
 
     def iterate_xml(data)
-      @original_identifier = data.children.at("bbmd_asi_object_id").text
-      @blackboard_type = data.children.at("bbmd_questiontype").text
+      @original_identifier = data.at("bbmd_asi_object_id").text
+      @blackboard_type = data.at("bbmd_questiontype").text
       @question_type = QUESTION_TYPE[@blackboard_type]
-      @points_possible = data.children.at("qmd_absolutescore_max").text
+      @points_possible = data.at("qmd_absolutescore_max").text
       @title = data.attributes["title"].value
       iterate_item(data)
       self
@@ -115,12 +115,12 @@ module Blacklight
     end
 
     def set_correct_answers(resprocessing)
-      correct = resprocessing.search("respcondition[title=correct]")
+      correct = resprocessing.at("respcondition[title=correct]")
       if correct
-        if correct.search("varequal")
-          @correct_answers["name"] = correct.search("varequal").text
+        if correct.at("varequal")
+          @correct_answers["name"] = correct.at("varequal").text
         end
-        score = correct.search("setvar") ? correct.search("setvar").text : 0
+        score = correct.at("setvar") ? correct.at("setvar").text : 0
         score_number = score == "SCORE.max" ? @max_score.to_f : score.to_f
         if score_number.positive?
           @correct_answers["fraction"] = score_number.to_f / @max_score.to_f
@@ -131,12 +131,12 @@ module Blacklight
     end
 
     def set_incorrect_answers(resprocessing)
-      incorrect = resprocessing.css("respcondition[title=incorrect]")
+      incorrect = resprocessing.at("respcondition[title=incorrect]")
       if incorrect
-        if incorrect.search("varequal")
-          @incorrect_answers["name"] = incorrect.search("varequal").text
+        if incorrect.at("varequal")
+          @incorrect_answers["name"] = incorrect.at("varequal").text
         end
-        score = incorrect.search("setvar") ? incorrect.search("setvar").text : 0
+        score = incorrect.at("setvar") ? incorrect.at("setvar").text : 0
         score_number = score == "SCORE.max" ? @max_score.to_f : score.to_f
         if score_number.positive?
           @incorrect_answers["fraction"] = score_number.to_f / @max_score.to_f
@@ -150,33 +150,32 @@ module Blacklight
       @general_correct_feedback = set_correct_feedback(data)
       @general_incorrect_feedback = set_incorrect_feedback(data)
       @material = set_material(data)
-      resprocessing = data.children.at("resprocessing")
+      resprocessing = data.at("resprocessing")
       @max_score = set_max_score(resprocessing)
     end
 
     def set_correct_feedback(data)
-      correct_feedback = data.children.css("itemfeedback[ident=correct]").first
-      if correct_feedback && correct_feedback.search("mat_formattedtext")
-        correct_feedback.search("mat_formattedtext").text
+      correct_feedback = data.at("itemfeedback[ident=correct]")
+      if correct_feedback && correct_feedback.at("mat_formattedtext")
+        correct_feedback.at("mat_formattedtext").text
       else
         ""
       end
     end
 
     def set_incorrect_feedback(data)
-      incorrect_feedback = data.children.
-        css("itemfeedback[ident=incorrect]").first
-      incorrect_children = incorrect_feedback.children.at("mat_formattedtext")
+      incorrect_feedback = data.at("itemfeedback[ident=incorrect]")
+      incorrect_children = incorrect_feedback.at("mat_formattedtext")
       if incorrect_feedback && incorrect_children
-        incorrect_feedback.children.at("mat_formattedtext").text
+        incorrect_feedback.at("mat_formattedtext").text
       else
         ""
       end
     end
 
     def set_material(data)
-      if (question_block = data.children.css("flow[@class=QUESTION_BLOCK]"))
-        question_block.children.at("mat_formattedtext").text
+      if (question_block = data.at("flow[@class=QUESTION_BLOCK]"))
+        question_block.at("mat_formattedtext").text
       else
         ""
       end
@@ -184,10 +183,10 @@ module Blacklight
 
     def set_max_score(resprocessing)
       no_score = "0.0"
-      outcomes = resprocessing.search("outcomes")
-      if outcomes && !outcomes.search("decvar").empty?
-        if outcomes.search("decvar")[0].attributes["maxvalue"]
-          outcomes.search("decvar")[0].attributes["maxvalue"].value
+      outcomes = resprocessing.at("outcomes")
+      if outcomes && outcomes.at("decvar") != nil
+        if outcomes.at("decvar").attributes["maxvalue"]
+          outcomes.at("decvar").attributes["maxvalue"].value
         else
           no_score
         end

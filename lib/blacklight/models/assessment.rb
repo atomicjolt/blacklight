@@ -17,12 +17,12 @@ module Blacklight
     end
 
     def iterate_xml(data)
-      @title = data.children.at("assessment").attributes["title"].value
-      @points_possible = data.children.at("qmd_absolutescore_max").text
-      @description = data.children.at("presentation_material").
-        children.at("mat_formattedtext").text
-      @group_name = data.children.at("bbmd_assessmenttype").text
-      data.children.at("section").children.map do |item|
+      @title = data.at("assessment").attributes["title"].value
+      @points_possible = data.at("qmd_absolutescore_max").text
+      @description = data.at("presentation_material").
+        at("mat_formattedtext").text
+      @group_name = data.at("bbmd_assessmenttype").text
+      data.at("section").children.map do |item|
         @items.push(item) if item.name == "item"
       end
       self
