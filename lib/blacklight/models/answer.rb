@@ -3,13 +3,13 @@ module Blacklight
     attr_reader :id
     attr_accessor :fraction, :resp_ident, :feedback
 
-    def initialize(text, id = nil)
+    def initialize(text, id = Blacklight.create_random_hex)
       @answer_text = text
       @resp_ident = ""
       @fraction = ""
       @feedback = ""
       @points = 0
-      @id = id ? id : Blacklight.create_random_hex
+      @id = id
     end
 
     def iterate_xml

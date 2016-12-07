@@ -7,8 +7,8 @@ module Blacklight
       "agree_disagree.false" => "Disagree",
       "right_wrong.true" => "Right",
       "right_wrong.false" => "Wrong",
-      "true_false.true" => "Yes",
-      "true_false.false" => "Yes",
+      "true_false.true" => "True",
+      "true_false.false" => "False",
     }.freeze
 
     def initialize

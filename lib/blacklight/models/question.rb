@@ -147,27 +147,17 @@ module Blacklight
     end
 
     def iterate_item(data)
-      @general_correct_feedback = set_correct_feedback(data)
-      @general_incorrect_feedback = set_incorrect_feedback(data)
+      @general_correct_feedback = set_feedback(data, "correct")
+      @general_incorrect_feedback = set_feedback(data, "incorrect")
       @material = set_material(data)
       resprocessing = data.at("resprocessing")
       @max_score = set_max_score(resprocessing)
     end
 
-    def set_correct_feedback(data)
-      correct_feedback = data.at("itemfeedback[ident=correct]")
-      if correct_feedback && correct_feedback.at("mat_formattedtext")
-        correct_feedback.at("mat_formattedtext").text
-      else
-        ""
-      end
-    end
-
-    def set_incorrect_feedback(data)
-      incorrect_feedback = data.at("itemfeedback[ident=incorrect]")
-      incorrect_children = incorrect_feedback.at("mat_formattedtext")
-      if incorrect_feedback && incorrect_children
-        incorrect_feedback.at("mat_formattedtext").text
+    def set_feedback(data, type)
+      feedback = data.at("itemfeedback[ident=#{type}]")
+      if feedback && feedback.at("mat_formattedtext")
+        feedback.at("mat_formattedtext").text
       else
         ""
       end

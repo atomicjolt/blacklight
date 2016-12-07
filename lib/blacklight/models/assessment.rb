@@ -10,8 +10,8 @@ module Blacklight
       @quiz_type = "assignment"
       @points_possible = 0
       @items = []
-      @group_name
-      @group_id
+      @group_name = ""
+      @group_id = ""
       @workflow_state = "published"
       @available = true
     end
@@ -69,12 +69,12 @@ module Blacklight
 
     def create_assignment_group(course)
       group = course.assignment_groups.detect { |a| a.title == @group_name }
-      if group == nil
+      if group
+        @group_id = group.identifier
+      else
         @group_id = Blacklight.create_random_hex
         assignment_group = AssignmentGroup.new(@group_name, @group_id)
         course = assignment_group.canvas_conversion(course)
-      else
-        @group_id = group.identifier
       end
       course
     end

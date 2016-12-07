@@ -39,7 +39,7 @@ module Blacklight
     resources_array = []
     resources[0].children.each do |resource|
       file_name = resource.attributes["file"].value
-      unless zip_file.find_entry(file_name) == nil
+      if zip_file.find_entry(file_name)
         data_file = Blacklight.open_file(zip_file, file_name)
         data = Nokogiri::XML.parse(data_file)
         xml_data = data.children.first

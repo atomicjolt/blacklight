@@ -118,30 +118,30 @@ describe Blacklight do
       end
     end
 
-    describe "set_correct_feedback" do
+    describe "set_feedback" do
       it "should send back correct feeback" do
         xml = get_fixture_xml "either_or.xml"
-        correct_feedback = @question.set_correct_feedback(xml)
+        correct_feedback = @question.set_feedback(xml, "correct")
         assert_equal correct_feedback, "<p>You did the right thing</p>"
       end
 
       it "should not send back correct feeback" do
         xml = get_fixture_xml "opinion.xml"
-        correct_feedback = @question.set_correct_feedback(xml)
+        correct_feedback = @question.set_feedback(xml, "correct")
         assert_equal correct_feedback, ""
       end
     end
 
-    describe "set_incorrect_feedback" do
+    describe "set_feedback" do
       it "should send back incorrect feeback" do
         xml = get_fixture_xml "either_or.xml"
-        incorrect_feedback = @question.set_incorrect_feedback(xml)
+        incorrect_feedback = @question.set_feedback(xml, "incorrect")
         assert_equal incorrect_feedback, "<p>Try again</p>"
       end
 
       it "should not send back correct feeback" do
         xml = get_fixture_xml "opinion.xml"
-        incorrect_feedback = @question.set_incorrect_feedback(xml)
+        incorrect_feedback = @question.set_feedback(xml, "incorrect")
         assert_equal incorrect_feedback, ""
       end
     end
