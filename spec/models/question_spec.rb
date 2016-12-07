@@ -80,8 +80,7 @@ describe Blacklight do
     describe "from" do
       it "should create a canvas question with correct details and answers" do
         xml = get_fixture_xml "either_or.xml"
-        question = Question.from(xml)
-        question = question.iterate_xml(xml.children.first)
+        question = Question.from(xml.children.first)
 
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.items = []

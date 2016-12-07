@@ -44,7 +44,8 @@ module Blacklight
     def self.from(item)
       type = item.at("bbmd_questiontype").children.text
       item_class = Blacklight.const_get ITEM_FUNCTION[type]
-      item_class.new
+      question = item_class.new
+      question.iterate_xml(item)
     end
 
     def initialize

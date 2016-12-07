@@ -58,7 +58,7 @@ module Blacklight
       @items = @items - ["", nil]
       @items.each do |item|
         question = Question.from(item)
-        items.push(question.iterate_xml(item))
+        items.push(question)
       end
       assessment.items = []
       items.each do |item|
