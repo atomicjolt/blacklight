@@ -8,6 +8,8 @@ module Blacklight
 
     def iterate_xml(data)
       super
+      resprocessing = data.children.at("resprocessing")
+      @matching_answers = set_matching_answers(resprocessing)
       matches_array = []
       if match_block = data.search("flow[@class=RIGHT_MATCH_BLOCK]")[0]
         match_block.children.each do |match|
@@ -40,18 +42,19 @@ module Blacklight
       assessment
     end
 
-    def process_response(resprocessing)
-      super
+    def set_matching_answers(resprocessing)
+      matching_answers = {}
       respcondition = resprocessing.css("respcondition")
       respcondition.each do |condition|
         if condition.attributes["title"] != "incorrect"
           varequal = condition.children.at("varequal")
           if varequal
             id = varequal.attributes["respident"].value
-            @matching_answers[id] = varequal.text
+            matching_answers[id] = varequal.text
           end
         end
       end
+      matching_answers
     end
   end
 end

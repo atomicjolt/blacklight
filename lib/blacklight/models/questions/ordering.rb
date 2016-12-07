@@ -8,6 +8,8 @@ module Blacklight
 
     def iterate_xml(data)
       super
+      resprocessing = data.children.at("resprocessing")
+      @order_answers = set_order_answers(resprocessing)
       if response_block = data.children.search("flow[@class=RESPONSE_BLOCK]")
         response_block.children.at("render_choice").children.each do |choice|
           id = choice.children.at("response_label").attributes["ident"].value
@@ -26,13 +28,14 @@ module Blacklight
       assessment
     end
 
-    def process_response(resprocessing)
-      super
+    def set_order_answers(resprocessing)
+      order_answers = {}
       correct = resprocessing.css("respcondition[title=correct]")
       correct.search("and")[0].children.each_with_index do |varequal, index|
         id = varequal.text
-        @order_answers[id] = index + 1
+        order_answers[id] = index + 1
       end
+      order_answers
     end
   end
 end

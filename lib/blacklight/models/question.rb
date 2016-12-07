@@ -22,7 +22,7 @@ module Blacklight
 
     ITEM_FUNCTION = {
       "True/False" => "TrueFalse",
-      "Numeric" => "Numeric",
+      "Numeric" => "NumericalQuestion",
       "Multiple Choice" => "MultipleChoice",
       "Multiple Answer" => "MultipleAnswer",
       "Matching" => "Matching",

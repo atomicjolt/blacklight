@@ -6,8 +6,8 @@ module Blacklight
         set_answers(data)
         response_block.children.at("render_choice").children.each do |choice|
           id = choice.children.at("response_label").attributes["ident"].value
-          @answer_text = choice.children.at("mat_formattedtext").text
-          answer = Answer.new(@answer_text, id)
+          answer_text = choice.children.at("mat_formattedtext").text
+          answer = Answer.new(answer_text, id)
           answer.fraction = get_fraction(id)
           @answers.push(answer)
         end
