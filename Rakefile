@@ -41,6 +41,4 @@ task :clean do
   rm_rf OUTPUT_DIR
 end
 
-
-
 Bundler::GemHelper.install_tasks
