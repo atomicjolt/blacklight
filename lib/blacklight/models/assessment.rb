@@ -29,7 +29,7 @@ module Blacklight
     end
 
     def canvas_conversion(course)
-      if @items.count.positive?
+      if @items.count > 0
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.identifier = Blacklight.create_random_hex
         course = create_assignment_group(course)
