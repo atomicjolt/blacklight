@@ -184,7 +184,7 @@ module Blacklight
     def set_max_score(resprocessing)
       no_score = "0.0"
       outcomes = resprocessing.at("outcomes")
-      if outcomes && outcomes.at("decvar") != nil
+      if outcomes && !outcomes.at("decvar").nil?
         if outcomes.at("decvar").attributes["maxvalue"]
           outcomes.at("decvar").attributes["maxvalue"].value
         else
