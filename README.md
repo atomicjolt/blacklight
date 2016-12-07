@@ -7,16 +7,25 @@ TODO: Describe the gem
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'blacklight'
+gem "blacklight"
+gem "canvas_cc", git: "https://github.com/atomicjolt/canvas_cc.git"
 ```
 
 And then execute:
-
-    $ bundle
+```sh
+$ bundle
+```
 
 Or install it yourself as:
+```sh
+$ gem install blacklight
+```
 
-    $ gem install blacklight
+Create a `Rakefile` and add
+```ruby
+require "blacklight/tasks"
+Blacklight::Tasks.install_tasks
+```
 
 ## Usage
 
