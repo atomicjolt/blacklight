@@ -39,13 +39,12 @@ module Blacklight
 
   def self.parse_manifest(zip_file, manifest)
     doc = Nokogiri::XML.parse(manifest)
-    resources = doc.xpath("//*[resource]")
+    resources = doc.at("resource")
     iterate_xml(resources, zip_file)
   end
 
   def self.iterate_xml(resources, zip_file)
-    resources_array = []
-    resources[0].children.each do |resource|
+    resources_array = resources.children.each do |resource|
       file_name = resource.attributes["file"].value
       if zip_file.find_entry(file_name)
         data_file = Blacklight.open_file(zip_file, file_name)
@@ -55,7 +54,7 @@ module Blacklight
         if RESOURCE_TYPE[type.to_sym]
           res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
           resource = res_class.new
-          resources_array.push(resource.iterate_xml(xml_data))
+          return resource.iterate_xml(xml_data)
         end
       end
     end
