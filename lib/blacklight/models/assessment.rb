@@ -54,14 +54,12 @@ module Blacklight
     end
 
     def create_items(assessment)
-      items = []
       @items = @items - ["", nil]
-      @items.map do |item|
-        question = Question.from(item)
-        items.push(question)
+      questions  = @items.map do |item|
+        Question.from(item)
       end
       assessment.items = []
-      items.each do |item|
+      questions.each do |item|
         assessment = item.canvas_conversion(assessment)
       end
       assessment
