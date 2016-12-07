@@ -10,7 +10,6 @@ module Blacklight
       super
       conditionvar = data.at("resprocessing").at("conditionvar")
       if conditionvar
-        max_difference = data.at("decvar").attributes["maxnumber"].to_i
         range = CanvasCc::CanvasCC::Models::Range.new
         range.low_range = conditionvar.at("vargte").text.to_i
         range.high_range = conditionvar.at("varlte").text.to_i
