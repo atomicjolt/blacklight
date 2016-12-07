@@ -27,6 +27,12 @@ require "blacklight/tasks"
 Blacklight::Tasks.install_tasks
 ```
 
+Create a `blacklight.yml` and add credentials
+```yaml
+:canvas_url: <url>
+:canvas_token: <token>
+```
+
 ## Usage
 
 Run the rake task to convert from .zip to .imscc

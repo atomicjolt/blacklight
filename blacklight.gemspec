@@ -16,16 +16,14 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
   spec.extra_rdoc_files = ["README.md"]
 
-  spec.files         = `git ls-files -z`.split("\x0").
-    reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  spec.require_paths = ["lib"]
+  spec.required_ruby_version = ">= 2.0"
+
+  spec.files = Dir["LICENSE.txt", "README.md", "lib/**/*", "bin/*"]
+  spec.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
 
   spec.add_development_dependency "pry-byebug", "~> 3.4"
   spec.add_development_dependency "minitest", "~> 5.9"
-
-  spec.metadata["allowed_push_host"] = "https://github.com/atomicjolt/"
+  spec.add_development_dependency "webmock", "~> 2.1"
 
   [
     ["rake", "~> 11.3"],
@@ -33,5 +31,8 @@ Gem::Specification.new do |spec|
     ["nokogiri", "~> 1.6.6"],
     ["fileutils", "~> 0.7"],
     ["require_all", "~> 1.3.3"],
+    ["pandarus", "~> 0.6"],
+    ["activesupport", "~> 4.2"],
+    ["rest-client", "~> 2.0"],
   ].each { |d| spec.add_runtime_dependency(*d) }
 end

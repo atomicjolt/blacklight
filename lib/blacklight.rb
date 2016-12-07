@@ -1,5 +1,7 @@
 require "blacklight/version"
 require "blacklight/xml_parser"
+require "blacklight/canvas_course"
+
 require "canvas_cc"
 require "optparse"
 require "ostruct"
@@ -87,5 +89,11 @@ module Blacklight
       course = resource.canvas_conversion(course)
     end
     course
+  end
+
+  def self.initialize_course(filename)
+    metadata = Blacklight::CanvasCourse.metadata_from_file(filename)
+    course = Blacklight::CanvasCourse.from_metadata(metadata)
+    course.upload_content(filename)
   end
 end

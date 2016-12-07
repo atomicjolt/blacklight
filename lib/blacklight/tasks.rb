@@ -1,3 +1,4 @@
+require "rake"
 require "rake/clean"
 require "blacklight"
 require "byebug"
@@ -5,16 +6,26 @@ require "byebug"
 ## CHANGED THESE TO CHANGE THE FOLDER LOCATIONS
 SOURCE_DIR = "sources".freeze
 OUTPUT_DIR = "canvas".freeze
+UPLOAD_DIR = "uploaded".freeze
 
-## Don"t change these, these are just getting the last
-## of the folder name for the script below"s use
+## Don't change these, these are just getting the last
+## of the folder name for the script below to use
 SOURCE_NAME = SOURCE_DIR.split("/").last
 OUTPUT_NAME = OUTPUT_DIR.split("/").last
+UPLOAD_NAME = UPLOAD_DIR.split("/").last
 SOURCE_FILES = Rake::FileList.new("#{SOURCE_DIR}/*.zip")
+CONVERTED_FILES = Rake::FileList.new("#{OUTPUT_DIR}/*.imscc")
 
 def source_for_imscc(imscc_file)
   SOURCE_FILES.detect do |f|
     path = imscc_file.pathmap("%{^#{OUTPUT_DIR}/,#{SOURCE_DIR}/}X")
+    f.ext("") == path
+  end
+end
+
+def source_for_upload_log(upload_log)
+  CONVERTED_FILES.detect do |f|
+    path = upload_log.pathmap("%{^#{UPLOAD_DIR}/,#{OUTPUT_DIR}/}X")
     f.ext("") == path
   end
 end
@@ -45,6 +56,21 @@ module Blacklight
           mkdir_p t.name.pathmap("%d")
           mkdir_p OUTPUT_DIR
           Blacklight.parse(SOURCE_DIR, OUTPUT_DIR)
+        end
+
+        desc "Upload converted files to canvas"
+        task upload: CONVERTED_FILES.pathmap(
+          "%{^#{OUTPUT_NAME}/,#{UPLOAD_DIR}/}X.txt",
+        )
+
+        directory UPLOAD_NAME
+
+        rule ".txt" => [->(f) { source_for_upload_log(f) }, UPLOAD_NAME] do |t|
+          mkdir_p t.name.pathmap("%d")
+          mkdir_p UPLOAD_DIR
+          Blacklight.initialize_course(t.source)
+          sh "touch #{t.name}"
+          sh "date >> #{t.name}"
         end
 
         desc "Completely delete all converted files"
