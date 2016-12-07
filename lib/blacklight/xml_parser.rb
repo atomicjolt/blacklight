@@ -54,7 +54,7 @@ module Blacklight
         if RESOURCE_TYPE[type.to_sym]
           res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
           resource = res_class.new
-          return resource.iterate_xml(xml_data)
+          resource.iterate_xml(xml_data)
         end
       end
     end

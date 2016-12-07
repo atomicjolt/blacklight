@@ -12,9 +12,9 @@ module Blacklight
       @matching_answers = set_matching_answers(resprocessing)
       matches_array = []
       if match_block = data.at("flow[@class=RIGHT_MATCH_BLOCK]")
-        match_block.children.each do |match|
+        matches_array = match_block.children.map do |match|
           match_text = match.at("mat_formattedtext").text
-          matches_array.push(convert_html(match_text))
+          convert_html(match_text)
         end
       end
       if response_block = data.at("flow[@class=RESPONSE_BLOCK]")
