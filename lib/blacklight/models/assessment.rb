@@ -56,7 +56,7 @@ module Blacklight
     def create_items(assessment)
       items = []
       @items = @items - ["", nil]
-      @items.each do |item|
+      @items.map do |item|
         question = Question.from(item)
         items.push(question)
       end
