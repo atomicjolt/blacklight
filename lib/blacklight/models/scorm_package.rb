@@ -18,17 +18,27 @@ module Blacklight
       corrected.slice(1, corrected.size) if corrected.start_with? "/"
     end
 
-    def to_zip(export_name)
+    def write_zip(export_name)
+      @@dir ||= Dir.mktmpdir
       scorm_path = File.dirname @manifest.name
-      Zip::File.open export_name, Zip::File::CREATE do |zip|
+      path = "#{@@dir}/#{export_name}"
+      Zip::File.open path, Zip::File::CREATE do |zip|
         @entries.each do |entry|
           if entry.file?
-            zip.get_output_stream(self.class.correct_path(entry.name, scorm_path)) do |file|
+            zip.get_output_stream(
+              self.class.correct_path(entry.name, scorm_path),
+            ) do |file|
               file.write(entry.get_input_stream.read)
             end
           end
         end
       end
+      path
+    end
+
+    def self.cleanup
+      # TODO remove temp files
+      FileUtils.rm_r @@dir unless @@dir.nil?
     end
 
     def canvas_conversion
