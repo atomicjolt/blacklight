@@ -44,7 +44,7 @@ module Blacklight
       manifest = open_file(zip_file, "imsmanifest.xml")
 
       resources = Blacklight.parse_manifest(zip_file, manifest)
-      resources.concat(Blacklight.iterate_files(zip_file))
+      resources.concat(Blacklight.add_files(zip_file))
       resources.concat(Blacklight.add_scorm(zip_file))
 
       course = create_canvas_course(resources, zip_name)
@@ -80,6 +80,7 @@ module Blacklight
   ##
   def self.cleanup
     BlacklightFile.cleanup
+    ScormPackage.cleanup
   end
 
   def self.create_canvas_course(resources, zip_name)
