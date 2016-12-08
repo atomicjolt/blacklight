@@ -36,8 +36,8 @@ module Blacklight
       path
     end
 
+    # cleanup temp files
     def self.cleanup
-      # TODO remove temp files
       FileUtils.rm_r @@dir unless @@dir.nil?
     end
 

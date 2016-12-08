@@ -84,13 +84,13 @@ module Blacklight
   def self.find_scorm_manifests(zip_file)
     zip_file.
       entries.select do |e|
-        File.fnmatch("imsmanifest.xml", e.name) && scorm_manifest?(e)
+        File.fnmatch("*imsmanifest.xml", e.name) && scorm_manifest?(e)
       end
   end
 
   def self.add_scorm(zip_file)
-    find_scorm_manifests(zip_file).map do |package|
-      ScormPackage.new package
+    find_scorm_manifests(zip_file).map do |manifest|
+      ScormPackage.new zip_file, manifest
     end
   end
 
