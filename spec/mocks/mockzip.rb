@@ -1,8 +1,9 @@
 class MockZip
   class MockEntry
-    attr_accessor(:name)
-    def initialize(name = "fake/path__xid-12.jpg")
+    attr_reader(:name, :ftype)
+    def initialize(name = "fake/path__xid-12.jpg", ftype = :file)
       @name = name
+      @ftype = ftype
     end
 
     def extract(dummy = nil)

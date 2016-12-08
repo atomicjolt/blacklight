@@ -62,7 +62,7 @@ module Blacklight
   end
 
   def self.black_list?(name, type)
-    FILE_BLACK_LIST.any? { |b_list_item| File.fnmatch?(b_list_item, name) } ||
+    FILE_BLACK_LIST.any? { |black_item| File.fnmatch?(black_item, name) } ||
       type == :directory
   end
 

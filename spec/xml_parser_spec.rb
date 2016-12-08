@@ -197,5 +197,16 @@ describe Blacklight do
       assert_equal(result.size, 1)
       assert_equal(result.first.name, "test__xid-12.jpg")
     end
+
+    it "should filter blacklisted directories" do
+      mock_entries = [
+        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12/", :directory),
+        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
+      ]
+
+      result = Blacklight.iterate_files(MockZip.new(mock_entries))
+      assert_equal(result.size, 1)
+      assert_equal(result.first.name, "test__xid-12.jpg")
+    end
   end
 end
