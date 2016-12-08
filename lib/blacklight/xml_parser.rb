@@ -73,12 +73,16 @@ module Blacklight
     resources_array
   end
 
-  def scorm_manifest?(manifest)
-    parsed_manifest = Nokogiri::XML(manifest.get_input_stream.read)
-    schema_name = parsed_manifest.
-      xpath("//xmlns:metadata/xmlns:schema").
-      text.delete(" ").downcase
-    schema_name == SCORM_SCHEMA
+  def self.scorm_manifest?(manifest)
+    begin
+      parsed_manifest = Nokogiri::XML(manifest.get_input_stream.read)
+      schema_name = parsed_manifest.
+        xpath("//xmlns:metadata/xmlns:schema").
+        text.delete(" ").downcase
+      return schema_name == SCORM_SCHEMA
+    rescue Nokogiri::XML::XPath::SyntaxError
+      false
+    end
   end
 
   def self.find_scorm_manifests(zip_file)
