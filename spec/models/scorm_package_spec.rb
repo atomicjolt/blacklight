@@ -40,4 +40,21 @@ describe "ScormPackage" do
       File.delete(EXPORT_NAME) if File.exist? EXPORT_NAME
     end
   end
+
+  it "should correct paths in scorm package" do
+    nested_path = "fake/nested/directory"
+    assert_equal(
+      Blacklight::ScormPackage.correct_path(
+        "#{nested_path}/test.jpg", nested_path
+      ),
+      "test.jpg",
+    )
+
+    assert_equal(
+      Blacklight::ScormPackage.correct_path(
+        "#{nested_path}/nested/test.jpg", nested_path
+      ),
+      "nested/test.jpg",
+    )
+  end
 end
