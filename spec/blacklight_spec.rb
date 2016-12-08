@@ -33,7 +33,7 @@ describe Blacklight do
     it "should not exist" do
       source_dir = "/path/to/dir/source"
       output_dir = "/path/to/dir/output"
-      assert_equal Blacklight.opens_dir(source_dir, output_dir), nil
+      assert_nil Blacklight.opens_dir(source_dir, output_dir)
     end
   end
 
