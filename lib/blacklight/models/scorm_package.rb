@@ -13,10 +13,16 @@ module Blacklight
       end
     end
 
-    def to_zip
-      # TODO use get_output_stream, and then both put_next_entry, and write to write
-      # new zip
-      # http://stackoverflow.com/questions/23957178/how-can-i-create-a-zip-file-without-temporary-files-in-ruby
+    def to_zip(export_name)
+      Zip::File.open export_name, Zip::File::CREATE do |zip|
+        @entries.each do |entry|
+          if entry.file?
+            zip.get_output_stream(entry.export_name) do |file|
+              file.write(entry.get_input_stream.read)
+            end
+          end
+        end
+      end
     end
 
     def canvas_conversion
