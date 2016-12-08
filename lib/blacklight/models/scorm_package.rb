@@ -38,10 +38,19 @@ module Blacklight
 
     # cleanup temp files
     def self.cleanup
+      @@dir ||= nil
       FileUtils.rm_r @@dir unless @@dir.nil?
     end
 
-    def canvas_conversion
+    def canvas_conversion(course)
+      @@count ||= 0
+      write_zip("export#{@@count}.zip")
+      @@count += 1
+      course
+    end
+
+    def self.dir
+      @@dir ||= nil
     end
 
     def api_call
