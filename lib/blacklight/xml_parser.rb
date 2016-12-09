@@ -35,6 +35,7 @@ module Blacklight
     "imsmanifest.xml",
     ".bb-package-info",
     ".bb-package-sig",
+    "*.*.xml",
   ].freeze
 
   def self.parse_manifest(zip_file, manifest)

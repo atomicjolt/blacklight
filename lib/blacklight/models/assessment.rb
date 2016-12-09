@@ -11,7 +11,6 @@ module Blacklight
       @points_possible = 0
       @items = []
       @group_name = ""
-      @group_id = ""
       @workflow_state = "published"
       @available = true
     end
