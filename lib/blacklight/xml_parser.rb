@@ -11,6 +11,7 @@ module Blacklight
     course: "Course",
     questestinterop: "Assessment",
     content: "Content",
+    gradebook: "Gradebook",
 
     # categories: :iterate_categories,
     # itemcategories: :iterate_itemcategories,
@@ -18,7 +19,6 @@ module Blacklight
     # coursemodulepages: :iterate_coursemodulepages,
     # groupcontentlist: :iterate_groupcontentlist,
     # learnrubrics: :iterate_learnrubrics,
-    # gradebook: :iterate_gradebook,
     # collabsessions: :iterate_collabsessions,
     # link: :iterate_link,
     # cms_resource_link_list: :iterate_resource_link_list,
