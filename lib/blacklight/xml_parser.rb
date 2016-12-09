@@ -67,8 +67,8 @@ module Blacklight
   end
 
   def self.iterate_files(zipfile)
-    zipfile.
-      entries.select { |e| !black_list?(e.name, e.ftype) }.
+    zipfile.entries.
+      select { |e| !black_list?(e.name, e.ftype) }.
       map { |entry| BlacklightFile.new(entry) }
   end
 
