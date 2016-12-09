@@ -55,6 +55,7 @@ module Blacklight
       @body = xml.xpath("/CONTENT/BODY/TEXT").first.text
       @id = xml.xpath("/CONTENT/@id").first.text
       @type = xml.xpath("/CONTENT/RENDERTYPE/@value").first.text
+      @parent_id = xml.xpath("/CONTENT/PARENTID/@value").first.text
       @files = xml.xpath("//FILES/FILE").map do |file|
         ContentFile.new(file)
       end

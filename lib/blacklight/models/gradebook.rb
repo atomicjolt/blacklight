@@ -25,7 +25,7 @@ module Blacklight
       outcomes = {}
       data.search("OUTCOMEDEFINITIONS").children.each do |outcome|
         id = outcome.at("CONTENTID").attributes["value"].value
-        if id != ""
+        if id.empty?
           category_id = outcome.at("CATEGORYID").attributes["value"].value
           category = @categories[category_id]
           points = outcome.at("POINTSPOSSIBLE").attributes["value"].value

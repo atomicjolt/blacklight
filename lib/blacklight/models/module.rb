@@ -11,7 +11,7 @@ module Blacklight
       cc_module.identifier = @identifier
       cc_module.title = @title
       cc_module.workflow_state = "published"
-      cc_module.identifier = @identifier
+      cc_module.module_items = @module_items
       course.canvas_modules << cc_module
       course
     end
