@@ -63,6 +63,8 @@ module Blacklight
     end
 
     def canvas_conversion(course)
+      # need access to the gradebook here -- and file name
+      # need access to all other content or at least a mapping of the folders
       course
     end
   end

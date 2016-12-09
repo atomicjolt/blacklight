@@ -47,6 +47,7 @@ module Blacklight
   def self.iterate_xml(resources, zip_file)
     resources_array = resources.children.map do |resource|
       file_name = resource.attributes["file"].value
+
       if zip_file.find_entry(file_name)
         data_file = Blacklight.open_file(zip_file, file_name)
         data = Nokogiri::XML.parse(data_file)
@@ -55,7 +56,11 @@ module Blacklight
         if RESOURCE_TYPE[type.to_sym]
           res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
           resource = res_class.new
-          resource.iterate_xml(xml_data)
+          if type == "Content"
+            resource.from(xml_data)
+          else
+            resource.iterate_xml(xml_data)
+          end
         end
       end
     end
