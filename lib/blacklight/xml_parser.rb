@@ -1,32 +1,24 @@
-require "blacklight/models/group"
-require "blacklight/models/course"
-require "blacklight/models/blog"
-require "blacklight/models/announcement"
-require "blacklight/models/forum"
-require "blacklight/models/file"
-require "blacklight/models/content"
-require "blacklight/models/scorm_package"
+require "require_all"
+require_all "lib/blacklight/models/**/*.rb"
 require_relative "exceptions"
 
 module Blacklight
   RESOURCE_TYPE = {
     groups: "Group",
     blog: "Blog",
-    # announcement: "Announcement",
+    announcement: "Announcement",
     forum: "Forum",
     course: "Course",
-    content: "Content"
+    questestinterop: "Assessment",
+    content: "Content",
 
     # categories: :iterate_categories,
     # itemcategories: :iterate_itemcategories,
-    # questestinterop: :iterate_questestinterop,
     # staffinfo: :iterate_staffinfo,
     # coursemodulepages: :iterate_coursemodulepages,
-    # content: :iterate_content,
     # groupcontentlist: :iterate_groupcontentlist,
     # learnrubrics: :iterate_learnrubrics,
     # gradebook: :iterate_gradebook,
-    # courseassessment: :iterate_courseassessment,
     # collabsessions: :iterate_collabsessions,
     # link: :iterate_link,
     # cms_resource_link_list: :iterate_resource_link_list,
@@ -38,39 +30,47 @@ module Blacklight
   }.freeze
 
   SCORM_SCHEMA = "adlscorm"
+  FILE_BLACK_LIST = [
+    "*.dat",
+    "glossary",
+    "imsmanifest.xml",
+    ".bb-package-info",
+    ".bb-package-sig",
+  ].freeze
 
   def self.parse_manifest(zip_file, manifest)
     doc = Nokogiri::XML.parse(manifest)
-    resources = doc.xpath("//*[resource]")
+    resources = doc.at("resources")
     iterate_xml(resources, zip_file)
   end
 
   def self.iterate_xml(resources, zip_file)
-    resources_array = []
-    resources[0].children.each do |resource|
+    resources_array = resources.children.map do |resource|
       file_name = resource.attributes["file"].value
-      data_file = Blacklight.open_file(zip_file, file_name)
-      data = Nokogiri::XML.parse(data_file)
-      xml_data = data.children.first
-      type = xml_data.name.downcase
-      if RESOURCE_TYPE[type.to_sym]
-        resource_type = "Blacklight::" + RESOURCE_TYPE[type.to_sym]
-        res_class = resource_type.split("::").
-          reduce(Object) { |o, c| o.const_get c }
-        resource = res_class.new
-        resources_array.push(resource.iterate_xml(xml_data))
+      if zip_file.find_entry(file_name)
+        data_file = Blacklight.open_file(zip_file, file_name)
+        data = Nokogiri::XML.parse(data_file)
+        xml_data = data.children.first
+        type = xml_data.name.downcase
+        if RESOURCE_TYPE[type.to_sym]
+          res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
+          resource = res_class.new
+          resource.iterate_xml(xml_data)
+        end
       end
     end
-    resources_array - ["", nil]
+    resources_array.flatten - ["", nil]
   end
 
-  def self.add_files(zip_file)
-    resources_array = []
-    zip_file.entries.each do |entry|
-      resources_array.push(BlacklightFile.new(entry))
-    end
+  def self.black_list?(name, type)
+    FILE_BLACK_LIST.any? { |black_item| File.fnmatch?(black_item, name) } ||
+      type == :directory
+  end
 
-    resources_array
+  def self.iterate_files(zipfile)
+    zipfile.entries.
+      select { |e| !black_list?(e.name, e.ftype) }.
+      map { |entry| BlacklightFile.new(entry) }
   end
 
   def self.scorm_manifest?(manifest)

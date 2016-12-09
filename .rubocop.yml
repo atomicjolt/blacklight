@@ -276,6 +276,16 @@ Style/NumericLiterals:
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#underscores-in-numerics'
   Enabled: false
 
+Style/NumericPredicate:
+ Description: >-
+                This cop checks for usage of comparison operators
+                (`==`, `!=`, `>`, `<`) to test numbers as
+                zero, nonzero, positive, or negative.
+                These can be replaced by their respective predicate methods.
+                The cop can also be configured to do the reverse.
+ StyleGuide: 'http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/NumericPredicate'
+ Enabled: false
+
 Style/OneLineConditional:
   Description: >-
                  Favor the ternary operator(?:) over

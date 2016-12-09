@@ -19,19 +19,19 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files -z`.split("\x0").
     reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
-  spec.executables   = spec.files.
-    grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 1.12"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "pry-byebug"
+  spec.add_development_dependency "pry-byebug", "~> 3.4"
+  spec.add_development_dependency "minitest", "~> 5.9"
 
   spec.metadata["allowed_push_host"] = "https://github.com/atomicjolt/"
 
   [
+    ["rake", "~> 11.3"],
     ["rubyzip", "~> 1.1"],
     ["nokogiri", "~> 1.6.6"],
-    ["fileutils"],
+    ["fileutils", "~> 0.7"],
+    ["require_all", "~> 1.3.3"],
   ].each { |d| spec.add_runtime_dependency(*d) }
 end

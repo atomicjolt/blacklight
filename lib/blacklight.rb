@@ -5,14 +5,13 @@ require "optparse"
 require "ostruct"
 require "nokogiri"
 require "zip"
-require "pry"
 
 require_relative "./blacklight/exceptions"
 
 module Blacklight
-  def self.parse(args)
-    source_directory = validates_source_directory(args[0])
-    output_directory = args[1]
+  def self.parse(source, output)
+    source_directory = validates_source_directory(source)
+    output_directory = output
     opens_dir(source_directory, output_directory)
   end
 
