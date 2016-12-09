@@ -67,9 +67,9 @@ module Blacklight
   end
 
   def self.iterate_files(zipfile)
-    zipfile.entries.select { |e| !black_list?(e.name, e.ftype) }.map do |entry|
-      BlacklightFile.new(entry)
-    end
+    zipfile.
+      entries.select { |e| !black_list?(e.name, e.ftype) }.
+      map { |entry| BlacklightFile.new(entry) }
   end
 
   def self.create_random_hex
