@@ -4,9 +4,9 @@ require "blacklight"
 require "byebug"
 
 ## CHANGED THESE TO CHANGE THE FOLDER LOCATIONS
-SOURCE_DIR = "running_examples".freeze
-OUTPUT_DIR = "running_examples".freeze
-UPLOAD_DIR = "uploaded".freeze
+SOURCE_DIR = "source_dir".freeze
+OUTPUT_DIR = "output_dir".freeze
+UPLOAD_DIR = "upload_dir".freeze
 
 ## Don't change these, these are just getting the last
 ## of the folder name for the script below to use
@@ -68,7 +68,7 @@ module Blacklight
         rule ".txt" => [->(f) { source_for_upload_log(f) }, UPLOAD_NAME] do |t|
           mkdir_p t.name.pathmap("%d")
           mkdir_p UPLOAD_DIR
-          Blacklight.initialize_course(t.source)
+          Blacklight.initialize_course(t.source, source_for_imscc(t.source))
           sh "touch #{t.name}"
           sh "date >> #{t.name}"
         end

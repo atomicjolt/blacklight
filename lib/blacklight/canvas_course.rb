@@ -4,7 +4,7 @@ require "rest-client"
 
 module Blacklight
   class CanvasCourse
-    def initialize(metadata, course_resource)
+    def initialize(metadata, course_resource, blackboard_export)
       @metadata = metadata
       @course_resource = course_resource
     end
@@ -27,7 +27,7 @@ module Blacklight
       )
     end
 
-    def self.from_metadata(metadata)
+    def self.from_metadata(metadata, blackboard_export)
       course_name = metadata[:name] || metadata[:title]
       courses = client.list_active_courses_in_account(:self)
       course = courses.detect { |c| c.name == course_name } ||
@@ -37,7 +37,7 @@ module Blacklight
             name: metadata[:name],
           },
         )
-      CanvasCourse.new(metadata, course)
+      CanvasCourse.new(metadata, course, blackboard_export)
     end
 
     def upload_content(filename)

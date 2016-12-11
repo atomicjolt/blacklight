@@ -93,9 +93,9 @@ module Blacklight
     course
   end
 
-  def self.initialize_course(filename)
-    metadata = Blacklight::CanvasCourse.metadata_from_file(filename)
-    course = Blacklight::CanvasCourse.from_metadata(metadata)
-    course.upload_content(filename)
+  def self.initialize_course(canvas_import, blackboard_export)
+    metadata = Blacklight::CanvasCourse.metadata_from_file(canvas_import)
+    course = Blacklight::CanvasCourse.from_metadata(metadata, blackboard_export)
+    course.upload_content(canvas_import)
   end
 end

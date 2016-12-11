@@ -9,7 +9,7 @@ module Blacklight
     announcement: "Announcement",
     forum: "Forum",
     course: "Course",
-    questestinterop: "Assessment",
+    # questestinterop: "Assessment",
     content: "Content",
 
     # categories: :iterate_categories,
