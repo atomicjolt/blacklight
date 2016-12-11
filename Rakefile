@@ -1,6 +1,8 @@
 require "rake/testtask"
-require "bundler/setup"
+require "bundler/gem_tasks"
 require "blacklight/tasks"
+
+Rake.application.options.trace_rules = true
 
 Rake::TestTask.new do |t|
   t.name = :spec
@@ -11,5 +13,4 @@ end
 
 task default: :spec
 
-Bundler::GemHelper.install_tasks
 Blacklight::Tasks.install_tasks
