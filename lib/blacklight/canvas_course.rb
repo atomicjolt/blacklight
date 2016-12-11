@@ -8,7 +8,7 @@ module Blacklight
     def initialize(metadata, course_resource, blackboard_export)
       @metadata = metadata
       @course_resource = course_resource
-      byebug
+      @scorm_packages = self.class.get_scorm_packages(blackboard_export) # TODO add specs
     end
 
     def self.metadata_from_file(filename)
@@ -29,7 +29,7 @@ module Blacklight
       )
     end
 
-    def self.add_scorm(zip_file)
+    def self.get_scorm_packages(zip_file)
       ScormPackage.find_scorm_manifests(zip_file).map do |manifest|
         ScormPackage.new zip_file, manifest
       end

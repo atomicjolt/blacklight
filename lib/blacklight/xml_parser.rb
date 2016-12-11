@@ -29,7 +29,6 @@ module Blacklight
     # safeassign: :iterate_safeassign,
   }.freeze
 
-  SCORM_SCHEMA = "adlscorm"
   FILE_BLACK_LIST = [
     "*.dat",
     "glossary",

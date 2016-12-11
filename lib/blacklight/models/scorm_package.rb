@@ -1,6 +1,7 @@
 module Blacklight
   class ScormPackage
     attr_accessor(:entries, :manifest)
+    SCORM_SCHEMA = "adlscorm"
 
     def initialize(zip_file, manifest)
       @manifest = manifest
@@ -9,20 +10,21 @@ module Blacklight
 
     def self.scorm_manifest?(manifest)
       begin
-        parsed_manifest = nokogiri::xml(manifest.get_input_stream.read)
+        parsed_manifest = Nokogiri::XML(manifest.get_input_stream.read)
         schema_name = parsed_manifest.
           xpath("//xmlns:metadata/xmlns:schema").
           text.delete(" ").downcase
-        return schema_name == scorm_schema
-      rescue nokogiri::xml::xpath::syntaxerror
+        return schema_name == SCORM_SCHEMA
+      rescue Nokogiri::XML::XPath::SyntaxError
         false
       end
     end
 
     def self.find_scorm_manifests(zip_file)
+      return [] if zip_file.nil? 
       zip_file.
         entries.select do |e|
-          file.fnmatch("*imsmanifest.xml", e.name) && scorm_manifest?(e)
+          File.fnmatch("*imsmanifest.xml", e.name) && scorm_manifest?(e)
         end
     end
 
