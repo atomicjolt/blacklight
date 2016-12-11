@@ -73,24 +73,24 @@ module Blacklight
       map { |entry| BlacklightFile.new(entry) }
   end
 
-  def self.scorm_manifest?(manifest)
-    begin
-      parsed_manifest = Nokogiri::XML(manifest.get_input_stream.read)
-      schema_name = parsed_manifest.
-        xpath("//xmlns:metadata/xmlns:schema").
-        text.delete(" ").downcase
-      return schema_name == SCORM_SCHEMA
-    rescue Nokogiri::XML::XPath::SyntaxError
-      false
-    end
-  end
-
-  def self.find_scorm_manifests(zip_file)
-    zip_file.
-      entries.select do |e|
-        File.fnmatch("*imsmanifest.xml", e.name) && scorm_manifest?(e)
-      end
-  end
+  # def self.scorm_manifest?(manifest)
+  #   begin
+  #     parsed_manifest = nokogiri::xml(manifest.get_input_stream.read)
+  #     schema_name = parsed_manifest.
+  #       xpath("//xmlns:metadata/xmlns:schema").
+  #       text.delete(" ").downcase
+  #     return schema_name == scorm_schema
+  #   rescue nokogiri::xml::xpath::syntaxerror
+  #     false
+  #   end
+  # end
+  #
+  # def self.find_scorm_manifests(zip_file)
+  #   zip_file.
+  #     entries.select do |e|
+  #       file.fnmatch("*imsmanifest.xml", e.name) && scorm_manifest?(e)
+  #     end
+  # end
 
   def self.add_scorm(zip_file)
     find_scorm_manifests(zip_file).map do |manifest|

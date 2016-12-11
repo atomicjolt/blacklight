@@ -95,7 +95,8 @@ module Blacklight
 
   def self.initialize_course(canvas_import, blackboard_export)
     metadata = Blacklight::CanvasCourse.metadata_from_file(canvas_import)
-    course = Blacklight::CanvasCourse.from_metadata(metadata, blackboard_export)
+    bb_zip = Zip::File.new(blackboard_export) unless blackboard_export.nil?
+    course = Blacklight::CanvasCourse.from_metadata(metadata, bb_zip)
     course.upload_content(canvas_import)
   end
 end

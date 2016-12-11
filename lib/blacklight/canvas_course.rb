@@ -1,5 +1,6 @@
 require "pandarus"
 require "blacklight/config"
+require "blacklight/models/scorm_package"
 require "rest-client"
 
 module Blacklight
@@ -7,6 +8,7 @@ module Blacklight
     def initialize(metadata, course_resource, blackboard_export)
       @metadata = metadata
       @course_resource = course_resource
+      byebug
     end
 
     def self.metadata_from_file(filename)
@@ -27,7 +29,13 @@ module Blacklight
       )
     end
 
-    def self.from_metadata(metadata, blackboard_export)
+    def self.add_scorm(zip_file)
+      ScormPackage.find_scorm_manifests(zip_file).map do |manifest|
+        ScormPackage.new zip_file, manifest
+      end
+    end
+
+    def self.from_metadata(metadata, blackboard_export = nil)
       course_name = metadata[:name] || metadata[:title]
       courses = client.list_active_courses_in_account(:self)
       course = courses.detect { |c| c.name == course_name } ||

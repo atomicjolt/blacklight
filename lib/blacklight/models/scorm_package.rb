@@ -7,6 +7,26 @@ module Blacklight
       @entries = ScormPackage.get_entries zip_file, manifest
     end
 
+    def self.scorm_manifest?(manifest)
+      begin
+        parsed_manifest = nokogiri::xml(manifest.get_input_stream.read)
+        schema_name = parsed_manifest.
+          xpath("//xmlns:metadata/xmlns:schema").
+          text.delete(" ").downcase
+        return schema_name == scorm_schema
+      rescue nokogiri::xml::xpath::syntaxerror
+        false
+      end
+    end
+
+    def self.find_scorm_manifests(zip_file)
+      zip_file.
+        entries.select do |e|
+          file.fnmatch("*imsmanifest.xml", e.name) && scorm_manifest?(e)
+        end
+    end
+
+
     def self.get_entries(zip_file, manifest)
       zip_file.entries.select do |e|
         File.dirname(e.name).include? File.dirname(manifest.name)
