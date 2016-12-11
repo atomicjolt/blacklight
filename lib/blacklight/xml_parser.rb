@@ -67,7 +67,7 @@ module Blacklight
       type == :directory
   end
 
-  def self.iterate_files(zipfile)
+  def self.get_files(zipfile)
     zipfile.entries.
       select { |e| !black_list?(e.name, e.ftype) }.
       map { |entry| BlacklightFile.new(entry) }

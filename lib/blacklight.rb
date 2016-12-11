@@ -45,8 +45,8 @@ module Blacklight
       manifest = open_file(zip_file, "imsmanifest.xml")
 
       resources = Blacklight.parse_manifest(zip_file, manifest)
-      resources.concat(Blacklight.add_files(zip_file))
-      resources.concat(Blacklight.add_scorm(zip_file))
+      resources.concat(Blacklight.get_files(zip_file))
+      # resources.concat(Blacklight.add_scorm(zip_file)) # TODO in canvas course
 
       course = create_canvas_course(resources, zip_name)
       output_to_dir(course, output_folder, zip_name)

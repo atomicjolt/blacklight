@@ -4,8 +4,8 @@ require "blacklight"
 require "byebug"
 
 ## CHANGED THESE TO CHANGE THE FOLDER LOCATIONS
-SOURCE_DIR = "sources".freeze
-OUTPUT_DIR = "canvas".freeze
+SOURCE_DIR = "running_examples".freeze
+OUTPUT_DIR = "running_examples".freeze
 UPLOAD_DIR = "uploaded".freeze
 
 ## Don't change these, these are just getting the last

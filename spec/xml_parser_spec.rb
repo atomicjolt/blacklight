@@ -171,14 +171,14 @@ describe Blacklight do
     end
   end
 
-  describe "add_files" do
+  describe "get_files" do
     it "should return array of files" do
       mock_entries = [
         MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
         MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
       ]
 
-      result = Blacklight.add_files(MockZip.new(mock_entries))
+      result = Blacklight.get_files(MockZip.new(mock_entries))
       assert_equal(result.size, 2)
       assert_equal(result.first.id, "test__xid-12.jpg")
       assert_includes(
@@ -193,7 +193,7 @@ describe Blacklight do
         MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
       ]
 
-      result = Blacklight.iterate_files(MockZip.new(mock_entries))
+      result = Blacklight.get_files(MockZip.new(mock_entries))
       assert_equal(result.size, 1)
       assert_equal(result.first.name, "test__xid-12.jpg")
     end
@@ -204,7 +204,7 @@ describe Blacklight do
         MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
       ]
 
-      result = Blacklight.iterate_files(MockZip.new(mock_entries))
+      result = Blacklight.get_files(MockZip.new(mock_entries))
       assert_equal(result.size, 1)
       assert_equal(result.first.name, "test__xid-12.jpg")
     end
