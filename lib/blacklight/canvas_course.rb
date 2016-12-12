@@ -56,18 +56,17 @@ module Blacklight
       upload_params[:file] = File.new(filename, "rb")
 
       puts "Uploading: #{name}"
+      # Post to S3
       RestClient.post(
         upload_url,
         upload_params,
       ) do |response|
-        code = response.code
-        if code == 302 || code == 303
-          RestClient.post(
-            response.headers[:location],
-            nil,
-            Authorization: "Bearer #{Blacklight.canvas_token}",
-          )
-        end
+        # Post to canvas
+        RestClient.post(
+          response.headers[:location],
+          nil,
+          Authorization: "Bearer #{Blacklight.canvas_token}",
+        )
       end
       puts "Done uploading: #{name}"
     end
