@@ -24,12 +24,9 @@ module Blacklight
   end
 
   def self.open_file(zip_file, file_name)
-    puts "Opening #{file_name}"
-    begin
-      zip_file.find_entry(file_name).get_input_stream.read
-    rescue NoMethodError
-      raise Exceptions::MissingFileError
-    end
+    zip_file.find_entry(file_name).get_input_stream.read
+  rescue NoMethodError
+    raise Exceptions::MissingFileError
   end
 
   def self.output_to_dir(course, imscc_path)
