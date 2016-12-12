@@ -3,12 +3,23 @@ require "blacklight/config"
 require "rest-client"
 
 module Blacklight
+  ##
+  # This class represents a canvas course for which we are uploading data to
+  ##
   class CanvasCourse
+    ##
+    # A new canvas course accepts the metadata for a course
+    # and the pandarus course resourse
+    ##
     def initialize(metadata, course_resource)
       @metadata = metadata
       @course_resource = course_resource
     end
 
+    ##
+    # Given a filename to a zip file, extract the necessary metadata
+    # for the course
+    ##
     def self.metadata_from_file(filename)
       Zip::File.open(filename) do |file|
         settings = "course_settings/course_settings.xml"
@@ -20,6 +31,9 @@ module Blacklight
       end
     end
 
+    ##
+    # Create a new pandarus instance to communicate with the canvas server
+    ##
     def self.client
       @client ||= Pandarus::Client.new(
         prefix: Blacklight.canvas_url,
@@ -27,6 +41,9 @@ module Blacklight
       )
     end
 
+    ##
+    # Find or Create a new CanvasCourse instance from the given metadata
+    ##
     def self.from_metadata(metadata)
       course_name = metadata[:name] || metadata[:title]
       courses = client.list_active_courses_in_account(:self)
@@ -40,9 +57,14 @@ module Blacklight
       CanvasCourse.new(metadata, course)
     end
 
+    ##
+    # Create a migration for the course
+    # and upload the imscc file to be imported into the course
+    ##
     def upload_content(filename)
       client = CanvasCourse.client
       name = File.basename(filename)
+      # Create a migration for the course and get S3 upload authorization
       migration = client.
         create_content_migration_courses(
           @course_resource.id,
@@ -50,6 +72,7 @@ module Blacklight
           pre_attachment: { name: name },
         )
 
+      # Attach the file to the S3 auth
       pre_attachment = migration.pre_attachment
       upload_url = pre_attachment["upload_url"]
       upload_params = pre_attachment["upload_params"]
@@ -61,7 +84,7 @@ module Blacklight
         upload_url,
         upload_params,
       ) do |response|
-        # Post to canvas
+        # Post to Canvas
         RestClient.post(
           response.headers[:location],
           nil,
