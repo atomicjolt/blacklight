@@ -64,7 +64,7 @@ module Blacklight
 
         rule ".imscc" => [->(f) { source_for_imscc(f) }, OUTPUT_NAME] do |t|
           make_directories(t.name, OUTPUT_DIR)
-          Blacklight.parse(SOURCE_DIR, OUTPUT_DIR)
+          Blacklight.parse(t.source, t.name)
         end
 
         desc "Upload converted files to canvas"
