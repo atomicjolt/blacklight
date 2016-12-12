@@ -30,6 +30,16 @@ def source_for_upload_log(upload_log)
   end
 end
 
+def make_directories(name, upload_dir)
+  mkdir_p name.pathmap("%d")
+  mkdir_p upload_dir
+end
+
+def log_file(name)
+  sh "touch #{name}"
+  sh "date >> #{name}"
+end
+
 module Blacklight
   class Tasks
     extend Rake::DSL if defined? Rake::DSL
@@ -53,8 +63,7 @@ module Blacklight
         directory OUTPUT_NAME
 
         rule ".imscc" => [->(f) { source_for_imscc(f) }, OUTPUT_NAME] do |t|
-          mkdir_p t.name.pathmap("%d")
-          mkdir_p OUTPUT_DIR
+          make_directories(t.name, OUTPUT_DIR)
           Blacklight.parse(SOURCE_DIR, OUTPUT_DIR)
         end
 
@@ -66,11 +75,9 @@ module Blacklight
         directory UPLOAD_NAME
 
         rule ".txt" => [->(f) { source_for_upload_log(f) }, UPLOAD_NAME] do |t|
-          mkdir_p t.name.pathmap("%d")
-          mkdir_p UPLOAD_DIR
+          make_directories(t.name, UPLOAD_DIR)
           Blacklight.initialize_course(t.source)
-          sh "touch #{t.name}"
-          sh "date >> #{t.name}"
+          log_file(t.name)
         end
 
         desc "Completely delete all converted files"
