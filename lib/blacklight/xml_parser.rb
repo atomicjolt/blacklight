@@ -47,7 +47,7 @@ module Blacklight
     resources_array = resources.children.map do |resource|
       file_name = resource.attributes["file"].value
       if zip_file.find_entry(file_name)
-        data_file = Blacklight.open_file(zip_file, file_name)
+        data_file = Blacklight.read_file(zip_file, file_name)
         data = Nokogiri::XML.parse(data_file)
         xml_data = data.children.first
         type = xml_data.name.downcase

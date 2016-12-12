@@ -30,6 +30,16 @@ def source_for_upload_log(upload_log)
   end
 end
 
+def make_directories(name, upload_dir)
+  mkdir_p name.pathmap("%d")
+  mkdir_p upload_dir
+end
+
+def log_file(name)
+  sh "touch #{name}"
+  sh "date >> #{name}"
+end
+
 module Blacklight
   class Tasks
     extend Rake::DSL if defined? Rake::DSL
@@ -53,9 +63,21 @@ module Blacklight
         directory OUTPUT_NAME
 
         rule ".imscc" => [->(f) { source_for_imscc(f) }, OUTPUT_NAME] do |t|
-          mkdir_p t.name.pathmap("%d")
-          mkdir_p OUTPUT_DIR
-          Blacklight.parse(SOURCE_DIR, OUTPUT_DIR)
+          make_directories(t.name, OUTPUT_DIR)
+          Blacklight.parse(t.source, t.name)
+        end
+
+        desc "Upload converted files to canvas"
+        task upload: CONVERTED_FILES.pathmap(
+          "%{^#{OUTPUT_NAME}/,#{UPLOAD_DIR}/}X.txt",
+        )
+
+        directory UPLOAD_NAME
+
+        rule ".txt" => [->(f) { source_for_upload_log(f) }, UPLOAD_NAME] do |t|
+          make_directories(t.name, UPLOAD_DIR)
+          Blacklight.initialize_course(t.source)
+          log_file(t.name)
         end
 
         desc "Upload converted files to canvas"
