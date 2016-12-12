@@ -18,6 +18,12 @@ module Blacklight
       @scorm_packages = self.class.get_scorm_packages(blackboard_export) # TODO add specs
     end
 
+    ## TODO write specs
+    def self.get_scorm_packages(zip_file)
+      ScormPackage.find_scorm_manifests(zip_file).map do |manifest|
+        ScormPackage.new zip_file, manifest
+      end
+    end
 
     ##
     # Given a filename to a zip file, extract the necessary metadata
@@ -47,7 +53,7 @@ module Blacklight
     ##
     # Find or Create a new CanvasCourse instance from the given metadata
     ##
-    def self.from_metadata(metadata)
+    def self.from_metadata(metadata, blackboard_export)
       course_name = metadata[:name] || metadata[:title]
       courses = client.list_active_courses_in_account(:self)
       canvas_course = courses.detect { |course| course.name == course_name } ||
@@ -57,7 +63,12 @@ module Blacklight
             name: course_name,
           },
         )
-      CanvasCourse.new(metadata, canvas_course)
+      CanvasCourse.new(metadata, canvas_course, blackboard_export)
+    end
+
+    ## TODO document
+    def upload_scorm
+      # scorm_zips = @scorm_
     end
 
     ##

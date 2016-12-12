@@ -91,11 +91,11 @@ module Blacklight
   #     end
   # end
 
-  def self.add_scorm(zip_file)
-    find_scorm_manifests(zip_file).map do |manifest|
-      ScormPackage.new zip_file, manifest
-    end
-  end
+  # def self.add_scorm(zip_file)
+  #   find_scorm_manifests(zip_file).map do |manifest|
+  #     ScormPackage.new zip_file, manifest
+  #   end
+  # end
 
   def self.create_random_hex
     SecureRandom.hex

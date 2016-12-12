@@ -76,23 +76,8 @@ module Blacklight
 
         rule ".txt" => [->(f) { source_for_upload_log(f) }, UPLOAD_NAME] do |t|
           make_directories(t.name, UPLOAD_DIR)
-          Blacklight.initialize_course(t.source)
-          log_file(t.name)
-        end
-
-        desc "Upload converted files to canvas"
-        task upload: CONVERTED_FILES.pathmap(
-          "%{^#{OUTPUT_NAME}/,#{UPLOAD_DIR}/}X.txt",
-        )
-
-        directory UPLOAD_NAME
-
-        rule ".txt" => [->(f) { source_for_upload_log(f) }, UPLOAD_NAME] do |t|
-          mkdir_p t.name.pathmap("%d")
-          mkdir_p UPLOAD_DIR
           Blacklight.initialize_course(t.source, source_for_imscc(t.source))
-          sh "touch #{t.name}"
-          sh "date >> #{t.name}"
+          log_file(t.name)
         end
 
         desc "Completely delete all converted files"
