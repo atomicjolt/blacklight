@@ -66,9 +66,26 @@ module Blacklight
       CanvasCourse.new(metadata, canvas_course, blackboard_export)
     end
 
+
     ## TODO document
-    def upload_scorm
-      # scorm_zips = @scorm_
+    def upload_scorm_packages
+      package_index = 0
+      config = Blacklight._config
+      result = @scorm_packages.map do |pack|
+        package_index += 1
+        zip = pack.write_zip "#{@metadata[:name]}_#{package_index}.zip"
+        resp = RestClient::Request.execute(
+          url: "#{config[:scorm_url]}/api/scorm_courses",
+          method: :post,
+          payload: {
+            oauth_consumer_key: 'scorm-player',
+            lms_course_id: @course_resource.id,
+            file: File.new(zip, 'rb')
+          },
+          :verify_ssl => false
+        )
+        JSON.parse(result.body)["response"]
+      end
     end
 
     ##
@@ -88,6 +105,8 @@ module Blacklight
 
       puts "Uploading: #{name}"
       upload_to_s3(migration, filename)
+      create_scorm_assignments(upload_scorm_packages)
+
       puts "Done uploading: #{name}"
     end
 
