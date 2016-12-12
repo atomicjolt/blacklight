@@ -43,9 +43,19 @@ module Blacklight
           :self,
           course: {
             name: metadata[:name],
+            id: course.id
           },
         )
+
       CanvasCourse.new(metadata, course, blackboard_export)
+    end
+
+    def upload_scorm
+      package_index = 0
+      scorm_package_zips = @scorm_packages.map do |pack|
+        pack.write_zip "#{@metadata[:name]}_#{package_index}"
+        package_index += 1
+      end
     end
 
     def upload_content(filename)
@@ -64,10 +74,12 @@ module Blacklight
       upload_params[:file] = File.new(filename, "rb")
 
       puts "Uploading: #{name}"
-      RestClient.post(
-        upload_url,
-        upload_params,
-      )
+      # RestClient.post(
+      #   upload_url,
+      #   upload_params,
+      # )
+
+      upload_scorm
       puts "Done uploading: #{name}"
     end
   end
