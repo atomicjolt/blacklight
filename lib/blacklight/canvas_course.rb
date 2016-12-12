@@ -47,14 +47,14 @@ module Blacklight
     def self.from_metadata(metadata)
       course_name = metadata[:name] || metadata[:title]
       courses = client.list_active_courses_in_account(:self)
-      course = courses.detect { |c| c.name == course_name } ||
+      canvas_course = courses.detect { |course| course.name == course_name } ||
         client.create_new_course(
           :self,
           course: {
-            name: metadata[:name],
+            name: course_name,
           },
         )
-      CanvasCourse.new(metadata, course)
+      CanvasCourse.new(metadata, canvas_course)
     end
 
     ##
@@ -72,13 +72,18 @@ module Blacklight
           pre_attachment: { name: name },
         )
 
+      puts "Uploading: #{name}"
+      upload_to_s3(migration, filename)
+      puts "Done uploading: #{name}"
+    end
+
+    def upload_to_s3(migration, filename)
       # Attach the file to the S3 auth
       pre_attachment = migration.pre_attachment
       upload_url = pre_attachment["upload_url"]
       upload_params = pre_attachment["upload_params"]
       upload_params[:file] = File.new(filename, "rb")
 
-      puts "Uploading: #{name}"
       # Post to S3
       RestClient.post(
         upload_url,
@@ -91,7 +96,6 @@ module Blacklight
           Authorization: "Bearer #{Blacklight.canvas_token}",
         )
       end
-      puts "Done uploading: #{name}"
     end
   end
 end
