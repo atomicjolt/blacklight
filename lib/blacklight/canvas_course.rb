@@ -59,7 +59,16 @@ module Blacklight
       RestClient.post(
         upload_url,
         upload_params,
-      )
+      ) do |response|
+        code = response.code
+        if code == 302 || code == 303
+          RestClient.post(
+            response.headers[:location],
+            nil,
+            Authorization: "Bearer #{Blacklight.canvas_token}",
+          )
+        end
+      end
       puts "Done uploading: #{name}"
     end
   end
