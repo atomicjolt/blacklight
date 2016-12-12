@@ -187,26 +187,20 @@ describe Blacklight do
       )
     end
 
-    it "should filter blacklisted files" do
+    it "should filter metadata files" do
       mock_entries = [
-        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.dat"),
+        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.xml"),
+        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.xml.xml"),
         MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
+        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg.xml"),
       ]
 
       result = Blacklight.iterate_files(MockZip.new(mock_entries))
-      assert_equal(result.size, 1)
-      assert_equal(result.first.name, "test__xid-12.jpg")
-    end
+      assert_equal(result.size, 2)
 
-    it "should filter blacklisted directories" do
-      mock_entries = [
-        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12/", :directory),
-        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
-      ]
-
-      result = Blacklight.iterate_files(MockZip.new(mock_entries))
-      assert_equal(result.size, 1)
-      assert_equal(result.first.name, "test__xid-12.jpg")
+      file_names = result.map(&:name).sort
+      expected_names = %w(test__xid-12.jpg test__xid-12.xml)
+      assert_equal(file_names, expected_names)
     end
   end
 end

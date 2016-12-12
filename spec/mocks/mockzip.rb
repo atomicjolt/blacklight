@@ -17,4 +17,8 @@ class MockZip
   def entries
     @entries
   end
+
+  def glob(*)
+    entries
+  end
 end
