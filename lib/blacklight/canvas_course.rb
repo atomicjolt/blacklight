@@ -66,12 +66,36 @@ module Blacklight
       CanvasCourse.new(metadata, canvas_course, blackboard_export)
     end
 
+    def create_scorm_assignment(scorm_package, course_id)
+      config = Blacklight._config
+      payload = {
+        assignment: {
+          name: scorm_package["title"],
+          submission_types: ["external_tool"],
+          integration_id: scorm_package["package_id"],
+          integration_data: { provider: 'atomic-scorm' },
+          external_tool_tag_attributes: {
+            url: "#{config[:scorm_launch_url]}?course_id=#{scorm_package["package_id"]}",
+          },
+        }
+      }
+
+      RestClient.post(
+        "#{config[:canvas_url]}/v1/courses/#{course_id}/assignments",
+        payload,
+        {Authorization: "Bearer #{Blacklight.canvas_token}",}
+      )
+    end
+
+    def create_scorm_assignments(scorm_packages, course_id)
+      scorm_packages.each { |pack| create_scorm_assignment(pack, course_id)}
+    end
 
     ## TODO document
-    def upload_scorm_packages
+    def upload_scorm_packages(scorm_packages)
       package_index = 0
       config = Blacklight._config
-      result = @scorm_packages.map do |pack|
+      result = scorm_packages.map do |pack|
         package_index += 1
         zip = pack.write_zip "#{@metadata[:name]}_#{package_index}.zip"
         resp = RestClient::Request.execute(
@@ -82,9 +106,9 @@ module Blacklight
             lms_course_id: @course_resource.id,
             file: File.new(zip, 'rb')
           },
-          :verify_ssl => false
+          :verify_ssl => false # NOTE to accept self signed certificates in dev
         )
-        JSON.parse(result.body)["response"]
+        JSON.parse(resp.body)["response"]
       end
     end
 
@@ -105,7 +129,10 @@ module Blacklight
 
       puts "Uploading: #{name}"
       upload_to_s3(migration, filename)
-      create_scorm_assignments(upload_scorm_packages)
+      create_scorm_assignments(
+        upload_scorm_packages(@scorm_packages),
+        @course_resource.id,
+      )
 
       puts "Done uploading: #{name}"
     end
