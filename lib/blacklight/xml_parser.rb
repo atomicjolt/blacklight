@@ -55,10 +55,10 @@ module Blacklight
         type = xml_data.name.downcase
         if RESOURCE_TYPE[type.to_sym]
           res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
-          resource = res_class.new
-          if type == "Content"
-            resource.from(xml_data)
+          if type == "content"
+            Content.from(xml_data)
           else
+            resource = res_class.new
             resource.iterate_xml(xml_data)
           end
         end

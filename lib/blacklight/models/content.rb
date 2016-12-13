@@ -13,41 +13,45 @@ module Blacklight
       "x-bbpi-selfpeer-type1" => "Assignment",
 
       # contents
-      "x-bb-document" => "Page",
-      "x-bb-file" => "Page",
-      "x-bb-audio" => "Page",
-      "x-bb-image" => "Page",
-      "x-bb-video" => "Page",
-      "x-bb-externallink" => "Page",
+      "x-bb-document" => "WikiPage",
+      "x-bb-file" => "WikiPage",
+      "x-bb-audio" => "WikiPage",
+      "x-bb-image" => "WikiPage",
+      "x-bb-video" => "WikiPage",
+      "x-bb-externallink" => "WikiPage",
 
       # lesson named modules
-      "x-bb-lesson" => "Page",
+      "x-bb-lesson" => "WikiPage-Module",
 
       # lesson named modules
-      "x-bb-lesson-plan" => "Page",
-      "x-bb-syllabus" => "Page",
+      "x-bb-lesson-plan" => "WikiPage-Module",
+      "x-bb-syllabus" => "WikiPage",
 
       # lesson named modules
-      "x-bb-folder" => "Page",
+      "x-bb-folder" => "WikiPage-Module",
 
       # lesson named modules
-      "x-bb-module-page" => "Page",
+      "x-bb-module-page" => "WikiPage-Module",
 
       # lesson named modules
-      "x-bb-blankpage" => "Page",
+      "x-bb-blankpage" => "WikiPage",
 
       # lesson named modules
-      "x-bb-flickr-mashup" => "Page",
+      "x-bb-flickr-mashup" => "WikiPage",
     }.freeze
 
     attr_accessor(:title, :body, :id, :files)
 
     def self.from(xml)
-      full_type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
-      type = full_type.slice! "resource/"
-      content_class = Blacklight.const_get CONTENT_TYPES[type]
-      content = content_class.new
-      content.iterate_xml(item)
+      title = xml.xpath("/CONTENT/TITLE/@value").first.text
+      type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
+      type.slice! "resource/"
+      if content_type = CONTENT_TYPES[type]
+        content_type = content_type.split("-Module")[0]
+        content_class = Blacklight.const_get content_type
+        content = content_class.new
+        content.iterate_xml(xml)
+      end
     end
 
     def iterate_xml(xml)
@@ -56,15 +60,47 @@ module Blacklight
       @id = xml.xpath("/CONTENT/@id").first.text
       @type = xml.xpath("/CONTENT/RENDERTYPE/@value").first.text
       @parent_id = xml.xpath("/CONTENT/PARENTID/@value").first.text
+      item = set_module(xml)
+      @module_item = item.canvas_conversion
       @files = xml.xpath("//FILES/FILE").map do |file|
         ContentFile.new(file)
       end
       self
     end
 
+    def set_module(xml)
+      bb_type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
+      bb_type.slice! "resource/"
+      @module_type = CONTENT_TYPES[bb_type]
+      if @module_type.include?("-Module")
+        @module_type.slice! "-Module"
+        @parent_id = @id
+      end
+      ModuleItem.new(@title, @module_type, @id)
+    end
+
     def canvas_conversion(course)
       # need access to the gradebook here -- and file name
-      # need access to all other content or at least a mapping of the folders
+      course
+    end
+
+    def create_module(course)
+      course.canvas_modules = [] if course.canvas_modules.nil?
+      cc_module = course.canvas_modules.detect { |a| a.identifier == @parent_id }
+
+      if cc_module
+        @cc_module_id = cc_module.identifier
+        cc_module.module_items << @module_item
+        course.canvas_modules.delete_if { |a| a.identifier == @parent_id }
+      else
+        @cc_module_id = @parent_id == "{unset id}" ? @id : @parent_id
+        @title = @title == "--TOP--" ? "Content" : @title
+        cc_module = Module.new(@title, @cc_module_id)
+        cc_module = cc_module.canvas_conversion
+        cc_module.module_items << @module_item
+      end
+
+      course.canvas_modules << cc_module
       course
     end
   end

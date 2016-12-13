@@ -1,6 +1,7 @@
 module Blacklight
   class Assignment < Content
     def canvas_conversion(course)
+      super
       assignment = CanvasCc::CanvasCC::Models::Assignment.new
       assignment.identifier = @id
       assignment.title = @title
@@ -14,9 +15,9 @@ module Blacklight
 
       # Add page links to page body
       @files.each { |f| assignment.body << f.canvas_conversion }
+      course = create_module(course)
 
       course.assignments << assignment
-
       course
     end
   end
