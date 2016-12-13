@@ -1,21 +1,25 @@
 module Blacklight
   class ModuleItem
-    def initialize
-      @title = ""
-      @identifier = ""
-      @content_type = ""
+    attr_reader :item
+
+    def initialize(title, type, identifier)
       # WikiPage, Attachment, ContextModuleSubHeader, DiscussionTopic
       # Assignment, Quizzes::Quiz, ExternalUrl
+      @title = title
+      @identifier = Blacklight.create_random_hex
+      @content_type = type
+      @identifierref = identifier
+      @workflow_state = "published"
     end
 
-    def canvas_conversion(cc_module)
-      module_item = CanvasCc::CanvasCC::Models::ModuleItem.new
-      module_item.title = @title
-      module_item.identifier = @identifier
-      module_item.content_type = @content_type
-      module_item.workflow_state = "published"
-      cc_module.items << module_item
-      cc_module
+    def canvas_conversion
+      item = CanvasCc::CanvasCC::Models::ModuleItem.new
+      item.title = @title
+      item.identifier = @identifier
+      item.content_type = @content_type
+      item.identifierref = @identifierref
+      item.workflow_state = @workflow_state
+      item
     end
   end
 end
