@@ -10,7 +10,7 @@ module Blacklight
       "Fill in the Blank Plus" => "fill_in_multiple_blanks_question",
       "File Upload" => "file_upload_question",
       "Essay" => "essay_question",
-      "Calculated" => "short_answer_question",
+      "Calculated" => "formula_question",
       "Jumbled Sentence" => "multiple_dropdowns_question",
       "Either/Or" => "multiple_choice_question",
       "Hot Spot" => "text_only_question",
