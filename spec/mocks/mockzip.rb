@@ -6,8 +6,7 @@ class MockZip
       @ftype = ftype
     end
 
-    def extract(dummy = nil)
-    end
+    def extract(dummy = nil) end
   end
 
   def initialize(entries = nil)
