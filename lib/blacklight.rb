@@ -1,5 +1,7 @@
 require "blacklight/version"
 require "blacklight/xml_parser"
+require "blacklight/canvas_course"
+
 require "canvas_cc"
 require "optparse"
 require "ostruct"
@@ -9,68 +11,30 @@ require "zip"
 require_relative "./blacklight/exceptions"
 
 module Blacklight
-  def self.parse(source, output)
-    source_directory = validates_source_directory(source)
-    output_directory = output
-    opens_dir(source_directory, output_directory)
-  end
+  def self.parse(zip_path, imscc_path)
+    Zip::File.open(zip_path) do |file|
+      manifest = read_file(file, "imsmanifest.xml")
 
-  def self.validates_source_directory(directory)
-    if directory_exists?(directory)
-      set_correct_dir_location(directory)
-    else
-      raise Exceptions::BadFileNameError
+      resources = Blacklight.parse_manifest(file, manifest)
+      resources.concat(Blacklight.iterate_files(file))
+
+      course = create_canvas_course(resources, zip_path)
+      build_file(course, imscc_path)
     end
   end
 
-  def self.directory_exists?(dir_location)
-    File.exists?(dir_location)
+  def self.read_file(zip_file, file_name)
+    zip_file.find_entry(file_name).get_input_stream.read
+  rescue NoMethodError
+    raise Exceptions::MissingFileError
   end
 
-  def self.set_correct_dir_location(dir_location)
-    unless dir_location[dir_location.length - 1] == "/"
-      dir_location = dir_location + "/"
-    end
-    dir_location
-  end
-
-  def self.opens_dir(source_folder, output_folder)
-    Dir.glob(source_folder + "*.zip") do |zip_path|
-      next if zip_path == "." || zip_path == ".."
-      # do work on real items
-      zip_name = zip_path.split("/").last.gsub(".zip", "")
-      zip_file = Zip::File.open(zip_path)
-      manifest = open_file(zip_file, "imsmanifest.xml")
-
-      resources = Blacklight.parse_manifest(zip_file, manifest)
-      resources.concat(Blacklight.iterate_files(zip_file))
-
-      course = create_canvas_course(resources, zip_name)
-      output_to_dir(course, output_folder, zip_name)
-    end
-  end
-
-  def self.open_file(zip_file, file_name)
-    puts "Opening #{file_name}"
-    begin
-      zip_file.find_entry(file_name).get_input_stream.read
-    rescue NoMethodError
-      raise Exceptions::MissingFileError
-    end
-  end
-
-  def self.output_to_dir(course, folder, zip_name)
-    out_dir = CanvasCc::CanvasCC::CartridgeCreator.new(course).create(folder)
-    original_name = switch_file_name(out_dir, zip_name)
+  def self.build_file(course, imscc_path)
+    folder = imscc_path.split("/").first
+    file = CanvasCc::CanvasCC::CartridgeCreator.new(course).create(folder)
+    File.rename(file, imscc_path)
     cleanup
-    puts "Created a file in #{original_name}"
-  end
-
-  def self.switch_file_name(canvas_name, zip_name)
-    name = canvas_name.split("/").last.gsub(".imscc", "")
-    original_name = canvas_name.gsub(name, zip_name)
-    File.rename(canvas_name, original_name)
-    original_name
+    puts "Created a file #{imscc_path}"
   end
 
   ##
@@ -87,5 +51,11 @@ module Blacklight
       course = resource.canvas_conversion(course)
     end
     course
+  end
+
+  def self.initialize_course(filename)
+    metadata = Blacklight::CanvasCourse.metadata_from_file(filename)
+    course = Blacklight::CanvasCourse.from_metadata(metadata)
+    course.upload_content(filename)
   end
 end

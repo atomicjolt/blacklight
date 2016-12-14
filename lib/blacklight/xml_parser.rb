@@ -29,15 +29,6 @@ module Blacklight
     # safeassign: :iterate_safeassign,
   }.freeze
 
-  FILE_BLACK_LIST = [
-    "*.dat",
-    "glossary",
-    "imsmanifest.xml",
-    ".bb-package-info",
-    ".bb-package-sig",
-    "*.*.xml",
-  ].freeze
-
   def self.parse_manifest(zip_file, manifest)
     doc = Nokogiri::XML.parse(manifest)
     resources = doc.at("resources")
@@ -47,35 +38,43 @@ module Blacklight
   def self.iterate_xml(resources, zip_file)
     resources_array = resources.children.map do |resource|
       file_name = resource.attributes["file"].value
-
       if zip_file.find_entry(file_name)
-        data_file = Blacklight.open_file(zip_file, file_name)
+        data_file = Blacklight.read_file(zip_file, file_name)
         data = Nokogiri::XML.parse(data_file)
         xml_data = data.children.first
         type = xml_data.name.downcase
         if RESOURCE_TYPE[type.to_sym]
           res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
-          if type == "content"
-            Content.from(xml_data)
-          else
-            resource = res_class.new
-            resource.iterate_xml(xml_data)
-          end
+          resource = res_class.new
+          resource.iterate_xml(xml_data)
         end
       end
     end
     resources_array.flatten - ["", nil]
   end
 
-  def self.black_list?(name, type)
-    FILE_BLACK_LIST.any? { |black_item| File.fnmatch?(black_item, name) } ||
-      type == :directory
-  end
-
+  ##
+  # Iterate through course files and create new BlacklightFile for each
+  # non-metadata file.
+  ##
   def self.iterate_files(zipfile)
-    zipfile.entries.
-      select { |e| !black_list?(e.name, e.ftype) }.
-      map { |entry| BlacklightFile.new(entry) }
+    files = zipfile.glob("csfiles/**/**")
+    file_names = files.map(&:name)
+
+    files = files.select do |file|
+      if File.extname(file.name) == ".xml"
+        # Detect and skip metadata files.
+        concrete_file = File.join(
+          File.dirname(file.name),
+          File.basename(file.name, ".xml"),
+        )
+        !file_names.include?(concrete_file)
+      else
+        true
+      end
+    end
+
+    files.map { |file| BlacklightFile.new(file) }
   end
 
   def self.create_random_hex

@@ -1,6 +1,6 @@
 module Blacklight
   class Answer
-    attr_reader :id
+    attr_reader :id, :answer_text
     attr_accessor :fraction, :resp_ident, :feedback
 
     def initialize(text, id = Blacklight.create_random_hex)
