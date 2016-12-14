@@ -95,15 +95,14 @@ module Blacklight
 
     def upload_scorm_package(scorm_package, course_id, tmp_name)
       zip = scorm_package.write_zip tmp_name
-      resp = RestClient::Request.execute(
-        url: "#{Blacklight.scorm_url}/api/scorm_courses",
-        method: :post,
-        payload: {
+      resp = RestClient.post(
+        "#{Blacklight.scorm_url}/api/scorm_courses",
+        {
           oauth_consumer_key: "scorm-player",
           lms_course_id: course_id,
           file: File.new(zip, "rb"),
         },
-        verify_ssl: false # NOTE to accept self signed certificates in dev
+        SharedAuthorization: Blacklight.scorm_shared_auth,
       )
       JSON.parse(resp.body)["response"]
     end

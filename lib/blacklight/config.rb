@@ -17,6 +17,10 @@ module Blacklight
     Blacklight._config[:scorm_url]
   end
 
+  def self.scorm_shared_auth
+    Blacklight._config[:scorm_shared_auth]
+  end
+
   def self._config
     @config ||= if File.exists? "blacklight.yml"
                   YAML::load(File.read("blacklight.yml"))
