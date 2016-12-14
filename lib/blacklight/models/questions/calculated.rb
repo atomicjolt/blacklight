@@ -1,5 +1,7 @@
 module Blacklight
   class Calculated < Question
+    attr_reader :dataset_definitions, :var_sets
+
     def initialize
       @dataset_definitions = []
       @var_sets = []

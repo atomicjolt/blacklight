@@ -1,5 +1,7 @@
 module Blacklight
   class Question
+    attr_reader :answers
+
     QUESTION_TYPE = {
       "True/False" => "true_false_question",
       "Numeric" => "numerical_question",
