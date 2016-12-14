@@ -12,11 +12,11 @@ end
 
 describe "ScormPackage" do
   it "should find all entries in same directory as manifest" do
-    zip = Zip::File.new("spec/fixtures/scorm.zip")
+    zip = Zip::File.new("spec/fixtures/scorm_package.zip")
     manifest = get_manifest_entry zip
 
     result = Blacklight::ScormPackage.get_entries(zip, manifest)
-    assert_equal(result.size, 308)
+    assert_equal(result.size, 2)
     assert_equal(
       manifest.get_input_stream.read.include?("ADL SCORM"),
       true,
@@ -24,7 +24,7 @@ describe "ScormPackage" do
   end
 
   it "should convert to zip file" do
-    zip = Zip::File.new("spec/fixtures/scorm.zip")
+    zip = Zip::File.new("spec/fixtures/scorm_package.zip")
     package = Blacklight::ScormPackage.new(zip, get_manifest_entry(zip))
     EXPORT_NAME = "zip_export.zip".freeze
     begin
