@@ -53,9 +53,8 @@ module Blacklight
 
     def parse_var_sets(parent_node)
       parent_node.search("var_set").map do |var_set|
-        vars = {}
-        var_set.search("var").each do |var|
-          vars[var.attributes["name"].text] = var.text
+        vars = var_set.search("var").each_with_object({}) do |var, hash|
+          hash[var.attributes["name"].text] = var.text
         end
 
         {
