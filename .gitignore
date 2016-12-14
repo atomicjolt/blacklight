@@ -8,7 +8,6 @@
 /tmp
 /spec/tmp
 /spec/reports/
-/.bundle/
 /coverage/
 /pkg/
 /doc/
@@ -18,3 +17,5 @@
 /sources/
 /spec/examples/
 *.gem
+.idea/
+blacklight.iml
