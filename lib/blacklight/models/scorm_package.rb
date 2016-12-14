@@ -46,7 +46,8 @@ module Blacklight
     ##
     def self.get_entries(zip_file, manifest)
       zip_file.entries.select do |e|
-        File.dirname(e.name).include? File.dirname(manifest.name)
+        File.dirname(e.name).start_with?(File.dirname(manifest.name)) &&
+          !e.directory?
       end
     end
 
