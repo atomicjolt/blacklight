@@ -9,7 +9,13 @@ module Blacklight
     end
 
     def canvas_conversion
-      "<a class='instructure_scribd_file instructure_file_link' title='#{@linkname}' href='$IMS_CC_FILEBASE$/#{@linkname}?canvas_download=1&amp;canvas_qs_wrap=1'>#{@linkname}</a>"
+      "<a
+        class='instructure_scribd_file instructure_file_link'
+        title='#{@linkname}'
+        href='$IMS_CC_FILEBASE$/#{@linkname}?canvas_download=1&amp;canvas_qs_wrap=1'
+      >
+        #{@linkname}
+      </a>"
     end
   end
 
