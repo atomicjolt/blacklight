@@ -3,8 +3,8 @@ module Blacklight
     attr_accessor(:entries, :manifest)
 
     ##
-    # Scorm packages should include this string in the <schema> tag. We downcase,
-    # and remove spaces to be more consistant
+    # Scorm packages should include this string in the <schema> tag. We
+    # downcase, and remove spaces to be more consistant
     ##
     SCORM_SCHEMA = "adlscorm".freeze
 
@@ -87,16 +87,5 @@ module Blacklight
       @@dir ||= nil
       FileUtils.rm_r @@dir unless @@dir.nil?
     end
-
-    # def canvas_conversion(course)
-    #   @@count ||= 0
-    #   write_zip("export#{@@count}.zip")
-    #   @@count += 1
-    #   course
-    # end
-
-    # def self.dir
-    #   @@dir ||= nil
-    # end
   end
 end

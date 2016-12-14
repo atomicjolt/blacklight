@@ -15,13 +15,15 @@ module Blacklight
     def initialize(metadata, course_resource, blackboard_export)
       @metadata = metadata
       @course_resource = course_resource
-      @scorm_packages = self.class.get_scorm_packages(blackboard_export) # TODO add specs
+      @scorm_packages = self.class.get_scorm_packages(blackboard_export)
     end
 
-    ## TODO write specs
-    def self.get_scorm_packages(zip_file)
-      ScormPackage.find_scorm_manifests(zip_file).map do |manifest|
-        ScormPackage.new zip_file, manifest
+    ##
+    # Extracts scorm packages from a blackboard export zip file
+    ##
+    def self.get_scorm_packages(blackboard_export)
+      ScormPackage.find_scorm_manifests(blackboard_export).map do |manifest|
+        ScormPackage.new blackboard_export, manifest
       end
     end
 
@@ -53,7 +55,7 @@ module Blacklight
     ##
     # Find or Create a new CanvasCourse instance from the given metadata
     ##
-    def self.from_metadata(metadata, blackboard_export)
+    def self.from_metadata(metadata, blackboard_export = nil)
       course_name = metadata[:name] || metadata[:title]
       courses = client.list_active_courses_in_account(:self)
       canvas_course = courses.detect { |course| course.name == course_name } ||
@@ -66,49 +68,57 @@ module Blacklight
       CanvasCourse.new(metadata, canvas_course, blackboard_export)
     end
 
+    ##
+    # Creates a canvas assignment from a scorm package that has already been
+    # uploaded to a scorm manager
+    ##
     def create_scorm_assignment(scorm_package, course_id)
-      config = Blacklight._config
       payload = {
         assignment: {
           name: scorm_package["title"],
           submission_types: ["external_tool"],
           integration_id: scorm_package["package_id"],
-          integration_data: { provider: 'atomic-scorm' },
+          integration_data: { provider: "atomic-scorm" },
           external_tool_tag_attributes: {
-            url: "#{config[:scorm_launch_url]}?course_id=#{scorm_package["package_id"]}",
+            url: "#{Blacklight.scorm_launch_url}" \
+              "?course_id=#{scorm_package['package_id']}",
           },
-        }
+        },
       }
 
       RestClient.post(
-        "#{config[:canvas_url]}/v1/courses/#{course_id}/assignments",
+        "#{Blacklight.canvas_url}/v1/courses/#{course_id}/assignments",
         payload,
-        {Authorization: "Bearer #{Blacklight.canvas_token}",}
+        Authorization: "Bearer #{Blacklight.canvas_token}",
       )
     end
 
+    def upload_scorm_package(scorm_package, course_id, tmp_name)
+      zip = scorm_package.write_zip tmp_name
+      resp = RestClient::Request.execute(
+        url: "#{Blacklight.scorm_url}/api/scorm_courses",
+        method: :post,
+        payload: {
+          oauth_consumer_key: "scorm-player",
+          lms_course_id: course_id,
+          file: File.new(zip, "rb"),
+        },
+        verify_ssl: false # NOTE to accept self signed certificates in dev
+      )
+      JSON.parse(resp.body)["response"]
+    end
+
     def create_scorm_assignments(scorm_packages, course_id)
-      scorm_packages.each { |pack| create_scorm_assignment(pack, course_id)}
+      scorm_packages.each { |pack| create_scorm_assignment(pack, course_id) }
     end
 
     ## TODO document
     def upload_scorm_packages(scorm_packages)
       package_index = 0
-      config = Blacklight._config
-      result = scorm_packages.map do |pack|
+      scorm_packages.map do |pack|
         package_index += 1
-        zip = pack.write_zip "#{@metadata[:name]}_#{package_index}.zip"
-        resp = RestClient::Request.execute(
-          url: "#{config[:scorm_url]}/api/scorm_courses",
-          method: :post,
-          payload: {
-            oauth_consumer_key: 'scorm-player',
-            lms_course_id: @course_resource.id,
-            file: File.new(zip, 'rb')
-          },
-          :verify_ssl => false # NOTE to accept self signed certificates in dev
-        )
-        JSON.parse(resp.body)["response"]
+        tmp_name = "#{@metadata[:name]}_#{package_index}.zip"
+        upload_scorm_package(pack, @course_resource.id, tmp_name)
       end
     end
 
