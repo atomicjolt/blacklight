@@ -17,17 +17,14 @@ module Blacklight
     # Returns true if a manifest is a scorm manifest file, false otherwise
     ##
     def self.scorm_manifest?(manifest)
-      begin
-        parsed_manifest = Nokogiri::XML(manifest.get_input_stream.read)
-        schema_name = parsed_manifest.
-          xpath("//xmlns:metadata/xmlns:schema").
-          text.delete(" ").downcase
-        return schema_name == SCORM_SCHEMA
-
-      # NOTE we occasionally run into malformed manifest files
-      rescue Nokogiri::XML::XPath::SyntaxError
-        false
-      end
+      parsed_manifest = Nokogiri::XML(manifest.get_input_stream.read)
+      schema_name = parsed_manifest.
+        xpath("//xmlns:metadata/xmlns:schema").
+        text.delete(" ").downcase
+      return schema_name == SCORM_SCHEMA
+    # NOTE we occasionally run into malformed manifest files
+    rescue Nokogiri::XML::XPath::SyntaxError
+      false
     end
 
     ##

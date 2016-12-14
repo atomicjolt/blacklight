@@ -121,7 +121,7 @@ module Blacklight
     ##
     # Uploads all scorm packages to scorm manager specified in blacklight.yml
     # config file
-    ## 
+    ##
     def upload_scorm_packages(scorm_packages)
       package_index = 0
       scorm_packages.map do |pack|
