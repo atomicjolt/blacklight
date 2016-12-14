@@ -93,6 +93,10 @@ module Blacklight
       )
     end
 
+    ##
+    # Uploads a scorm package to scorm manager specified in blacklight.yml
+    # config file
+    ##
     def upload_scorm_package(scorm_package, course_id, tmp_name)
       zip = scorm_package.write_zip tmp_name
       resp = RestClient.post(
@@ -107,11 +111,17 @@ module Blacklight
       JSON.parse(resp.body)["response"]
     end
 
+    ##
+    # Creates assignments from all previously uploaded scorm packages
+    ##
     def create_scorm_assignments(scorm_packages, course_id)
       scorm_packages.each { |pack| create_scorm_assignment(pack, course_id) }
     end
 
-    ## TODO document
+    ##
+    # Uploads all scorm packages to scorm manager specified in blacklight.yml
+    # config file
+    ## 
     def upload_scorm_packages(scorm_packages)
       package_index = 0
       scorm_packages.map do |pack|
