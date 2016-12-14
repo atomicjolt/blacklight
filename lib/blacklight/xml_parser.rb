@@ -29,14 +29,6 @@ module Blacklight
     # safeassign: :iterate_safeassign,
   }.freeze
 
-  FILE_BLACK_LIST = [
-    "*.dat",
-    "glossary",
-    "imsmanifest.xml",
-    ".bb-package-info",
-    ".bb-package-sig",
-  ].freeze
-
   def self.parse_manifest(zip_file, manifest)
     doc = Nokogiri::XML.parse(manifest)
     resources = doc.at("resources")
@@ -61,15 +53,28 @@ module Blacklight
     resources_array.flatten - ["", nil]
   end
 
-  def self.black_list?(name, type)
-    FILE_BLACK_LIST.any? { |black_item| File.fnmatch?(black_item, name) } ||
-      type == :directory
-  end
+  ##
+  # Iterate through course files and create new BlacklightFile for each
+  # non-metadata file.
+  ##
+  def self.iterate_files(zipfile)
+    files = zipfile.glob("csfiles/**/**")
+    file_names = files.map(&:name)
 
-  def self.get_files(zipfile)
-    zipfile.entries.
-      select { |e| !black_list?(e.name, e.ftype) }.
-      map { |entry| BlacklightFile.new(entry) }
+    files = files.select do |file|
+      if File.extname(file.name) == ".xml"
+        # Detect and skip metadata files.
+        concrete_file = File.join(
+          File.dirname(file.name),
+          File.basename(file.name, ".xml"),
+        )
+        !file_names.include?(concrete_file)
+      else
+        true
+      end
+    end
+
+    files.map { |file| BlacklightFile.new(file) }
   end
 
   # def self.scorm_manifest?(manifest)
