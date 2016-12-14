@@ -16,7 +16,7 @@ module Blacklight
       manifest = read_file(file, "imsmanifest.xml")
 
       resources = Blacklight.parse_manifest(file, manifest)
-      resources.concat(Blacklight.get_files(file))
+      resources.concat(Blacklight.iterate_files(file))
 
       course = create_canvas_course(resources, zip_path)
       build_file(course, imscc_path)
