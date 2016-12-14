@@ -3,25 +3,33 @@ module Blacklight
     def initialize
       @dataset_definitions = []
       @var_sets = []
+      @correct_answer_length = 0
+      @correct_answer_format = 0
+      @tolerance = 0
       super
     end
 
     def canvas_conversion(*)
       @question.dataset_definitions = @dataset_definitions
       @question.var_sets = @var_sets
+      @question.correct_answer_length = @correct_answer_length
+      @question.correct_answer_format = @correct_answer_format
+      @question.tolerance = @tolerance
       super
     end
 
     def iterate_xml(data)
       super
       calculated_node = data.at("itemproc_extension > calculated")
-      formula = CGI.unescapeHTML(calculated_node.at("formula").text)
+      math_ml = CGI.unescapeHTML(calculated_node.at("formula").text)
+      formula = Nokogiri::HTML(math_ml).text
+
       answer = Answer.new(formula)
-      answer.fraction = 1
       @answers.push(answer)
 
-      answer_tolerance = calculated_node.at("answer_tolerance").text
-      decimal_places = calculated_node.at("answer_scale").text
+      @tolerance = calculated_node.at("answer_tolerance").text
+      @correct_answer_format = 1
+      @correct_answer_length = calculated_node.at("answer_scale").text
 
       @dataset_definitions = parse_vars(calculated_node.at("vars"))
       @var_sets = parse_var_sets(calculated_node.at("var_sets"))
