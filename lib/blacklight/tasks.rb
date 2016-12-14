@@ -4,9 +4,9 @@ require "blacklight"
 require "byebug"
 
 ## CHANGED THESE TO CHANGE THE FOLDER LOCATIONS
-SOURCE_DIR = "source_dir".freeze
-OUTPUT_DIR = "output_dir".freeze
-UPLOAD_DIR = "upload_dir".freeze
+SOURCE_DIR = "sources".freeze
+OUTPUT_DIR = "canvas".freeze
+UPLOAD_DIR = "uploaded".freeze
 
 ## Don't change these, these are just getting the last
 ## of the folder name for the script below to use
