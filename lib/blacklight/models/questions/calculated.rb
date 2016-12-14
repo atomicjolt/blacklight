@@ -1,21 +1,31 @@
 module Blacklight
   class Calculated < Question
+    def initialize
+      @dataset_definitions = []
+      @var_sets = []
+      super
+    end
+
+    def canvas_conversion(*)
+      @question.dataset_definitions = @dataset_definitions
+      @question.var_sets = @var_sets
+      super
+    end
+
     def iterate_xml(data)
       super
       calculated_node = data.at("itemproc_extension > calculated")
-      formula = CGI.unescapeHTML(calculated_node.at("forumla").text)
-      answer = Answer.new(forumla)
-      @answers.push(answer)
-      answer_tolerance = calculated_node.at("answer_tolerance").text
-      decimal_places = 0
-
-      @vars = parse_vars(calculated_node.at("vars"))
-      var_sets = parse_var_sets(calculated_node.at("var_sets"))
-
-      answer_text = CGI.unescapeHTML(data.at("formula").text)
-      answer = Answer.new(answer_text)
+      formula = CGI.unescapeHTML(calculated_node.at("formula").text)
+      answer = Answer.new(formula)
       answer.fraction = 1
       @answers.push(answer)
+
+      answer_tolerance = calculated_node.at("answer_tolerance").text
+      decimal_places = calculated_node.at("answer_scale").text
+
+      @dataset_definitions = parse_vars(calculated_node.at("vars"))
+      @var_sets = parse_var_sets(calculated_node.at("var_sets"))
+
       self
     end
 
@@ -27,7 +37,7 @@ module Blacklight
         options = ":#{min}:#{max}:#{scale}"
 
         {
-          name: var.attributes["name"],
+          name: var.attributes["name"].value,
           options: options,
         }
       end
@@ -35,15 +45,15 @@ module Blacklight
 
     def parse_var_sets(parent_node)
       parent_node.search("var_set").map do |var_set|
-        var = var_set.at("var")
+        vars = {}
+        var_set.search("var").each do |var|
+          vars[var.attributes["name"].text] = var.text
+        end
 
         {
-          ident: var_set.attributes["ident"],
+          ident: var_set.attributes["ident"].text,
           answer: var_set.at("answer").text,
-          var: {
-            name: var.attributes["name"],
-            text: var.text,
-          },
+          vars: vars,
         }
       end
     end
