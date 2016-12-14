@@ -1,13 +1,6 @@
 module Blacklight
   class Content
     CONTENT_TYPES = {
-      # ignore
-      # "x-bb-asmt-test-link",
-      # "x-bb-asmt-survey-link",
-      # "x-bb-courselink",
-
-      # "x-bb-folder"
-
       # assignments
       "x-bb-assignment" => "Assignment",
       "x-bbpi-selfpeer-type1" => "Assignment",
@@ -19,22 +12,14 @@ module Blacklight
       "x-bb-image" => "WikiPage",
       "x-bb-video" => "WikiPage",
       "x-bb-externallink" => "WikiPage",
+      "x-bb-blankpage" => "WikiPage",
 
       # lesson named modules
       "x-bb-lesson" => "WikiPage-Module",
-
-      # lesson named modules
+      "x-bb-folder" => "WikiPage-Module",
+      "x-bb-module-page" => "WikiPage-Module",
       "x-bb-lesson-plan" => "WikiPage-Module",
       "x-bb-syllabus" => "WikiPage",
-
-      # lesson named modules
-      "x-bb-folder" => "WikiPage-Module",
-
-      # lesson named modules
-      "x-bb-module-page" => "WikiPage-Module",
-
-      # lesson named modules
-      "x-bb-blankpage" => "WikiPage",
 
       # lesson named modules
       "x-bb-flickr-mashup" => "WikiPage",
@@ -87,6 +72,18 @@ module Blacklight
     def create_module(course)
       course.canvas_modules = [] if course.canvas_modules.nil?
       cc_module = course.canvas_modules.detect { |a| a.identifier == @parent_id }
+
+      top_module = course.canvas_modules.detect { |c| c.title == "Content" }
+      if top_module && !cc_module
+        unless @parent_id == top_module.identifier || @parent_id == @id
+          course.canvas_modules.each do |course_module|
+            c_module = course_module.module_items.detect { |a| a.identifierref == @parent_id }
+            if c_module && course_module.identifier != top_module.identifier
+              cc_module = course_module
+            end
+          end
+        end
+      end
 
       if cc_module
         @cc_module_id = cc_module.identifier
