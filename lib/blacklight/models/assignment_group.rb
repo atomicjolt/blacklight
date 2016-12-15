@@ -1,5 +1,7 @@
+require "blacklight/models/resource"
+
 module Blacklight
-  class AssignmentGroup
+  class AssignmentGroup < Resource
     def initialize(title, group_id)
       @title = title
       @group_weight = ""
@@ -7,7 +9,7 @@ module Blacklight
       @group_id = group_id
     end
 
-    def canvas_conversion(course)
+    def canvas_conversion(course, _resources)
       assignment_group = CanvasCc::CanvasCC::Models::AssignmentGroup.new
       assignment_group.identifier = @group_id
       assignment_group.title = @title

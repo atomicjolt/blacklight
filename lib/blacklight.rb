@@ -15,8 +15,9 @@ module Blacklight
     Zip::File.open(zip_path) do |file|
       manifest = read_file(file, "imsmanifest.xml")
 
-      resources = Blacklight.parse_manifest(file, manifest)
-      resources.concat(Blacklight.iterate_files(file))
+      resources = Blacklight::Collection.new
+      resources.add(Blacklight.parse_manifest(file, manifest))
+      resources.add(Blacklight.iterate_files(file))
 
       course = create_canvas_course(resources, zip_path)
       build_file(course, imscc_path)
@@ -48,7 +49,7 @@ module Blacklight
     course = CanvasCc::CanvasCC::Models::Course.new
     course.course_code = zip_name
     resources.each do |resource|
-      course = resource.canvas_conversion(course)
+      course = resource.canvas_conversion(course, resources)
     end
     course
   end

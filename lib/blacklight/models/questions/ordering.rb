@@ -22,7 +22,7 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(assessment)
+    def canvas_conversion(assessment, _resources)
       @question.matches = @matches
       super
     end

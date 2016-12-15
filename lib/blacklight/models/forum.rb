@@ -1,5 +1,7 @@
+require "blacklight/models/resource"
+
 module Blacklight
-  class Forum
+  class Forum < Resource
     def initialize
       @title = ""
       @text = ""
@@ -13,7 +15,7 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(course)
+    def canvas_conversion(course, _resources)
       discussion = CanvasCc::CanvasCC::Models::Discussion.new
       discussion.title = @title
       discussion.text = @text

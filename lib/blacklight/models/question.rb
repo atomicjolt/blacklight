@@ -1,5 +1,7 @@
+require "blacklight/models/resource"
+
 module Blacklight
-  class Question
+  class Question < Resource
     attr_reader :answers
 
     QUESTION_TYPE = {
@@ -79,11 +81,11 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(assessment)
+    def canvas_conversion(assessment, resources)
       @question.identifier = Blacklight.create_random_hex
       @question.title = convert_html(@title)
       @question.points_possible = @points_possible
-      @question.material = convert_html(@material)
+      @question.material = fix_images(@material, resources)
       @question.general_feedback = convert_html(@general_feedback)
       @general_correct_feedback = convert_html(@general_correct_feedback)
       @question.general_correct_feedback = @general_correct_feedback
@@ -91,7 +93,7 @@ module Blacklight
       @question.general_incorrect_feedback = @general_incorrect_feedback
       @question.answers = []
       @answers.each do |answer|
-        @question = answer.canvas_conversion(@question)
+        @question = answer.canvas_conversion(@question, resources)
       end
       assessment.items << @question
       assessment
@@ -99,7 +101,22 @@ module Blacklight
 
     def convert_html(contents)
       if contents && !contents.empty?
-        Nokogiri::HTML(contents).text
+        Nokogiri::HTML.fragment(contents).text
+      else
+        contents
+      end
+    end
+
+    def fix_images(contents, resources)
+      if contents && !contents.empty?
+        node_html = Nokogiri::HTML.fragment(contents)
+        node_html.search("img").each do |element|
+          original_src = element["src"]
+          xid = original_src.split("/").last
+          file_resource = resources.detect_xid(xid)
+          element["src"] = "$IMS-CC-FILEBASE$/#{file_resource}"
+        end
+        node_html.to_s
       else
         contents
       end

@@ -1,5 +1,7 @@
+require "blacklight/models/resource"
+
 module Blacklight
-  class Answer
+  class Answer < Resource
     attr_reader :id, :answer_text
     attr_accessor :fraction, :resp_ident, :feedback
 
@@ -16,7 +18,7 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(question)
+    def canvas_conversion(question, _resources)
       answer = CanvasCc::CanvasCC::Models::Answer.new(@answer_text)
       answer.answer_text = @answer_text
       answer.id = @id

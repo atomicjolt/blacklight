@@ -1,9 +1,10 @@
 require "blacklight/models/assignment_group"
 require "blacklight/models/assignment"
 require "blacklight/models/question"
+require "blacklight/models/resource"
 
 module Blacklight
-  class Assessment
+  class Assessment < Resource
     def initialize
       @title = ""
       @description = ""
@@ -28,51 +29,51 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(course)
+    def canvas_conversion(course, resources)
       if @items.count > 0
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.identifier = Blacklight.create_random_hex
-        course = create_assignment_group(course)
+        course = create_assignment_group(course, resources)
         assignment = create_assignment
         assignment.quiz_identifier_ref = assessment.identifier
         course.assignments << assignment
-        assessment = setup_assessment(assessment, assignment)
+        assessment = setup_assessment(assessment, assignment, resources)
         course.assessments << assessment
       end
       course
     end
 
-    def setup_assessment(assessment, assignment)
+    def setup_assessment(assessment, assignment, resources)
       assessment.title = @title
       assessment.description = @description
       assessment.available = @available
       assessment.quiz_type = @quiz_type
       assessment.points_possible = @points_possible
-      assessment = create_items(assessment)
+      assessment = create_items(assessment, resources)
       assessment.assignment = assignment
       assessment
     end
 
-    def create_items(assessment)
+    def create_items(assessment, resources)
       @items = @items - ["", nil]
       questions = @items.map do |item|
         Question.from(item)
       end
       assessment.items = []
       questions.each do |item|
-        assessment = item.canvas_conversion(assessment)
+        assessment = item.canvas_conversion(assessment, resources)
       end
       assessment
     end
 
-    def create_assignment_group(course)
+    def create_assignment_group(course, resources)
       group = course.assignment_groups.detect { |a| a.title == @group_name }
       if group
         @group_id = group.identifier
       else
         @group_id = Blacklight.create_random_hex
         assignment_group = AssignmentGroup.new(@group_name, @group_id)
-        course = assignment_group.canvas_conversion(course)
+        course = assignment_group.canvas_conversion(course, resources)
       end
       course
     end

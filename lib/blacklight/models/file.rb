@@ -1,6 +1,8 @@
+require "blacklight/models/resource"
 require "blacklight/exceptions"
+
 module Blacklight
-  class BlacklightFile
+  class BlacklightFile < Resource
     attr_accessor(:id, :location, :name)
 
     def initialize(zip_entry)
@@ -13,6 +15,9 @@ module Blacklight
       @id = id
     end
 
+    def matches_xid?(xid)
+    end
+
     def extract_file(entry)
       @@dir ||= Dir.mktmpdir
 
@@ -23,7 +28,7 @@ module Blacklight
       name
     end
 
-    def canvas_conversion(course)
+    def canvas_conversion(course, _resources)
       file = CanvasCc::CanvasCC::Models::CanvasFile.new
       file.identifier = @id
       file.file_location = @location

@@ -1,5 +1,7 @@
+require "blacklight/models/resource"
+
 module Blacklight
-  class ContentFile
+  class ContentFile < Resource
     attr_accessor(:id, :name, :linkname)
 
     def initialize(xml)
@@ -8,12 +10,12 @@ module Blacklight
       @linkname = xml.xpath("./LINKNAME/@value").first.text
     end
 
-    def canvas_conversion
+    def canvas_conversion(*)
       "<a href='$IMS_CC_FILEBASE$/#{@linkname}'>#{@linkname}</a>"
     end
   end
 
-  class Content
+  class Content < Resource
     attr_accessor(:title, :body, :id, :files)
 
     def iterate_xml(xml)
@@ -27,7 +29,7 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(course)
+    def canvas_conversion(course, _resources)
       page = CanvasCc::CanvasCC::Models::Page.new
       page.body = @body
       page.identifier = @id

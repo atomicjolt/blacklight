@@ -1,5 +1,7 @@
+require "blacklight/models/resource"
+
 module Blacklight
-  class Assignment
+  class Assignment < Resource
     def initialize
       @id
       @title = ""
@@ -19,7 +21,7 @@ module Blacklight
     def iterate_xml(data)
     end
 
-    def canvas_conversion(course)
+    def canvas_conversion(course, _resources)
       course
     end
   end
