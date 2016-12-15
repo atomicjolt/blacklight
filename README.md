@@ -29,7 +29,6 @@ Blacklight::Tasks.install_tasks
 
 Create a `blacklight.yml` and add credentials
 ```yaml
-
 # Generally looks like https://< mycanvas_instance >/api
 :canvas_url: <canvas instance api url>
 
@@ -49,6 +48,9 @@ Create a `blacklight.yml` and add credentials
 # of adhesion you can generate a shared secret by logging into the server and
 # running rake shared_auth, which will generate and save a token
 :scorm_shared_auth: <scorm manager token>
+
+# The account or sub-account id. This can be :self, :default, or an id
+:account_id: <id>
 ```
 
 ## Usage

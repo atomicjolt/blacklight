@@ -57,10 +57,10 @@ module Blacklight
     ##
     def self.from_metadata(metadata, blackboard_export = nil)
       course_name = metadata[:name] || metadata[:title]
-      courses = client.list_active_courses_in_account(:self)
+      courses = client.list_active_courses_in_account(Blacklight.account_id)
       canvas_course = courses.detect { |course| course.name == course_name } ||
         client.create_new_course(
-          :self,
+          Blacklight.account_id,
           course: {
             name: course_name,
           },

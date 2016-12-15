@@ -19,6 +19,9 @@ module Blacklight
 
   def self.scorm_shared_auth
     Blacklight._config[:scorm_shared_auth]
+
+  def self.account_id
+    Blacklight._config[:account_id] || :self
   end
 
   def self._config
