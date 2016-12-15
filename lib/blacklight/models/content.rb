@@ -79,20 +79,17 @@ module Blacklight
     end
 
     def create_module(course)
-      course.canvas_modules = [] if course.canvas_modules.nil?
+      course.canvas_modules ||= []
       cc_module = course.canvas_modules.
         detect { |a| a.identifier == @parent_id }
       if cc_module
-        @cc_module_id = cc_module.identifier
         cc_module.module_items << @module_item
-        course.canvas_modules.delete_if { |a| a.identifier == @parent_id }
       else
-        @cc_module_id = @parent_id
         cc_module = Module.new(@title, @parent_id)
         cc_module = cc_module.canvas_conversion
         cc_module.module_items << @module_item
+        course.canvas_modules << cc_module
       end
-      course.canvas_modules << cc_module
       course
     end
   end

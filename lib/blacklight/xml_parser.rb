@@ -26,54 +26,47 @@ module Blacklight
 
   def self.iterate_xml(resources, zip_file)
     pre_data = pre_iterator(resources, zip_file)
-
-    resources_array = resources.children.map do |resource|
-      file_name = resource.attributes["file"].value
-      if zip_file.find_entry(file_name)
-        data_file = Blacklight.read_file(zip_file, file_name)
-        xml_data = Nokogiri::XML.parse(data_file).children.first
-        type = xml_data.name.downcase
-        if RESOURCE_TYPE[type.to_sym]
-          single_pre_data = get_single_pre_data(pre_data, file_name)
-          res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
-          if type == "content"
-            Content.from(xml_data, single_pre_data)
-          else
-            resource = res_class.new
-            resource.iterate_xml(xml_data, single_pre_data)
-          end
+    resources_array = midnight_eagle(resources, zip_file) do |xml_data, type, file|
+      if RESOURCE_TYPE[type.to_sym]
+        single_pre_data = get_single_pre_data(pre_data, file)
+        res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
+        if type == "content"
+          Content.from(xml_data, single_pre_data)
+        else
+          resource = res_class.new
+          resource.iterate_xml(xml_data, single_pre_data)
         end
       end
     end
     resources_array.flatten - ["", nil]
   end
 
-  def self.get_single_pre_data(pre_data, file_name)
-    file = file_name.split(".dat")[0]
-    single_pre_data = pre_data.
-      detect { |d| d[:file_name] == file }
-    unless single_pre_data
-      single_pre_data = pre_data.
-        detect { |d| d[:assignment_id] == file }
-    end
-    single_pre_data
+  def self.get_single_pre_data(pre_data, file)
+    pre_data.detect { |d| d[:file_name] == file ||
+      d[:assignment_id] == file }
   end
 
-  def self.pre_iterator(resources, zip_file)
-    pre_data = {}
+  def self.midnight_eagle(resources, zip_file)
     resources.children.map do |resource|
       file_name = resource.attributes["file"].value
+      file = File.basename(file_name, ".dat")
       if zip_file.find_entry(file_name)
         data_file = Blacklight.read_file(zip_file, file_name)
         xml_data = Nokogiri::XML.parse(data_file).children.first
         type = xml_data.name.downcase
-        if PRE_RESOURCE_TYPE[type.to_sym]
-          res_class = Blacklight.const_get PRE_RESOURCE_TYPE[type.to_sym]
-          resource_class = res_class.new
-          pre_data[type] = [] if pre_data[type].nil?
-          file = file_name.split(".dat")[0]
-          pre_data[type].push(resource_class.get_pre_data(xml_data, file))
-        end
+        yield xml_data, type, file
+      end
+    end
+  end
+
+  def self.pre_iterator(resources, zip_file)
+    pre_data = {}
+    midnight_eagle(resources, zip_file) do |xml_data, type, file|
+      if PRE_RESOURCE_TYPE[type.to_sym]
+        res_class = Blacklight.const_get PRE_RESOURCE_TYPE[type.to_sym]
+        resource_class = res_class.new
+        pre_data[type] ||= []
+        pre_data[type].push(resource_class.get_pre_data(xml_data, file))
       end
     end
     pre_data = connect_content(pre_data)
@@ -96,15 +89,12 @@ module Blacklight
     parents = pre_data.select { |p| p[:parent_id] == "{unset id}" }
     parents_ids = parents.map { |u| u[:id] }
     pre_data.each do |content|
-      unless parents_ids.include?(content[:id])
-        unless parents_ids.include?(content[:parent_id])
-          parent_id = get_master_parent(pre_data, parents_ids,
-                                        content[:parent_id])
-          content[:parent_id] = parent_id
-        end
-      end
+      next if parents_ids.include?(content[:id])
+      next if parents_ids.include?(content[:parent_id])
+      parent_id = get_master_parent(pre_data, parents_ids,
+                                    content[:parent_id])
+      content[:parent_id] = parent_id
     end
-    pre_data
   end
 
   def self.get_master_parent(pre_data, parents_ids, parent_id)

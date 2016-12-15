@@ -16,10 +16,8 @@ module Blacklight
     end
 
     def iterate_xml(data, pre_data)
-      @id = Blacklight.create_random_hex
-      if pre_data && !pre_data[:assignment_id].empty?
-        @id = pre_data[:assignment_id]
-      end
+      pre_data ||= {}
+      @id = pre_data[:assignment_id] || Blacklight.create_random_hex
       @title = data.at("assessment").attributes["title"].value
       @points_possible = data.at("qmd_absolutescore_max").text
       @description = data.at("presentation_material").

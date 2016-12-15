@@ -13,7 +13,7 @@ module Blacklight
 
     def get_pre_data(data, _)
       categories = get_categories(data)
-      outcomes = data.search("OUTCOMEDEFINITIONS").children.map do |outcome|
+      data.search("OUTCOMEDEFINITIONS").children.map do |outcome|
         content_id = outcome.at("CONTENTID").attributes["value"].value
         assignment_id = outcome.at("ASIDATAID").attributes["value"].value
         category_id = outcome.at("CATEGORYID").attributes["value"].value
@@ -22,7 +22,6 @@ module Blacklight
         { category: category, points: points, content_id: content_id,
           assignment_id: assignment_id }
       end
-      outcomes
     end
   end
 end
