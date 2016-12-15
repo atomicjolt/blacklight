@@ -4,7 +4,8 @@ module Blacklight
 
     ##
     # Scorm packages should include this string in the <schema> tag. We
-    # downcase, and remove spaces to be more consistant
+    # downcase, and remove spaces before checking to see if a manifest contains
+    # this schema to determine whether or not it belongs to a scorm package
     ##
     SCORM_SCHEMA = "adlscorm".freeze
 
