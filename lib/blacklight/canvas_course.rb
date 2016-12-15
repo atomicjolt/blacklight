@@ -88,10 +88,10 @@ module Blacklight
         },
       }
 
-      RestClient.post(
-        "#{Blacklight.canvas_url}/v1/courses/#{course_id}/assignments",
+      client.create_assignment(
+        course_id,
+        scorm_package["title"],
         payload,
-        Authorization: "Bearer #{Blacklight.canvas_token}",
       )
     end
 
