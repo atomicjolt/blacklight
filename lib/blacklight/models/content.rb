@@ -26,7 +26,6 @@ module Blacklight
     attr_accessor(:title, :body, :id, :files)
 
     def self.from(xml, pre_data)
-      title = xml.xpath("/CONTENT/TITLE/@value").first.text
       type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
       type.slice! "resource/"
       if content_type = CONTENT_TYPES[type]
@@ -48,12 +47,12 @@ module Blacklight
       bb_type.slice! "resource/"
       @module_type = CONTENT_TYPES[bb_type]
 
-      if pre_data[:assignment_id] && pre_data[:assignment_id].length > 0
+      if pre_data[:assignment_id] && pre_data[:assignment_id].empty?
         @id = pre_data[:assignment_id]
       end
 
       if @module_type
-        item = set_module(xml)
+        item = set_module
         @module_item = item.canvas_conversion
       end
 
@@ -69,7 +68,7 @@ module Blacklight
       { id: id, parent_id: parent_id, file_name: file_name }
     end
 
-    def set_module(xml)
+    def set_module
       if @module_type.include?("-Module")
         @module_type.slice! "-Module"
         @parent_id = @id
@@ -80,7 +79,6 @@ module Blacklight
     end
 
     def canvas_conversion(course)
-      # need access to the gradebook here -- and file name
       course
     end
 

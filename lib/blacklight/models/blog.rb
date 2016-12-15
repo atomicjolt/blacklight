@@ -6,7 +6,7 @@ module Blacklight
       @is_public = true
     end
 
-    def iterate_xml(data, pre_data)
+    def iterate_xml(data, _)
       @name = Blacklight.get_attribute_value(data, "TITLE")
       @description = data.at("TEXT").text
       @is_public = Blacklight.get_attribute_value(data, "ISAVAILABLE")

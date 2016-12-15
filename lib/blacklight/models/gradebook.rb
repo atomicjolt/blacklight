@@ -11,7 +11,7 @@ module Blacklight
       categories
     end
 
-    def get_pre_data(data, file_name)
+    def get_pre_data(data, _)
       categories = get_categories(data)
       outcomes = data.search("OUTCOMEDEFINITIONS").children.map do |outcome|
         content_id = outcome.at("CONTENTID").attributes["value"].value

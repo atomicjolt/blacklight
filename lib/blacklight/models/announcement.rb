@@ -10,7 +10,7 @@ module Blacklight
       @type = "announcement"
     end
 
-    def iterate_xml(data, pre_data)
+    def iterate_xml(data, _)
       dates = data.children.at("DATES")
       @title = Blacklight.get_attribute_value(data, "TITLE")
       @text = Blacklight.get_text(data, "TEXT")
