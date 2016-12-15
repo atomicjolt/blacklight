@@ -11,20 +11,6 @@ module Blacklight
     course: "Course",
     questestinterop: "Assessment",
     content: "Content",
-
-    # categories: :iterate_categories,
-    # itemcategories: :iterate_itemcategories,
-    # staffinfo: :iterate_staffinfo,
-    # coursemodulepages: :iterate_coursemodulepages,
-    # groupcontentlist: :iterate_groupcontentlist,
-    # learnrubrics: :iterate_learnrubrics,
-    # collabsessions: :iterate_collabsessions,
-    # cms_resource_link_list: :iterate_resource_link_list,
-    # courserubricassociations: :iterate_courserubricassociations,
-    # partentcontextinfo: :iterate_parentcontextinfo,
-    # notificationrules: :iterate_notificationrules,
-    # wiki: :iterate_wiki,
-    # safeassign: :iterate_safeassign,
   }.freeze
 
   PRE_RESOURCE_TYPE = {
@@ -49,25 +35,29 @@ module Blacklight
         xml_data = data.children.first
         type = xml_data.name.downcase
         if RESOURCE_TYPE[type.to_sym]
-          file = file_name.split(".dat")[0]
-          single_data = pre_data.
-            detect { |d| d[:file_name] == file }
-          unless single_data
-            single_data = pre_data.
-              detect { |d| d[:assignment_id] == file }
-          end
-
+          single_pre_data = get_single_pre_data(pre_data, file_name)
           res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
           if type == "content"
-            Content.from(xml_data, single_data)
+            Content.from(xml_data, single_pre_data)
           else
             resource = res_class.new
-            resource.iterate_xml(xml_data, single_data)
+            resource.iterate_xml(xml_data, single_pre_data)
           end
         end
       end
     end
     resources_array.flatten - ["", nil]
+  end
+
+  def self.get_single_pre_data(pre_data, file_name)
+    file = file_name.split(".dat")[0]
+    single_pre_data = pre_data.
+      detect { |d| d[:file_name] == file }
+    unless single_pre_data
+      single_pre_data = pre_data.
+        detect { |d| d[:assignment_id] == file }
+    end
+    single_pre_data
   end
 
   def self.pre_iterator(resources, zip_file)
@@ -88,7 +78,8 @@ module Blacklight
         end
       end
     end
-    connect_content(pre_data)
+    pre_data = connect_content(pre_data)
+    build_heirarchy(pre_data)
   end
 
   def self.connect_content(pre_data)
@@ -101,6 +92,29 @@ module Blacklight
       end
     end
     pre_data["content"]
+  end
+
+  def self.build_heirarchy(pre_data)
+    parents = pre_data.select { |p| p[:parent_id] == "{unset id}" }
+    parents_ids = parents.map{|u| u[:id]}
+    pre_data.each do |content|
+      unless parents_ids.include?(content[:id])
+        unless parents_ids.include?(content[:parent_id])
+          parent_id = get_master_parent(pre_data, parents_ids, content[:parent_id])
+          content[:parent_id] = parent_id
+        end
+      end
+    end
+    pre_data
+  end
+
+  def self.get_master_parent(pre_data, parents_ids, parent_id)
+    parent = pre_data.find { |p| p[:id] == parent_id }
+    if parents_ids.include? parent[:id]
+      return parent[:id]
+    else
+      get_master_parent(pre_data, parents_ids, parent[:parent_id])
+    end
   end
 
   ##

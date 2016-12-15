@@ -1,11 +1,7 @@
 module Blacklight
   class Assignment < Content
     def canvas_conversion(course)
-      if @title == "--TOP--"
-        if @parent_id == "{unset id}"
-          course = create_module(course)
-        end
-      else
+      unless @title == "--TOP--"
         assignment = CanvasCc::CanvasCC::Models::Assignment.new
         assignment.identifier = @id
         assignment.title = @title
