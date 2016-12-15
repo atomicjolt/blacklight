@@ -9,6 +9,10 @@ module Blacklight
     Blacklight._config[:canvas_token]
   end
 
+  def self.account_id
+    Blacklight._config[:account_id] || :self
+  end
+
   def self._config
     @config ||= if File.exists? "blacklight.yml"
                   YAML::load(File.read("blacklight.yml"))
