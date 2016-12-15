@@ -73,7 +73,8 @@ module Blacklight
       @question_type = QUESTION_TYPE[@blackboard_type]
       @question = CanvasCc::CanvasCC::Models::Question.create(@question_type)
       @points_possible = data.at("qmd_absolutescore_max").text
-      @title = data.attributes["title"].value
+      title = data.attributes["title"]
+      @title = title ? title.value : ""
       iterate_item(data)
       self
     end
