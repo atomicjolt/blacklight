@@ -17,7 +17,7 @@ module Blacklight
 
     def iterate_xml(data, pre_data)
       @id = Blacklight.create_random_hex
-      if pre_data && pre_data[:assignment_id].length > 0
+      if pre_data && !pre_data[:assignment_id].empty?
         @id = pre_data[:assignment_id]
       end
       @title = data.at("assessment").attributes["title"].value

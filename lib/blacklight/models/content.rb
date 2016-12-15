@@ -47,7 +47,7 @@ module Blacklight
       bb_type.slice! "resource/"
       @module_type = CONTENT_TYPES[bb_type]
 
-      if pre_data[:assignment_id] && pre_data[:assignment_id].length > 0
+      if pre_data[:assignment_id] && !pre_data[:assignment_id].empty?
         @id = pre_data[:assignment_id]
       end
 

@@ -6,6 +6,9 @@ module Blacklight
           course = create_module(course)
         end
       else
+        page = course.pages.
+          select { |p| p.title.start_with? @title }.count
+        @title = "#{@title}-#{page}" unless page > 0
         page = CanvasCc::CanvasCC::Models::Page.new
         page.body = @body
         page.identifier = @id
