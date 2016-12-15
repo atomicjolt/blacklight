@@ -96,11 +96,12 @@ module Blacklight
 
   def self.build_heirarchy(pre_data)
     parents = pre_data.select { |p| p[:parent_id] == "{unset id}" }
-    parents_ids = parents.map{|u| u[:id]}
+    parents_ids = parents.map { |u| u[:id] }
     pre_data.each do |content|
       unless parents_ids.include?(content[:id])
         unless parents_ids.include?(content[:parent_id])
-          parent_id = get_master_parent(pre_data, parents_ids, content[:parent_id])
+          parent_id = get_master_parent(pre_data, parents_ids,
+                                        content[:parent_id])
           content[:parent_id] = parent_id
         end
       end
@@ -109,7 +110,7 @@ module Blacklight
   end
 
   def self.get_master_parent(pre_data, parents_ids, parent_id)
-    parent = pre_data.find { |p| p[:id] == parent_id }
+    parent = pre_data.detect { |p| p[:id] == parent_id }
     if parents_ids.include? parent[:id]
       return parent[:id]
     else
