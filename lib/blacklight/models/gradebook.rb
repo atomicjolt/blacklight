@@ -1,16 +1,5 @@
 module Blacklight
   class Gradebook
-    attr_reader :outcomes
-
-    def iterate_xml(data)
-      @outcomes = get_outcome(data)
-      self
-    end
-
-    def canvas_conversion(course)
-      course
-    end
-
     def get_categories(data)
       categories = {}
       data.at("CATEGORIES").children.each do |category|
@@ -22,17 +11,16 @@ module Blacklight
       categories
     end
 
-    def get_outcome(data)
-      outcomes = {}
+    def get_pre_data(data, file_name)
       categories = get_categories(data)
-      data.search("OUTCOMEDEFINITIONS").children.each do |outcome|
-        id = outcome.at("CONTENTID").attributes["value"].value
-        if id.empty?
-          category_id = outcome.at("CATEGORYID").attributes["value"].value
-          category = categories[category_id]
-          points = outcome.at("POINTSPOSSIBLE").attributes["value"].value
-          outcomes[id] = { category: category, points: points }
-        end
+      outcomes = data.search("OUTCOMEDEFINITIONS").children.map do |outcome|
+        content_id = outcome.at("CONTENTID").attributes["value"].value
+        assignment_id = outcome.at("ASIDATAID").attributes["value"].value
+        category_id = outcome.at("CATEGORYID").attributes["value"].value
+        category = categories[category_id]
+        points = outcome.at("POINTSPOSSIBLE").attributes["value"].value
+        { category: category, points: points, content_id: content_id,
+          assignment_id: assignment_id }
       end
       outcomes
     end

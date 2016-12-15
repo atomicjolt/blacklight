@@ -14,7 +14,7 @@ module Blacklight
       @conclude_at = ""
     end
 
-    def iterate_xml(data)
+    def iterate_xml(data, pre_data)
       @identifier = data["id"]
       @title = Blacklight.get_attribute_value(data, "TITLE")
       @description = Blacklight.get_description(data)

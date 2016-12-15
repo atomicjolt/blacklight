@@ -11,7 +11,6 @@ module Blacklight
     course: "Course",
     questestinterop: "Assessment",
     content: "Content",
-    gradebook: "Gradebook",
 
     # categories: :iterate_categories,
     # itemcategories: :iterate_itemcategories,
@@ -20,13 +19,17 @@ module Blacklight
     # groupcontentlist: :iterate_groupcontentlist,
     # learnrubrics: :iterate_learnrubrics,
     # collabsessions: :iterate_collabsessions,
-    # link: :iterate_link,
     # cms_resource_link_list: :iterate_resource_link_list,
     # courserubricassociations: :iterate_courserubricassociations,
     # partentcontextinfo: :iterate_parentcontextinfo,
     # notificationrules: :iterate_notificationrules,
     # wiki: :iterate_wiki,
     # safeassign: :iterate_safeassign,
+  }.freeze
+
+  PRE_RESOURCE_TYPE = {
+    content: "Content",
+    gradebook: "Gradebook",
   }.freeze
 
   def self.parse_manifest(zip_file, manifest)
@@ -36,6 +39,8 @@ module Blacklight
   end
 
   def self.iterate_xml(resources, zip_file)
+    pre_data = pre_iterator(resources, zip_file)
+
     resources_array = resources.children.map do |resource|
       file_name = resource.attributes["file"].value
       if zip_file.find_entry(file_name)
@@ -44,13 +49,53 @@ module Blacklight
         xml_data = data.children.first
         type = xml_data.name.downcase
         if RESOURCE_TYPE[type.to_sym]
+          file = file_name.split(".dat")[0]
+          single_data = pre_data.find {|d| d[:file_name] == file }
+          single_data = pre_data.find {|d| d[:assignment_id] == file } unless single_data
+
           res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
-          resource = res_class.new
-          resource.iterate_xml(xml_data)
+          if type == "content"
+            Content.from(xml_data, single_data)
+           else
+            resource = res_class.new
+            resource.iterate_xml(xml_data, single_data)
+          end
         end
       end
     end
     resources_array.flatten - ["", nil]
+  end
+
+  def self.pre_iterator(resources, zip_file)
+    pre_data = {}
+    resources.children.map do |resource|
+      file_name = resource.attributes["file"].value
+      if zip_file.find_entry(file_name)
+        data_file = Blacklight.read_file(zip_file, file_name)
+        data = Nokogiri::XML.parse(data_file)
+        xml_data = data.children.first
+        type = xml_data.name.downcase
+        if PRE_RESOURCE_TYPE[type.to_sym]
+          res_class = Blacklight.const_get PRE_RESOURCE_TYPE[type.to_sym]
+          resource_class = res_class.new
+          pre_data[type] = [] if pre_data[type].nil?
+          file = file_name.split(".dat")[0]
+          pre_data[type].push(resource_class.get_pre_data(xml_data, file))
+        end
+      end
+    end
+    connect_content(pre_data)
+  end
+
+  def self.connect_content(pre_data)
+    pre_data["content"].each do |content|
+      gradebook = pre_data["gradebook"].first.find {|g| g[:content_id] == content[:file_name] }
+      if gradebook
+        content[:points] = gradebook[:points] || ""
+        content[:assignment_id] = gradebook[:assignment_id] || ""
+      end
+    end
+    pre_data["content"]
   end
 
   ##

@@ -9,7 +9,7 @@ module Blacklight
       @identifier = Blacklight.create_random_hex
       @content_type = type
       @identifierref = identifier
-      @workflow_state = "published"
+      @workflow_state = "active"
     end
 
     def canvas_conversion

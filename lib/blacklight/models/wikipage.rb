@@ -10,6 +10,7 @@ module Blacklight
         page.body = @body
         page.identifier = @id
         page.page_name = @title
+        page.workflow_state = "active"
 
         # Add page links to page body
         @files.each { |f| page.body << f.canvas_conversion }
