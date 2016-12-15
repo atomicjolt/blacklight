@@ -69,7 +69,7 @@ module Blacklight
         @entries.each do |entry|
           if entry.file?
             zip.get_output_stream(
-              self.class.correct_path(entry.name, scorm_path),
+              ScormPackage.correct_path(entry.name, scorm_path),
             ) do |file|
               file.write(entry.get_input_stream.read)
             end
