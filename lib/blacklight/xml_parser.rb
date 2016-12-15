@@ -31,8 +31,7 @@ module Blacklight
       file_name = resource.attributes["file"].value
       if zip_file.find_entry(file_name)
         data_file = Blacklight.read_file(zip_file, file_name)
-        data = Nokogiri::XML.parse(data_file)
-        xml_data = data.children.first
+        xml_data = Nokogiri::XML.parse(data_file).children.first
         type = xml_data.name.downcase
         if RESOURCE_TYPE[type.to_sym]
           single_pre_data = get_single_pre_data(pre_data, file_name)
@@ -66,8 +65,7 @@ module Blacklight
       file_name = resource.attributes["file"].value
       if zip_file.find_entry(file_name)
         data_file = Blacklight.read_file(zip_file, file_name)
-        data = Nokogiri::XML.parse(data_file)
-        xml_data = data.children.first
+        xml_data = Nokogiri::XML.parse(data_file).children.first
         type = xml_data.name.downcase
         if PRE_RESOURCE_TYPE[type.to_sym]
           res_class = Blacklight.const_get PRE_RESOURCE_TYPE[type.to_sym]
