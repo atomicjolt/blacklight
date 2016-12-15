@@ -31,6 +31,9 @@ Create a `blacklight.yml` and add credentials
 ```yaml
 :canvas_url: <url>
 :canvas_token: <token>
+
+# The account or sub-account id. This can be :self, :default, or an id
+:account_id: <id>
 ```
 
 ## Usage
