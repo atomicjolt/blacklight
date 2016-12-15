@@ -1,6 +1,7 @@
 require "blacklight/version"
 require "blacklight/xml_parser"
 require "blacklight/canvas_course"
+require "blacklight/collection"
 
 require "canvas_cc"
 require "optparse"

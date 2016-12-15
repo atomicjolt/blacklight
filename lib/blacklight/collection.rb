@@ -1,6 +1,6 @@
 module Blacklight
   class Collection
-    def initilize
+    def initialize
       @resources = []
     end
 

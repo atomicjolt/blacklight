@@ -8,14 +8,17 @@ module Blacklight
     def initialize(zip_entry)
       path = zip_entry.name
       id = File.basename(path)
+      xid = id[/__(xid-[0-9]+_[0-9]+)/, 1]
       name = id.gsub(/__xid-[0-9]+_[0-9]+/, "")
 
       @location = extract_file(zip_entry) # Location of file on local filesystem
       @name = name
       @id = id
+      @xid = xid
     end
 
     def matches_xid?(xid)
+      @xid == xid
     end
 
     def extract_file(entry)
