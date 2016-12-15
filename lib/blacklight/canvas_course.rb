@@ -88,9 +88,8 @@ module Blacklight
         },
       }
 
-      client.create_assignment(
+      CanvasCourse.client.create_assignment(
         course_id,
-        scorm_package["title"],
         payload,
       )
     end
