@@ -47,7 +47,7 @@ module Blacklight
       bb_type.slice! "resource/"
       @module_type = CONTENT_TYPES[bb_type]
 
-      if pre_data[:assignment_id] && pre_data[:assignment_id].empty?
+      if pre_data[:assignment_id] && pre_data[:assignment_id].length > 0
         @id = pre_data[:assignment_id]
       end
 
@@ -84,20 +84,9 @@ module Blacklight
 
     def create_module(course)
       course.canvas_modules = [] if course.canvas_modules.nil?
-      cc_module = course.canvas_modules.detect { |a| a.identifier == @parent_id }
-
-      top_module = course.canvas_modules.detect { |c| c.title == "Content" }
-      if top_module && !cc_module
-        cc_module = top_module if @title == "--TOP--"
-        unless @parent_id == top_module.identifier || @parent_id == @id
-          course.canvas_modules.each do |course_module|
-            c_module = course_module.module_items.detect { |a| a.identifierref == @parent_id }
-            if c_module && course_module.identifier != top_module.identifier
-              cc_module = course_module
-            end
-          end
-        end
-      end
+      cc_module = course.canvas_modules.
+        detect { |a| a.identifier == @parent_id }
+      cc_module = combine_parent_modules(course, cc_module)
 
       if cc_module
         @cc_module_id = cc_module.identifier
@@ -112,6 +101,29 @@ module Blacklight
       end
       course.canvas_modules << cc_module
       course
+    end
+
+    def combine_parent_modules(course, cc_module)
+      top_module = course.canvas_modules.
+        detect { |c| c.title == "Content" }
+      if top_module && !cc_module
+        cc_module = top_module if @title == "--TOP--"
+        unless @parent_id == top_module.identifier || @parent_id == @id
+          cc_module = iterate_parents(course, cc_module, top_module)
+        end
+      end
+      cc_module
+    end
+
+    def iterate_parents(course, cc_module, top_module)
+      course.canvas_modules.each do |course_module|
+        c_module = course_module.module_items.
+          detect { |a| a.identifierref == @parent_id }
+        if c_module && course_module.identifier != top_module.identifier
+          cc_module = course_module
+        end
+      end
+      cc_module
     end
   end
 end

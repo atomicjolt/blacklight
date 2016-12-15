@@ -50,13 +50,17 @@ module Blacklight
         type = xml_data.name.downcase
         if RESOURCE_TYPE[type.to_sym]
           file = file_name.split(".dat")[0]
-          single_data = pre_data.find {|d| d[:file_name] == file }
-          single_data = pre_data.find {|d| d[:assignment_id] == file } unless single_data
+          single_data = pre_data.
+            detect { |d| d[:file_name] == file }
+          unless single_data
+            single_data = pre_data.
+              detect { |d| d[:assignment_id] == file }
+          end
 
           res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
           if type == "content"
             Content.from(xml_data, single_data)
-           else
+          else
             resource = res_class.new
             resource.iterate_xml(xml_data, single_data)
           end
@@ -89,7 +93,8 @@ module Blacklight
 
   def self.connect_content(pre_data)
     pre_data["content"].each do |content|
-      gradebook = pre_data["gradebook"].first.find {|g| g[:content_id] == content[:file_name] }
+      gradebook = pre_data["gradebook"].first.
+        detect { |g| g[:content_id] == content[:file_name] }
       if gradebook
         content[:points] = gradebook[:points] || ""
         content[:assignment_id] = gradebook[:assignment_id] || ""
