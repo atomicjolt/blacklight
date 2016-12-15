@@ -54,7 +54,7 @@ module Blacklight
     course
   end
 
-  def self.initialize_course(canvas_file_path, blackboard_file_path)
+  def self.initialize_course(canvas_file_path, blackboard_file_path = nil)
     metadata = Blacklight::CanvasCourse.metadata_from_file(canvas_file_path)
     bb_zip = if blackboard_file_path
                Zip::File.open(blackboard_file_path)
