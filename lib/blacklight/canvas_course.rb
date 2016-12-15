@@ -15,7 +15,7 @@ module Blacklight
     def initialize(metadata, course_resource, blackboard_export)
       @metadata = metadata
       @course_resource = course_resource
-      @scorm_packages = self.class.get_scorm_packages(blackboard_export)
+      @scorm_packages = CanvasCourse.get_scorm_packages(blackboard_export)
     end
 
     ##
@@ -73,6 +73,9 @@ module Blacklight
     # uploaded to a scorm manager
     ##
     def create_scorm_assignment(scorm_package, course_id)
+      url = "#{Blacklight.scorm_launch_url}?" +
+        "course_id=#{scorm_package['package_id']}"
+
       payload = {
         assignment: {
           name: scorm_package["title"],
@@ -80,8 +83,7 @@ module Blacklight
           integration_id: scorm_package["package_id"],
           integration_data: { provider: "atomic-scorm" },
           external_tool_tag_attributes: {
-            url: "#{Blacklight.scorm_launch_url}" \
-              "?course_id=#{scorm_package['package_id']}",
+            url: url,
           },
         },
       }
