@@ -33,8 +33,7 @@ module Blacklight
     ##
     def self.find_scorm_manifests(zip_file)
       return [] if zip_file.nil?
-      zip_file.
-        entries.select do |e|
+      zip_file.entries.select do |e|
           File.fnmatch("*imsmanifest.xml", e.name) && scorm_manifest?(e)
         end
     end
