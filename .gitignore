@@ -16,5 +16,7 @@
 
 /canvas/
 /sources/
+/uploaded/
 /spec/examples/
 *.gem
+blacklight.yml

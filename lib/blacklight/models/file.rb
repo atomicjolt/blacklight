@@ -38,6 +38,7 @@ module Blacklight
     # Remove temporary files
     ##
     def self.cleanup
+      @@dir ||= nil
       FileUtils.rm_r @@dir unless @@dir.nil?
     end
   end

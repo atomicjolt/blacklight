@@ -1,0 +1,5 @@
+:canvas_url: <canvas instance api url>
+:canvas_token: <canvas token>
+:scorm_url: <scorm manager url>
+:scorm_launch_url: <scorm launch url>
+:scorm_shared_auth: <scorm manager token>
