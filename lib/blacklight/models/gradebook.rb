@@ -14,7 +14,8 @@ module Blacklight
     end
 
     def get_categories(data)
-      data.at("CATEGORIES").children.each_with_object({}) do |category, categories|
+      data.at("CATEGORIES").children.
+        each_with_object({}) do |category, categories|
         id = category.attributes["id"].value
         title = category.at("TITLE").
           attributes["value"].value.gsub(".name", "")
