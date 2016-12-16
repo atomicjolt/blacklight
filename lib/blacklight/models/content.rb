@@ -29,9 +29,9 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(course, _resources)
+    def canvas_conversion(course, resources)
       page = CanvasCc::CanvasCC::Models::Page.new
-      page.body = @body
+      page.body = fix_images(@body, resources)
       page.identifier = @id
       page.page_name = @title
 
