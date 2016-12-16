@@ -15,7 +15,6 @@ describe "WikiPage" do
 
     page_title = xml.xpath("/CONTENT/TITLE/@value").first.text
     page_body = xml.xpath("/CONTENT/BODY/TEXT").first.text
-    page_type = xml.xpath("/CONTENT/RENDERTYPE/@value").first.text
     page_id = xml.xpath("/CONTENT/@id").first.text
 
     assert_equal(page.id, page_id)

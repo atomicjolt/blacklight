@@ -14,9 +14,11 @@ describe Blacklight do
       master_parent_id = "res00036"
       file_name = "res00002"
       first_data = { id: id, parent_id: parent_id, file_name: file_name }
-      pre_data = [ first_data,
-        { id: parent_id, parent_id: master_parent_id, file_name: "res00003" },
-        { id: master_parent_id, parent_id: "{unset id}", file_name: "res00004" }]
+      pre_data = [first_data,
+                  { id: parent_id, parent_id: master_parent_id,
+                    file_name: "res00003" },
+                  { id: master_parent_id, parent_id: "{unset id}",
+                    file_name: "res00004" }]
       result = Blacklight.get_single_pre_data(pre_data, file_name)
 
       assert_equal(result, first_data)
@@ -29,8 +31,10 @@ describe Blacklight do
       parent_id = "res00028"
       master_parent_id = "res00036"
       pre_data = [{ id: id, parent_id: parent_id, file_name: "res00002" },
-        { id: parent_id, parent_id: master_parent_id, file_name: "res00003" },
-        { id: master_parent_id, parent_id: "{unset id}", file_name: "res00004" }]
+                  { id: parent_id, parent_id: master_parent_id,
+                    file_name: "res00003" },
+                  { id: master_parent_id, parent_id: "{unset id}",
+                    file_name: "res00004" }]
       results = Blacklight.build_heirarchy(pre_data)
       assert_equal(results.first[:parent_id], master_parent_id)
     end
@@ -43,8 +47,10 @@ describe Blacklight do
       master_parent_id = "res00036"
       parents_ids = [master_parent_id, "res00015"]
       pre_data = [{ id: id, parent_id: parent_id, file_name: "res00002" },
-        { id: parent_id, parent_id: master_parent_id, file_name: "res00003" },
-        { id: master_parent_id, parent_id: "{unset id}", file_name: "res00004" }]
+                  { id: parent_id, parent_id: master_parent_id,
+                    file_name: "res00003" },
+                  { id: master_parent_id, parent_id: "{unset id}",
+                    file_name: "res00004" }]
       result = Blacklight.get_master_parent(pre_data, parents_ids, parent_id)
       assert_equal(result, master_parent_id)
     end

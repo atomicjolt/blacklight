@@ -10,14 +10,16 @@ describe "ModuleItem" do
     @title = "Module Item Name"
     @content_type = "Assignment"
     @identifierref = Blacklight.create_random_hex
-    @module_item = Blacklight::ModuleItem.new(@title, @content_type, @identifierref)
+    @module_item = Blacklight::ModuleItem.new(@title, @content_type,
+                                              @identifierref)
   end
 
   describe "initialize" do
     it "should initialize module_item" do
       assert_equal (@module_item.is_a? Object), true
       assert_equal (@module_item.instance_variable_get :@title), @title
-      assert_equal (@module_item.instance_variable_get :@identifierref), @identifierref
+      assert_equal (@module_item.
+        instance_variable_get :@identifierref), @identifierref
     end
   end
 

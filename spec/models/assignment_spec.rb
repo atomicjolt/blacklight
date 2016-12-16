@@ -15,7 +15,6 @@ describe "Assignment" do
 
     assignment_title = xml.xpath("/CONTENT/TITLE/@value").first.text
     assignment_body = xml.xpath("/CONTENT/BODY/TEXT").first.text
-    assignment_type = xml.xpath("/CONTENT/RENDERTYPE/@value").first.text
     assignment_id = xml.xpath("/CONTENT/@id").first.text
 
     assert_equal(assignment.id, assignment_id)

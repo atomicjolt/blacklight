@@ -60,8 +60,10 @@ describe "Content" do
       id = xml.xpath("/CONTENT/@id").first.text
       title = xml.xpath("/CONTENT/TITLE/@value").first.text
 
-      assert_equal((result.instance_variable_get :@module_item).content_type, "WikiPage")
-      assert_equal((result.instance_variable_get :@module_item).identifierref, id)
+      assert_equal((result.instance_variable_get :@module_item).
+        content_type, "WikiPage")
+      assert_equal((result.instance_variable_get :@module_item).
+        identifierref, id)
       assert_equal((result.instance_variable_get :@module_item).title, title)
     end
   end
@@ -93,7 +95,8 @@ describe "Content" do
       result = content.create_module(course)
 
       assert_equal(result.canvas_modules.size, 1)
-      assert_equal(result.canvas_modules.first.identifier, (content.instance_variable_get :@identifier))
+      assert_equal(result.canvas_modules.first.identifier, (content.
+        instance_variable_get :@identifier))
     end
   end
 end

@@ -29,10 +29,8 @@ describe "Module" do
   end
 
   it "should convert to canvas wiki page" do
-    title = "Module Item Name"
-    content_type = "Assignment"
-    identifierref = Blacklight.create_random_hex
-    module_item = Blacklight::ModuleItem.new(@title, @content_type, @identifierref)
+    module_item = Blacklight::ModuleItem.new(@title, @content_type,
+                                             @identifierref)
 
     @module.module_items << module_item
     result = @module.canvas_conversion

@@ -6,7 +6,6 @@ module Blacklight
       @content_type = type
       @identifierref = identifierref
       @workflow_state = "active"
-      self.canvas_conversion
     end
 
     def canvas_conversion

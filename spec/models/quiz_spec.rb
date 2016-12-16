@@ -31,7 +31,9 @@ describe "Quiz" do
 
     quiz_id = xml.xpath("/CONTENT/@id").first.text
 
-    assert_equal((quiz.instance_variable_get :@module_item).content_type, "Quizzes::Quiz")
-    assert_equal((quiz.instance_variable_get :@module_item).identifierref, quiz_id)
+    assert_equal((quiz.instance_variable_get :@module_item).
+      content_type, "Quizzes::Quiz")
+    assert_equal((quiz.instance_variable_get :@module_item).
+      identifierref, quiz_id)
   end
 end

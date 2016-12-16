@@ -21,12 +21,12 @@ module Blacklight
   def self.parse_manifest(zip_file, manifest)
     doc = Nokogiri::XML.parse(manifest)
     resources = doc.at("resources")
-    iterate_xml(resources, zip_file)
+    iterate_xml(resources, zip_file).flatten - ["", nil]
   end
 
   def self.iterate_xml(resources, zip_file)
     pre_data = pre_iterator(resources, zip_file)
-    resources_array = midnight_eagle(resources, zip_file) do |xml_data, type, file|
+    midnight_eagle(resources, zip_file) do |xml_data, type, file|
       if RESOURCE_TYPE[type.to_sym]
         single_pre_data = get_single_pre_data(pre_data, file)
         res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
@@ -38,12 +38,12 @@ module Blacklight
         end
       end
     end
-    resources_array.flatten - ["", nil]
   end
 
   def self.get_single_pre_data(pre_data, file)
-    pre_data.detect { |d| d[:file_name] == file ||
-      d[:assignment_id] == file }
+    pre_data.detect do |d|
+      d[:file_name] == file || d[:assignment_id] == file
+    end
   end
 
   def self.midnight_eagle(resources, zip_file)
