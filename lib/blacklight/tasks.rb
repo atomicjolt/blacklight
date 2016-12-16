@@ -76,7 +76,7 @@ module Blacklight
 
         rule ".txt" => [->(f) { source_for_upload_log(f) }, UPLOAD_NAME] do |t|
           make_directories(t.name, UPLOAD_DIR)
-          Blacklight.initialize_course(t.source)
+          Blacklight.initialize_course(t.source, source_for_imscc(t.source))
           log_file(t.name)
         end
 
