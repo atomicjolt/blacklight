@@ -77,19 +77,18 @@ module Blacklight
         "course_id=#{scorm_package['package_id']}"
 
       payload = {
-        assignment: {
-          name: scorm_package["title"],
-          submission_types: ["external_tool"],
-          integration_id: scorm_package["package_id"],
-          integration_data: { provider: "atomic-scorm" },
-          external_tool_tag_attributes: {
-            url: url,
-          },
+        assignment__name__: scorm_package["title"],
+        assignment__submission_types__: ["external_tool"],
+        assignment__integration_id__: scorm_package["package_id"],
+        assignment__integration_data__: { provider: "atomic-scorm" },
+        assignment__external_tool_tag_attributes__: {
+          url: url,
         },
       }
 
       CanvasCourse.client.create_assignment(
         course_id,
+        scorm_package["title"],
         payload,
       )
     end
@@ -100,7 +99,7 @@ module Blacklight
     ##
     def upload_scorm_package(scorm_package, course_id, tmp_name)
       zip = scorm_package.write_zip tmp_name
-      resp = RestClient.post(
+      RestClient.post(
         "#{Blacklight.scorm_url}/api/scorm_courses",
         {
           oauth_consumer_key: "scorm-player",
@@ -108,8 +107,9 @@ module Blacklight
           file: File.new(zip, "rb"),
         },
         SharedAuthorization: Blacklight.scorm_shared_auth,
-      )
-      JSON.parse(resp.body)["response"]
+      ) do |resp|
+        return JSON.parse(resp.body)["response"]
+      end
     end
 
     ##
