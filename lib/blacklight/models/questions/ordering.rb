@@ -14,7 +14,7 @@ module Blacklight
         response_block.at("render_choice").children.each do |choice|
           id = choice.at("response_label").attributes["ident"].value
           question = @order_answers[id].to_s
-          answer = convert_html(choice.at("mat_formattedtext").text)
+          answer = choice.at("mat_formattedtext").text
           @matches << { id: id, question_text: question, answer_text: answer }
         end
         @matches = @matches.sort_by { |hsh| hsh[:question_text] }

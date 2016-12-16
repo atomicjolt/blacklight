@@ -13,15 +13,13 @@ module Blacklight
       matches_array = []
       if match_block = data.at("flow[@class=RIGHT_MATCH_BLOCK]")
         matches_array = match_block.children.map do |match|
-          match_text = match.at("mat_formattedtext").text
-          convert_html(match_text)
+          match.at("mat_formattedtext").text
         end
       end
       if response_block = data.at("flow[@class=RESPONSE_BLOCK]")
         response_block.children.each do |response|
           id = response.at("response_lid").attributes["ident"].value
-          response_text = response.at("mat_formattedtext").text
-          question = convert_html(response_text)
+          question = response.at("mat_formattedtext").text
           answer_id = @matching_answers[id]
           answer = ""
           flow_label = response.at("flow_label")

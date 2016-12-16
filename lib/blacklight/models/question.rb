@@ -83,13 +83,13 @@ module Blacklight
 
     def canvas_conversion(assessment, resources)
       @question.identifier = Blacklight.create_random_hex
-      @question.title = convert_html(@title)
+      @question.title = @title
       @question.points_possible = @points_possible
       @question.material = fix_images(@material, resources)
-      @question.general_feedback = convert_html(@general_feedback)
-      @general_correct_feedback = convert_html(@general_correct_feedback)
+      @question.general_feedback = fix_images(@general_feedback, resources)
+      @general_correct_feedback = fix_images(@general_correct_feedback, resources)
       @question.general_correct_feedback = @general_correct_feedback
-      @general_incorrect_feedback = convert_html(@general_incorrect_feedback)
+      @general_incorrect_feedback = fix_images(@general_incorrect_feedback, resources)
       @question.general_incorrect_feedback = @general_incorrect_feedback
       @question.answers = []
       @answers.each do |answer|
@@ -97,14 +97,6 @@ module Blacklight
       end
       assessment.items << @question
       assessment
-    end
-
-    def convert_html(contents)
-      if contents && !contents.empty?
-        Nokogiri::HTML.fragment(contents).text
-      else
-        contents
-      end
     end
 
     def fix_images(contents, resources)
