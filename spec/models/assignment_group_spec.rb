@@ -20,7 +20,7 @@ describe Blacklight do
       it "should initialize with parameters" do
         assert_equal (@assignment_group.instance_variable_get :@title), @title
         assert_equal (@assignment_group.
-          instance_variable_get :@group_id), @group_id
+          instance_variable_get :@id), @group_id
       end
     end
 

@@ -1,13 +1,12 @@
 module Blacklight
   class ModuleItem
-    attr_reader :item
-
-    def initialize(title, type, identifier)
+    def initialize(title, type, identifierref)
       @title = title
       @identifier = Blacklight.create_random_hex
       @content_type = type
-      @identifierref = identifier
+      @identifierref = identifierref
       @workflow_state = "active"
+      self.canvas_conversion
     end
 
     def canvas_conversion

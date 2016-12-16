@@ -12,15 +12,11 @@ module Blacklight
       "x-bb-video" => "WikiPage",
       "x-bb-externallink" => "WikiPage",
       "x-bb-blankpage" => "WikiPage",
-
       "x-bb-lesson" => "WikiPage",
       "x-bb-folder" => "WikiPage",
       "x-bb-module-page" => "WikiPage",
       "x-bb-lesson-plan" => "WikiPage",
       "x-bb-syllabus" => "WikiPage",
-
-      # lesson named modules
-      "x-bb-flickr-mashup" => "WikiPage",
     }.freeze
 
     attr_accessor(:title, :body, :id, :files)
@@ -39,21 +35,17 @@ module Blacklight
       @points = pre_data[:points] || 0
       @title = xml.xpath("/CONTENT/TITLE/@value").first.text
       @body = xml.xpath("/CONTENT/BODY/TEXT").first.text
-      @id = xml.xpath("/CONTENT/@id").first.text
       @type = xml.xpath("/CONTENT/RENDERTYPE/@value").first.text
       @parent_id = pre_data[:parent_id]
       bb_type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
       bb_type.slice! "resource/"
       @module_type = CONTENT_TYPES[bb_type]
-
+      @id = xml.xpath("/CONTENT/@id").first.text
       if pre_data[:assignment_id] && !pre_data[:assignment_id].empty?
         @id = pre_data[:assignment_id]
       end
 
-      if @module_type
-        item = set_module
-        @module_item = item.canvas_conversion
-      end
+      @module_item = set_module if @module_type
 
       @files = xml.xpath("//FILES/FILE").map do |file|
         ContentFile.new(file)
@@ -68,10 +60,9 @@ module Blacklight
     end
 
     def set_module
-      if @module_type == "Quiz"
-        @module_type = "Quizzes::Quiz"
-      end
-      ModuleItem.new(@title, @module_type, @id)
+      @module_type = "Quizzes::Quiz" if @module_type == "Quiz"
+      module_item = ModuleItem.new(@title, @module_type, @id)
+      module_item.canvas_conversion
     end
 
     def canvas_conversion(course)

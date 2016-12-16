@@ -14,10 +14,8 @@ module Blacklight
         assignment.submission_types << "online_upload"
         assignment.grading_type = "points"
 
-        # Add page links to page body
         @files.each { |f| assignment.body << f.canvas_conversion }
         course = create_module(course)
-
         course.assignments << assignment
       end
       course

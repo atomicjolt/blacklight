@@ -1,16 +1,5 @@
 module Blacklight
   class Gradebook
-    def get_categories(data)
-      categories = {}
-      data.at("CATEGORIES").children.each do |category|
-        id = category.attributes["id"].value
-        title = category.at("TITLE").
-          attributes["value"].value.gsub(".name", "")
-        categories[id] = title
-      end
-      categories
-    end
-
     def get_pre_data(data, _)
       categories = get_categories(data)
       data.search("OUTCOMEDEFINITIONS").children.map do |outcome|
@@ -22,6 +11,17 @@ module Blacklight
         { category: category, points: points, content_id: content_id,
           assignment_id: assignment_id }
       end
+    end
+
+    def get_categories(data)
+      categories = {}
+      data.at("CATEGORIES").children.each do |category|
+        id = category.attributes["id"].value
+        title = category.at("TITLE").
+          attributes["value"].value.gsub(".name", "")
+        categories[id] = title
+      end
+      categories
     end
   end
 end
