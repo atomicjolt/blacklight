@@ -77,10 +77,11 @@ module Blacklight
         "course_id=#{scorm_package['package_id']}"
 
       payload = {
-        assignment__name__: scorm_package["title"],
         assignment__submission_types__: ["external_tool"],
         assignment__integration_id__: scorm_package["package_id"],
-        assignment__integration_data__: { provider: "atomic-scorm" },
+        assignment__integration_data__: {
+          provider: "atomic-scorm",
+        },
         assignment__external_tool_tag_attributes__: {
           url: url,
         },
@@ -108,7 +109,7 @@ module Blacklight
         },
         SharedAuthorization: Blacklight.scorm_shared_auth,
       ) do |resp|
-        return JSON.parse(resp.body)["response"]
+        JSON.parse(resp.body)["response"]
       end
     end
 
