@@ -44,9 +44,7 @@ module Blacklight
       if pre_data[:assignment_id] && !pre_data[:assignment_id].empty?
         @id = pre_data[:assignment_id]
       end
-
       @module_item = set_module if @module_type
-
       @files = xml.xpath("//FILES/FILE").map do |file|
         ContentFile.new(file)
       end
