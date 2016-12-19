@@ -29,7 +29,7 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(assessment, _resources)
+    def canvas_conversion(assessment, _resources = nil)
       @question.responses = @responses
       super
     end

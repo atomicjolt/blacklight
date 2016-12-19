@@ -15,7 +15,7 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(course, _resources)
+    def canvas_conversion(course, _resources = nil)
       discussion = CanvasCc::CanvasCC::Models::Discussion.new
       discussion.title = @title
       discussion.text = @text

@@ -18,7 +18,7 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(question, _resources)
+    def canvas_conversion(question, _resources = nil)
       answer = CanvasCc::CanvasCC::Models::Answer.new(@answer_text)
       answer.answer_text = @answer_text
       answer.id = @id

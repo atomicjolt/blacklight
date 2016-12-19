@@ -9,7 +9,7 @@ module Blacklight
       @group_id = group_id
     end
 
-    def canvas_conversion(course, _resources)
+    def canvas_conversion(course, _resources = nil)
       assignment_group = CanvasCc::CanvasCC::Models::AssignmentGroup.new
       assignment_group.identifier = @group_id
       assignment_group.title = @title

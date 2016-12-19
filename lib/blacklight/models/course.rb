@@ -26,7 +26,7 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(course, _resources)
+    def canvas_conversion(course, _resources = nil)
       course.identifier = @identifier
       course.title = @title
       course.description = @description

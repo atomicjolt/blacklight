@@ -21,7 +21,7 @@ module Blacklight
     def iterate_xml(data)
     end
 
-    def canvas_conversion(course, _resources)
+    def canvas_conversion(course, _resources = nil)
       course
     end
   end

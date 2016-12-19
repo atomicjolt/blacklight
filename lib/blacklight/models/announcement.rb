@@ -21,7 +21,7 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(course, _resources)
+    def canvas_conversion(course, _resources = nil)
       announcement = CanvasCc::CanvasCC::Models::Announcement.new
       announcement.title = @title
       announcement.text = @text

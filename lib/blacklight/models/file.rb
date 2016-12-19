@@ -31,7 +31,7 @@ module Blacklight
       name
     end
 
-    def canvas_conversion(course, _resources)
+    def canvas_conversion(course, _resources = nil)
       file = CanvasCc::CanvasCC::Models::CanvasFile.new
       file.identifier = @id
       file.file_location = @location
