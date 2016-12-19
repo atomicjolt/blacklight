@@ -1,0 +1,2 @@
+&lt;p&gt;This is a formula:&amp;nbsp;&lt;img align="middle" alt="square root of 1" class="Wirisformula" data-mathml="«math xmlns=¨http://www.w3.org/1998/Math/MathML¨»«msqrt»«mn»1«/mn»«/msqrt»«/math»"
+    src="@X@EmbeddedFile.requestUrlStub@X@bbcswebdav/xid-123_1"&gt; &lt;img src="@X@EmbeddedFile.requestUrlStub@X@bbcswebdav/xid-456_1" width="287" height="332" alt="Just a picture" title="Picture"&gt; &lt;/p&gt;
