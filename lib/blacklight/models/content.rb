@@ -57,7 +57,7 @@ module Blacklight
       {
         id: id,
         parent_id: parent_id,
-        file_name: file_name
+        file_name: file_name,
       }
     end
 

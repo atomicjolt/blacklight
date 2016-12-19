@@ -12,7 +12,7 @@ module Blacklight
           category: category,
           points: points,
           content_id: content_id,
-          assignment_id: assignment_id
+          assignment_id: assignment_id,
         }
       end
     end
