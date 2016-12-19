@@ -1,5 +1,5 @@
 def get_fixture(name)
-  File.open("#{File.dirname(__FILE__)}/fixtures/#{name}")
+  File.read("#{File.dirname(__FILE__)}/fixtures/#{name}")
 end
 
 def get_fixture_xml(name)
