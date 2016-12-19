@@ -10,6 +10,7 @@ describe Blacklight do
   describe "Question" do
     before do
       @question = Question.new
+      @resources = Blacklight::Collection.new
     end
 
     describe "initialize" do
@@ -60,7 +61,7 @@ describe Blacklight do
 
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.items = []
-        @question.canvas_conversion(assessment)
+        @question.canvas_conversion(assessment, @resources)
         assert_equal assessment.items.count, 1
       end
 
@@ -71,7 +72,7 @@ describe Blacklight do
 
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.items = []
-        @question.canvas_conversion(assessment)
+        @question.canvas_conversion(assessment, @resources)
         assert_equal assessment.items.first.title, title
         assert_equal assessment.items.first.answers.count, 0
       end
@@ -84,20 +85,8 @@ describe Blacklight do
 
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.items = []
-        question.canvas_conversion(assessment)
+        question.canvas_conversion(assessment, @resources)
         assert_equal assessment.items.first.answers.count, 2
-      end
-    end
-
-    describe "convert_html" do
-      it "should convert symbols to characters" do
-        bad_text = "&lt;p&gt;Try again&lt;/p&gt;"
-        assert_equal @question.convert_html(bad_text), "<p>Try again</p>"
-      end
-
-      it "should be the same" do
-        bad_text = "Try again"
-        assert_equal @question.convert_html(bad_text), "Try again"
       end
     end
 

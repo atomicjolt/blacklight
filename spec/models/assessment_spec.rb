@@ -2,12 +2,15 @@ require "minitest/autorun"
 require "blacklight"
 require "pry"
 
+require_relative "../helpers.rb"
+
 include Blacklight
 
 describe Blacklight do
   describe "Assessment" do
     before do
       @assessment = Assessment.new
+      @resources = Blacklight::Collection.new
     end
 
     describe "initialize" do
@@ -43,7 +46,7 @@ describe Blacklight do
         @assessment = @assessment.iterate_xml(xml.children.first)
 
         course = CanvasCc::CanvasCC::Models::Course.new
-        @assessment.canvas_conversion(course)
+        @assessment.canvas_conversion(course, @resources)
         assert_equal course.assessments.count, 1
       end
     end
@@ -58,19 +61,19 @@ describe Blacklight do
         description = "<p>Do this test with honor</p>"
 
         assignment = @assessment.create_assignment
-        assessment = @assessment.setup_assessment(assessment, assignment)
+        assessment = @assessment.setup_assessment(assessment, assignment, @resources)
         assert_equal assessment.title, title
         assert_equal assessment.description, description
       end
     end
 
     describe "create_items" do
-      it "should create an items" do
+      it "should create items" do
         xml = get_fixture_xml "assessment.xml"
         @assessment = @assessment.iterate_xml(xml.children.first)
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
 
-        assessment = @assessment.create_items(assessment)
+        assessment = @assessment.create_items(assessment, @resources)
         assert_equal assessment.items.count, 12
       end
     end
@@ -81,7 +84,7 @@ describe Blacklight do
         @assessment = @assessment.iterate_xml(xml.children.first)
         course = CanvasCc::CanvasCC::Models::Course.new
 
-        course = @assessment.create_assignment_group(course)
+        course = @assessment.create_assignment_group(course, @resources)
         assert_equal course.assignment_groups.count, 1
       end
     end

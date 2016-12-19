@@ -25,7 +25,7 @@ describe Blacklight do
         assert_equal answers.count, 2
       end
 
-      it "should iterate through xml and right content to answers" do
+      it "should iterate through xml and write content to answers" do
         xml = get_fixture_xml "either_or.xml"
         @either_or = @either_or.iterate_xml(xml.children.first)
 
