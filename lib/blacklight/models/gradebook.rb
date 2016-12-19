@@ -8,8 +8,12 @@ module Blacklight
         category_id = outcome.at("CATEGORYID").attributes["value"].value
         category = categories[category_id]
         points = outcome.at("POINTSPOSSIBLE").attributes["value"].value
-        { category: category, points: points, content_id: content_id,
-          assignment_id: assignment_id }
+        {
+          category: category,
+          points: points,
+          content_id: content_id,
+          assignment_id: assignment_id
+        }
       end
     end
 
