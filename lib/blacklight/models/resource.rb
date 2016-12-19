@@ -1,4 +1,6 @@
 module Blacklight
+  IMPORTED_FILES_DIRNAME = "Imported".freeze
+
   class Resource
     def fix_images(contents, resources)
       if contents && !contents.empty?
@@ -10,7 +12,7 @@ module Blacklight
           file_resource = resources.detect_xid(xid)
 
           if file_resource
-            element["src"] = "$IMS-CC-FILEBASE$/#{file_resource.name}"
+            element["src"] = "$IMS-CC-FILEBASE$/#{IMPORTED_FILES_DIRNAME}/#{file_resource.name}"
           end
         end
 

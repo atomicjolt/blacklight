@@ -35,7 +35,7 @@ module Blacklight
       file = CanvasCc::CanvasCC::Models::CanvasFile.new
       file.identifier = @id
       file.file_location = @location
-      file.file_path = @name
+      file.file_path = "#{IMPORTED_FILES_DIRNAME}/#{@name}"
       file.hidden = false
 
       course.files << file
