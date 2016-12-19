@@ -26,7 +26,7 @@ module Blacklight
 
   def self.iterate_xml(resources, zip_file)
     pre_data = pre_iterator(resources, zip_file)
-    midnight_eagle(resources, zip_file) do |xml_data, type, file|
+    iterator_master(resources, zip_file) do |xml_data, type, file|
       if RESOURCE_TYPE[type.to_sym]
         single_pre_data = get_single_pre_data(pre_data, file)
         res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
@@ -46,7 +46,7 @@ module Blacklight
     end
   end
 
-  def self.midnight_eagle(resources, zip_file)
+  def self.iterator_master(resources, zip_file)
     resources.children.map do |resource|
       file_name = resource.attributes["file"].value
       file = File.basename(file_name, ".dat")
@@ -61,7 +61,7 @@ module Blacklight
 
   def self.pre_iterator(resources, zip_file)
     pre_data = {}
-    midnight_eagle(resources, zip_file) do |xml_data, type, file|
+    iterator_master(resources, zip_file) do |xml_data, type, file|
       if PRE_RESOURCE_TYPE[type.to_sym]
         res_class = Blacklight.const_get PRE_RESOURCE_TYPE[type.to_sym]
         resource_class = res_class.new
@@ -86,8 +86,9 @@ module Blacklight
   end
 
   def self.build_heirarchy(pre_data)
-    parents = pre_data.select { |p| p[:parent_id] == "{unset id}" }
-    parents_ids = parents.map { |u| u[:id] }
+    parents_ids = pre_data.
+      select { |p| p[:parent_id] == "{unset id}" }.
+      map { |u| u[:id] }
     pre_data.each do |content|
       next if parents_ids.include?(content[:id])
       next if parents_ids.include?(content[:parent_id])
@@ -100,7 +101,7 @@ module Blacklight
   def self.get_master_parent(pre_data, parents_ids, parent_id)
     parent = pre_data.detect { |p| p[:id] == parent_id }
     if parents_ids.include? parent[:id]
-      return parent[:id]
+      parent[:id]
     else
       get_master_parent(pre_data, parents_ids, parent[:parent_id])
     end

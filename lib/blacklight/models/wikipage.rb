@@ -2,9 +2,9 @@ module Blacklight
   class WikiPage < Content
     def canvas_conversion(course)
       unless @title == "--TOP--"
-        page = course.pages.
+        page_count = course.pages.
           select { |p| p.title.start_with? @title }.count
-        @title = "#{@title}-#{page + 1}" if page > 0
+        @title = "#{@title}-#{page_count + 1}" if page_count > 0
         page = CanvasCc::CanvasCC::Models::Page.new
         page.body = @body
         page.identifier = @id
