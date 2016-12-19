@@ -20,8 +20,11 @@ describe "ContentFile" do
     file = Blacklight::ContentFile.new(xml.xpath("//FILE"))
     assert_includes(
       file.canvas_conversion,
-      "<a href='$IMS_CC_FILEBASE$/ADV " \
-      "&amp; DisAdv.pdf'>ADV &amp; DisAdv.pdf</a>",
+      "href=\"$IMS_CC_FILEBASE$/ADV",
+    )
+    assert_includes(
+      file.canvas_conversion,
+      "ADV &amp; DisAdv.pdf",
     )
   end
 end
