@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<STAFFINFO id="_112170_1">
+  <TITLE   value="Test Title"/>
+  <BIOGRAPHY>
+    <TEXT>&lt;p&gt;Contact this office for asistance.&lt;/p&gt;</TEXT>
+    <TEXTCOLOR    value="000000"/>
+    <FLAGS>
+      <ISHTML value="true"/>
+      <ISNEWLINELITERAL   value="false"/>
+    </FLAGS>
+  </BIOGRAPHY>
+  <FLAGS>
+    <ISAVAILABLE value="true"/>
+    <ISFOLDER    value="false"/>
+  </FLAGS>
+  <CONTACT>
+    <NAME>
+      <FORMALTITLE value="Mr."/>
+      <GIVEN value="Test"/>
+      <FAMILY   value="Name"/>
+    </NAME>
+    <EMAIL value="AFIT.lscoursemanagers@afit.edu"/>
+    <PHONE    value="DSN 785-7777 ext 3164  COMM 937-255-7777 ext 3164"/>
+    <OFFICE>
+      <HOURS value="24/7"/>
+      <ADDRESS  value="123 Fake St."/>
+    </OFFICE>
+  </CONTACT>
+  <HOMEPAGE value="example.com"/>
+  <IMAGE value="example.com/image.png"/>
+  <DATES>
+    <CREATED value=""/>
+    <UPDATED value="2015-09-22 10:12:59 EDT"/>
+  </DATES>
+</STAFFINFO>

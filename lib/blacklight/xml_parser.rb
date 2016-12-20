@@ -11,6 +11,7 @@ module Blacklight
     course: "Course",
     questestinterop: "Assessment",
     content: "Content",
+    staffinfo: "StaffInfo",
   }.freeze
 
   PRE_RESOURCE_TYPE = {
