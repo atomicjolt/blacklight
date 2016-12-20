@@ -12,7 +12,9 @@ describe Blacklight do
   describe "Resource" do
     before do
       @resource = Resource.new
-      @contents = CGI.unescapeHTML(get_fixture("embedded_images.txt"))
+      @contents = get_fixture("embedded_images.txt") do |file|
+        CGI.unescapeHTML(file)
+      end
     end
 
     describe "fix_images" do
