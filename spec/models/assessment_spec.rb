@@ -19,7 +19,8 @@ describe Blacklight do
     describe "iterate_xml" do
       it "should iterate through xml" do
         xml = get_fixture_xml "assessment.xml"
-        @assessment = @assessment.iterate_xml(xml.children.first)
+        pre_data = {}
+        @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
 
         points_possible = "120.0"
         title = "Just a test"
@@ -40,7 +41,8 @@ describe Blacklight do
     describe "canvas_conversion" do
       it "should create a canvas assessment" do
         xml = get_fixture_xml "assessment.xml"
-        @assessment = @assessment.iterate_xml(xml.children.first)
+        pre_data = {}
+        @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
 
         course = CanvasCc::CanvasCC::Models::Course.new
         @assessment.canvas_conversion(course)
@@ -51,7 +53,8 @@ describe Blacklight do
     describe "setup_assessment" do
       it "should return assessment with details" do
         xml = get_fixture_xml "assessment.xml"
-        @assessment = @assessment.iterate_xml(xml.children.first)
+        pre_data = {}
+        @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
 
         title = "Just a test"
@@ -67,7 +70,8 @@ describe Blacklight do
     describe "create_items" do
       it "should create an items" do
         xml = get_fixture_xml "assessment.xml"
-        @assessment = @assessment.iterate_xml(xml.children.first)
+        pre_data = {}
+        @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
 
         assessment = @assessment.create_items(assessment)
@@ -78,7 +82,8 @@ describe Blacklight do
     describe "create_assignment_group" do
       it "should create assignment groups in course" do
         xml = get_fixture_xml "assessment.xml"
-        @assessment = @assessment.iterate_xml(xml.children.first)
+        pre_data = {}
+        @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
         course = CanvasCc::CanvasCC::Models::Course.new
 
         course = @assessment.create_assignment_group(course)
@@ -89,7 +94,8 @@ describe Blacklight do
     describe "create_assignment" do
       it "should create an assignment" do
         xml = get_fixture_xml "assessment.xml"
-        @assessment = @assessment.iterate_xml(xml.children.first)
+        pre_data = {}
+        @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
 
         assignment = @assessment.create_assignment
         assert_equal assignment.title,

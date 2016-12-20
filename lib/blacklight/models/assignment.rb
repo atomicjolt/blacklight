@@ -1,25 +1,23 @@
 module Blacklight
-  class Assignment
-    def initialize
-      @id
-      @title = ""
-      @body = ""
-      @due_at = ""
-      @lock_at = ""
-      @unlock_at = ""
-      @workflow_state = "active"
-      @points_possible = ""
-      @assignment_group_identifier_ref = ""
-      @submission_types = ""
-      # online_text_entry, online_upload, on_paper, discussion_topic,
-      # online_quiz
-      @grading_type = "" # letter_grade, points, percentage, pass_fail
-    end
-
-    def iterate_xml(data)
-    end
-
+  class Assignment < Content
     def canvas_conversion(course)
+      unless @title == "--TOP--"
+        assignment = CanvasCc::CanvasCC::Models::Assignment.new
+        assignment.identifier = @id
+        assignment.title = @title
+        assignment.body = @body
+        assignment.points_possible = @points
+        assignment.assignment_group_identifier_ref = @group_id
+        assignment.position = 1
+        assignment.workflow_state = "published"
+        assignment.submission_types << "online_text_entry"
+        assignment.submission_types << "online_upload"
+        assignment.grading_type = "points"
+
+        @files.each { |f| assignment.body << f.canvas_conversion }
+        course = create_module(course)
+        course.assignments << assignment
+      end
       course
     end
   end
