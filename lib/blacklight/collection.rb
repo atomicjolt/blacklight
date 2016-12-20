@@ -1,5 +1,7 @@
 module Blacklight
   class Collection
+    attr_reader :resources
+
     def initialize
       @resources = []
     end
