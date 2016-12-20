@@ -73,8 +73,8 @@ module Blacklight
     # uploaded to a scorm manager
     ##
     def create_scorm_assignment(scorm_package, course_id)
-      url = "#{Blacklight.scorm_launch_url}?" +
-        "course_id=#{scorm_package['package_id']}"
+      url = Blacklight.scorm_launch_url +
+        "?course_id=#{scorm_package['package_id']}"
 
       payload = {
         assignment__submission_types__: ["external_tool"],
