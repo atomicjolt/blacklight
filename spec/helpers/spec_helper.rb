@@ -18,5 +18,5 @@ def stub_toe(type, pattern, json, with_params = nil)
 end
 
 def stub_active_courses_in_account(json)
-  stub_toe(:get, /v1\/accounts\/self\/courses/, json)
+  stub_toe(:get, /v1\/accounts\/.+\/courses/, json)
 end
