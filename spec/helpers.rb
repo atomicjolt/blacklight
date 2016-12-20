@@ -1,7 +1,11 @@
 def get_fixture(name)
-  File.open("#{File.dirname(__FILE__)}/fixtures/#{name}")
+  File.open("#{File.dirname(__FILE__)}/fixtures/#{name}") do |file|
+    yield file
+  end
 end
 
 def get_fixture_xml(name)
-  Nokogiri::XML(get_fixture(name))
+  get_fixture(name) do |file|
+    Nokogiri::XML(file)
+  end
 end
