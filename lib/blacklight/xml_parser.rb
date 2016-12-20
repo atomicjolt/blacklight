@@ -11,10 +11,10 @@ module Blacklight
     course: "Course",
     questestinterop: "Assessment",
     content: "Content",
+    staffinfo: "StaffInfo",
 
     # categories: :iterate_categories,
     # itemcategories: :iterate_itemcategories,
-    # staffinfo: :iterate_staffinfo,
     # coursemodulepages: :iterate_coursemodulepages,
     # groupcontentlist: :iterate_groupcontentlist,
     # learnrubrics: :iterate_learnrubrics,
