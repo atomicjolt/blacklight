@@ -1,7 +1,7 @@
 
 module Blacklight
   class StaffInfo
-    attr_accessor(
+    attr_reader(
       :id,
       :title,
       :bio,
