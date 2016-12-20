@@ -47,7 +47,6 @@ module Blacklight
 
     def construct_body
       <<-HTML
-        <h2>Contact</h2>
         <h3>#{@name}</h3>
         <p>#{@bio}</p>
         <ul>
