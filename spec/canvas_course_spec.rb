@@ -16,11 +16,11 @@ describe Blacklight::CanvasCourse do
 
   describe "from_metadata" do
     it "should return a canvas course" do
-      # name = "bfcoding 101"
-      # stub_active_courses_in_account([{ name: name }])
-      # metadata = { name: name }
-      # course = Blacklight::CanvasCourse.from_metadata(metadata)
-      # assert_kind_of Blacklight::CanvasCourse, course
+      name = "bfcoding 101"
+      stub_active_courses_in_account([{ name: name }])
+      metadata = { name: name }
+      course = Blacklight::CanvasCourse.from_metadata(metadata)
+      assert_kind_of Blacklight::CanvasCourse, course
     end
   end
 end
