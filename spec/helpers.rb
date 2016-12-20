@@ -12,7 +12,7 @@ end
 
 def get_zip_manifest(name)
   get_zip_fixture(name) do |file|
-    return file, get_manifest_entry(file)
+    yield file, get_manifest_entry(file)
   end
 end
 
