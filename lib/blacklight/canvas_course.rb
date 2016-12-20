@@ -150,12 +150,14 @@ module Blacklight
 
       puts "Uploading: #{name}"
       upload_to_s3(migration, filename)
+      puts "Done uploading: #{name}"
+
+      puts "Creating Scorm: #{name}"
       create_scorm_assignments(
         upload_scorm_packages(@scorm_packages),
         @course_resource.id,
       )
-
-      puts "Done uploading: #{name}"
+      puts "Done creating scorm: #{name}"
     end
 
     def upload_to_s3(migration, filename)
