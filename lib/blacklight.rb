@@ -44,6 +44,7 @@ module Blacklight
   ##
   def self.cleanup
     BlacklightFile.cleanup
+    ScormPackage.cleanup
   end
 
   def self.create_canvas_course(resources, zip_name)
@@ -55,9 +56,11 @@ module Blacklight
     course
   end
 
-  def self.initialize_course(filename)
-    metadata = Blacklight::CanvasCourse.metadata_from_file(filename)
-    course = Blacklight::CanvasCourse.from_metadata(metadata)
-    course.upload_content(filename)
+  def self.initialize_course(canvas_file_path, blackboard_file_path)
+    metadata = Blacklight::CanvasCourse.metadata_from_file(canvas_file_path)
+    Zip::File.open(blackboard_file_path, "rb") do |bb_zip|
+      course = Blacklight::CanvasCourse.from_metadata(metadata, bb_zip)
+      course.upload_content(canvas_file_path)
+    end
   end
 end

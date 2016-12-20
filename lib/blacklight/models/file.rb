@@ -4,6 +4,7 @@ require "blacklight/exceptions"
 module Blacklight
   class BlacklightFile < Resource
     attr_accessor(:id, :location, :name)
+    @@dir = nil
 
     def initialize(zip_entry)
       path = zip_entry.name

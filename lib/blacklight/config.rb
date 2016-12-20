@@ -9,6 +9,18 @@ module Blacklight
     Blacklight._config[:canvas_token]
   end
 
+  def self.scorm_launch_url
+    Blacklight._config[:scorm_launch_url]
+  end
+
+  def self.scorm_url
+    Blacklight._config[:scorm_url]
+  end
+
+  def self.scorm_shared_auth
+    Blacklight._config[:scorm_shared_auth]
+  end
+
   def self.account_id
     Blacklight._config[:account_id] || :self
   end

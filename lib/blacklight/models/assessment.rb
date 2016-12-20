@@ -12,12 +12,13 @@ module Blacklight
       @points_possible = 0
       @items = []
       @group_name = ""
-      @group_id = ""
       @workflow_state = "published"
       @available = true
     end
 
-    def iterate_xml(data)
+    def iterate_xml(data, pre_data)
+      pre_data ||= {}
+      @id = pre_data[:assignment_id] || Blacklight.create_random_hex
       @title = data.at("assessment").attributes["title"].value
       @points_possible = data.at("qmd_absolutescore_max").text
       @description = data.at("presentation_material").
@@ -32,7 +33,7 @@ module Blacklight
     def canvas_conversion(course, resources)
       if @items.count > 0
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
-        assessment.identifier = Blacklight.create_random_hex
+        assessment.identifier = @id
         course = create_assignment_group(course, resources)
         assignment = create_assignment
         assignment.quiz_identifier_ref = assessment.identifier

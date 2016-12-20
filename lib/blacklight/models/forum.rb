@@ -9,7 +9,7 @@ module Blacklight
       @discussion_type = "threaded"
     end
 
-    def iterate_xml(data)
+    def iterate_xml(data, _)
       @title = Blacklight.get_attribute_value(data, "TITLE")
       @text = Blacklight.get_text(data, "TEXT")
       self

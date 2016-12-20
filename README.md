@@ -29,8 +29,25 @@ Blacklight::Tasks.install_tasks
 
 Create a `blacklight.yml` and add credentials
 ```yaml
-:canvas_url: <url>
-:canvas_token: <token>
+# Generally looks like https://< mycanvas_instance >/api
+:canvas_url: <canvas instance api url>
+
+# Canvas tokens can be generated at <my_canvas_url>/profile/setting provided
+# that the user has the required priviledges
+:canvas_token: <canvas token>
+
+# Url of scorm manager. This could the the adhesion app
+# [https://github.com/atomicjolt/adhesion]
+:scorm_url: <scorm manager url>
+
+# This should be the endpoint to launch a given scorm course, in the case of
+# adhesion this will look like https://<adhesion url>/scorm_course
+:scorm_launch_url: <scorm launch url>
+
+# This is the secret to authenticate requests to the scorm manager. In the case
+# of adhesion you can generate a shared secret by logging into the server and
+# running rake shared_auth, which will generate and save a token
+:scorm_shared_auth: <scorm manager token>
 
 # The account or sub-account id. This can be :self, :default, or an id
 :account_id: <id>

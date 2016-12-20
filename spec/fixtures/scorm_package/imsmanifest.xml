@@ -1,0 +1,95 @@
+<?xml version="1.0" standalone="no" ?>
+<!-- created with "Manifest Maker 1.2.7" for Dreamweaver,
+ on Wed Mar 17 16:18:42 GMT-0500 (Eastern Standard Time) 2004 -->
+
+<manifest identifier="Logistics-MANIFEST1-Final" version="1.0"
+    xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+    xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd
+        http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd
+        http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd" >
+
+  <organizations default="TOC1">
+    <organization identifier="TOC1">
+      <title>Fundamentals of Logistics</title >
+      <item identifier="ITEM1" identifierref="SCO0">
+        <title>Fundamentals of Logistics: Overview Module</title>
+      </item>
+      <item identifier="ITEM2" identifierref="SCO1">
+        <title>Fundamentals of Logistics: Acquisition Module</title>
+      </item>
+      <item identifier="ITEM3" identifierref="SCO2">
+        <title>Fundamentals of Logistics: Distribution Module</title>
+      </item>
+      <item identifier="ITEM4" identifierref="SCO3">
+        <title>Fundamentals of Logistics: Sustainment Module</title>
+      </item>
+      <item identifier="ITEM5" identifierref="SCO4">
+        <title>Fundamentals of Logistics: Disposition Module</title>
+      </item>
+      <metadata>
+        <schema>ADL SCORM</schema>
+        <schemaversion>1.2</schemaversion>
+        <adlcp:location>Fund_Log.xml</adlcp:location>
+        <record xmlns="http://www.imsglobal.org/xsd/imsmd_rootv1p2p1" >
+          <general>
+            <title>
+              <langstring xml:lang="en-US">Fundamentals of Logistics</langstring>
+            </title>
+            <description>
+              <langstring xml:lang="en-US">This interactive internet based course will provide an overview of joint and air force logistics doctrine, organizations and processes.  It will also introduce key contemporary issues that will affect the logistics practitioner.  It is designed for new accessions and new practitioners in the logistics career fields.</langstring>
+            </description>
+            <keywords>
+              <langstring xml:lang="en-US">Logistics</langstring>
+            </keywords>
+            <keywords>
+              <langstring xml:lang="en-US">Acquisition</langstring>
+            </keywords>
+            <keywords>
+              <langstring xml:lang="en-US">Distribution</langstring>
+            </keywords>
+            <keywords>
+              <langstring xml:lang="en-US">Sustainment</langstring>
+            </keywords>
+            <keywords>
+              <langstring xml:lang="en-US">Disposition</langstring>
+            </keywords>
+          </general>
+        </record>
+      </metadata>
+    </organization>
+  </organizations>
+
+  <resources>
+<resource identifier="SCO0" type="webcontent" adlcp:scormtype="sco" href="Module1/index.htm">
+<file href="Module1/index.htm" />
+<dependency identifierref="ALLRESOURCES" />
+</resource>
+
+<resource identifier="SCO1" type="webcontent" adlcp:scormtype="sco" href="Module2/index.htm">
+<file href="Module2/index.htm" />
+<dependency identifierref="ALLRESOURCES" />
+</resource>
+
+<resource identifier="SCO2" type="webcontent" adlcp:scormtype="sco" href="Module3/index.htm">
+<file href="Module3/index.htm" />
+<dependency identifierref="ALLRESOURCES" />
+</resource>
+
+<resource identifier="SCO3" type="webcontent" adlcp:scormtype="sco" href="Module4/index.htm">
+<file href="Module4/index.htm" />
+<dependency identifierref="ALLRESOURCES" />
+</resource>
+
+<resource identifier="SCO4" type="webcontent" adlcp:scormtype="sco" href="Module5/index.htm">
+<file href="Module5/index.htm" />
+<dependency identifierref="ALLRESOURCES" />
+</resource>
+<resource identifier="ALLRESOURCES" type="webcontent" adlcp:scormtype="asset">
+
+</resource>
+
+</resources>
+
+</manifest>

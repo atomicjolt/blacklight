@@ -11,46 +11,100 @@ module Blacklight
     course: "Course",
     questestinterop: "Assessment",
     content: "Content",
+  }.freeze
 
-    # categories: :iterate_categories,
-    # itemcategories: :iterate_itemcategories,
-    # staffinfo: :iterate_staffinfo,
-    # coursemodulepages: :iterate_coursemodulepages,
-    # groupcontentlist: :iterate_groupcontentlist,
-    # learnrubrics: :iterate_learnrubrics,
-    # gradebook: :iterate_gradebook,
-    # collabsessions: :iterate_collabsessions,
-    # link: :iterate_link,
-    # cms_resource_link_list: :iterate_resource_link_list,
-    # courserubricassociations: :iterate_courserubricassociations,
-    # partentcontextinfo: :iterate_parentcontextinfo,
-    # notificationrules: :iterate_notificationrules,
-    # wiki: :iterate_wiki,
-    # safeassign: :iterate_safeassign,
+  PRE_RESOURCE_TYPE = {
+    content: "Content",
+    gradebook: "Gradebook",
   }.freeze
 
   def self.parse_manifest(zip_file, manifest)
     doc = Nokogiri::XML.parse(manifest)
     resources = doc.at("resources")
-    iterate_xml(resources, zip_file)
+    iterate_xml(resources, zip_file).flatten - ["", nil]
   end
 
   def self.iterate_xml(resources, zip_file)
-    resources_array = resources.children.map do |resource|
-      file_name = resource.attributes["file"].value
-      if zip_file.find_entry(file_name)
-        data_file = Blacklight.read_file(zip_file, file_name)
-        data = Nokogiri::XML.parse(data_file)
-        xml_data = data.children.first
-        type = xml_data.name.downcase
-        if RESOURCE_TYPE[type.to_sym]
-          res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
+    pre_data = pre_iterator(resources, zip_file)
+    iterator_master(resources, zip_file) do |xml_data, type, file|
+      if RESOURCE_TYPE[type.to_sym]
+        single_pre_data = get_single_pre_data(pre_data, file)
+        res_class = Blacklight.const_get RESOURCE_TYPE[type.to_sym]
+        if type == "content"
+          Content.from(xml_data, single_pre_data)
+        else
           resource = res_class.new
-          resource.iterate_xml(xml_data)
+          resource.iterate_xml(xml_data, single_pre_data)
         end
       end
     end
-    resources_array.flatten - ["", nil]
+  end
+
+  def self.get_single_pre_data(pre_data, file)
+    pre_data.detect do |d|
+      d[:file_name] == file || d[:assignment_id] == file
+    end
+  end
+
+  def self.iterator_master(resources, zip_file)
+    resources.children.map do |resource|
+      file_name = resource.attributes["file"].value
+      file = File.basename(file_name, ".dat")
+      if zip_file.find_entry(file_name)
+        data_file = Blacklight.read_file(zip_file, file_name)
+        xml_data = Nokogiri::XML.parse(data_file).children.first
+        type = xml_data.name.downcase
+        yield xml_data, type, file
+      end
+    end
+  end
+
+  def self.pre_iterator(resources, zip_file)
+    pre_data = {}
+    iterator_master(resources, zip_file) do |xml_data, type, file|
+      if PRE_RESOURCE_TYPE[type.to_sym]
+        res_class = Blacklight.const_get PRE_RESOURCE_TYPE[type.to_sym]
+        resource_class = res_class.new
+        pre_data[type] ||= []
+        pre_data[type].push(resource_class.get_pre_data(xml_data, file))
+      end
+    end
+    pre_data = connect_content(pre_data)
+    build_heirarchy(pre_data)
+  end
+
+  def self.connect_content(pre_data)
+    pre_data["content"].each do |content|
+      gradebook = pre_data["gradebook"].first.
+        detect { |g| g[:content_id] == content[:file_name] }
+      if gradebook
+        content[:points] = gradebook[:points] || ""
+        content[:assignment_id] = gradebook[:assignment_id] || ""
+      end
+    end
+    pre_data["content"]
+  end
+
+  def self.build_heirarchy(pre_data)
+    parents_ids = pre_data.
+      select { |p| p[:parent_id] == "{unset id}" }.
+      map { |u| u[:id] }
+    pre_data.each do |content|
+      next if parents_ids.include?(content[:id])
+      next if parents_ids.include?(content[:parent_id])
+      parent_id = get_master_parent(pre_data, parents_ids,
+                                    content[:parent_id])
+      content[:parent_id] = parent_id
+    end
+  end
+
+  def self.get_master_parent(pre_data, parents_ids, parent_id)
+    parent = pre_data.detect { |p| p[:id] == parent_id }
+    if parents_ids.include? parent[:id]
+      parent[:id]
+    else
+      get_master_parent(pre_data, parents_ids, parent[:parent_id])
+    end
   end
 
   ##
