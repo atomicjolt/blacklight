@@ -15,16 +15,7 @@ module Blacklight
     def initialize(metadata, course_resource, blackboard_export)
       @metadata = metadata
       @course_resource = course_resource
-      @scorm_packages = CanvasCourse.get_scorm_packages(blackboard_export)
-    end
-
-    ##
-    # Extracts scorm packages from a blackboard export zip file
-    ##
-    def self.get_scorm_packages(blackboard_export)
-      ScormPackage.find_scorm_manifests(blackboard_export).map do |manifest|
-        ScormPackage.new blackboard_export, manifest
-      end
+      @scorm_packages = ScormPackage.get_scorm_packages(blackboard_export)
     end
 
     ##
@@ -73,8 +64,8 @@ module Blacklight
     # uploaded to a scorm manager
     ##
     def create_scorm_assignment(scorm_package, course_id)
-      url = "#{Blacklight.scorm_launch_url}?" +
-        "course_id=#{scorm_package['package_id']}"
+      url = Blacklight.scorm_launch_url +
+        "?course_id=#{scorm_package['package_id']}"
 
       payload = {
         assignment__submission_types__: ["external_tool"],
@@ -100,16 +91,18 @@ module Blacklight
     ##
     def upload_scorm_package(scorm_package, course_id, tmp_name)
       zip = scorm_package.write_zip tmp_name
-      RestClient.post(
-        "#{Blacklight.scorm_url}/api/scorm_courses",
-        {
-          oauth_consumer_key: "scorm-player",
-          lms_course_id: course_id,
-          file: File.new(zip, "rb"),
-        },
-        SharedAuthorization: Blacklight.scorm_shared_auth,
-      ) do |resp|
-        JSON.parse(resp.body)["response"]
+      File.open(zip, "rb") do |file|
+        RestClient.post(
+          "#{Blacklight.scorm_url}/api/scorm_courses",
+          {
+            oauth_consumer_key: "scorm-player",
+            lms_course_id: course_id,
+            file: file,
+          },
+          SharedAuthorization: Blacklight.scorm_shared_auth,
+        ) do |resp|
+          JSON.parse(resp.body)["response"]
+        end
       end
     end
 
@@ -150,32 +143,36 @@ module Blacklight
 
       puts "Uploading: #{name}"
       upload_to_s3(migration, filename)
+      puts "Done uploading: #{name}"
+
+      puts "Creating Scorm: #{name}"
       create_scorm_assignments(
         upload_scorm_packages(@scorm_packages),
         @course_resource.id,
       )
-
-      puts "Done uploading: #{name}"
+      puts "Done creating scorm: #{name}"
     end
 
     def upload_to_s3(migration, filename)
-      # Attach the file to the S3 auth
-      pre_attachment = migration.pre_attachment
-      upload_url = pre_attachment["upload_url"]
-      upload_params = pre_attachment["upload_params"]
-      upload_params[:file] = File.new(filename, "rb")
+      File.open(filename, "rb") do |file|
+        # Attach the file to the S3 auth
+        pre_attachment = migration.pre_attachment
+        upload_url = pre_attachment["upload_url"]
+        upload_params = pre_attachment["upload_params"]
+        upload_params[:file] = file
 
-      # Post to S3
-      RestClient.post(
-        upload_url,
-        upload_params,
-      ) do |response|
-        # Post to Canvas
+        # Post to S3
         RestClient.post(
-          response.headers[:location],
-          nil,
-          Authorization: "Bearer #{Blacklight.canvas_token}",
-        )
+          upload_url,
+          upload_params,
+        ) do |response|
+          # Post to Canvas
+          RestClient.post(
+            response.headers[:location],
+            nil,
+            Authorization: "Bearer #{Blacklight.canvas_token}",
+          )
+        end
       end
     end
   end

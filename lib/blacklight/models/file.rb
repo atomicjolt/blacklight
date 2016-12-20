@@ -2,6 +2,7 @@ require "blacklight/exceptions"
 module Blacklight
   class BlacklightFile
     attr_accessor(:id, :location, :name)
+    @@dir = nil
 
     def initialize(zip_entry)
       path = zip_entry.name
@@ -38,7 +39,6 @@ module Blacklight
     # Remove temporary files
     ##
     def self.cleanup
-      @@dir ||= nil
       FileUtils.rm_r @@dir unless @@dir.nil?
     end
   end

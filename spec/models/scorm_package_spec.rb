@@ -12,32 +12,33 @@ end
 
 describe "ScormPackage" do
   it "should find all entries in same directory as manifest" do
-    zip = Zip::File.new("spec/fixtures/scorm_package.zip")
-    manifest = get_manifest_entry zip
-
-    result = Blacklight::ScormPackage.get_entries(zip, manifest)
-    assert_equal(result.size, 2)
-    assert_equal(
-      manifest.get_input_stream.read.include?("ADL SCORM"),
-      true,
-    )
+    get_zip_manifest("scorm_package.zip") do |zip, manifest|
+      result = Blacklight::ScormPackage.get_entries(zip, manifest)
+      assert_equal(result.size, 2)
+      assert_equal(
+        manifest.get_input_stream.read.include?("ADL SCORM"),
+        true,
+      )
+    end
   end
 
   it "should convert to zip file" do
-    zip = Zip::File.new("spec/fixtures/scorm_package.zip")
-    package = Blacklight::ScormPackage.new(zip, get_manifest_entry(zip))
-    EXPORT_NAME = "zip_export.zip".freeze
-    begin
-      result_location = package.write_zip(EXPORT_NAME)
-      result_zip = Zip::File.new(result_location)
-      result_manifest = get_manifest_entry(result_zip)
+    get_zip_manifest("scorm_package.zip") do |zip, manifest|
+      package = Blacklight::ScormPackage.new(zip, manifest)
+      EXPORT_NAME = "zip_export.zip".freeze
+      begin
+        result_location = package.write_zip(EXPORT_NAME)
+        Zip::File.open(result_location) do |file|
+          result_manifest = get_manifest_entry(file)
 
-      assert_equal(
-        result_manifest.get_input_stream.read.include?("ADL SCORM"),
-        true,
-      )
-    ensure
-      Blacklight::ScormPackage.cleanup # Remove temp files
+          assert_equal(
+            result_manifest.get_input_stream.read.include?("ADL SCORM"),
+            true,
+          )
+        end
+      ensure
+        Blacklight::ScormPackage.cleanup # Remove temp files
+      end
     end
   end
 
