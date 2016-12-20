@@ -24,5 +24,11 @@ describe "StaffInfo" do
   end
 
   it "should convert to canvas page" do
+    course = CanvasCc::CanvasCC::Models::Course.new
+    staff_info = StaffInfo.new.iterate_xml(get_fixture_xml("staff_info.xml"))
+    staff_info.canvas_conversion course
+
+    assert_equal(course.pages.size, 1)
+    assert_equal(course.pages.first.body.include?("Mr. Test Name"), true)
   end
 end

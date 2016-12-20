@@ -45,12 +45,32 @@ module Blacklight
       self
     end
 
+    def construct_body
+      <<-HTML
+        <h2>Contact</h2>
+        <h3>#{@name}</h3>
+        <p>#{@bio}</p>
+        <ul>
+          <li>Email: #{@email}</li>
+          <li>Phone: #{@phone}</li>
+          <li>Office Hours: #{@office_hours}</li>
+          <li>Office Address: #{@office_address}</li>
+        </ul>
+      HTML
+    end
+
     def canvas_conversion(course)
       page = CanvasCc::CanvasCC::Models::Page.new
-      # page.body = @body
-      # page.identifier = @id
-      # page.page_name = @title
+      page.body = construct_body
+      page.identifier = @id
 
+      page.page_name = if @title.empty?
+                         "Contact"
+                       else
+                         @title
+                       end
+
+      course.pages << page
       course
     end
   end
