@@ -54,12 +54,11 @@ module Blacklight
     course
   end
 
-  def self.initialize_course(canvas_file_path, blackboard_file_path = nil)
+  def self.initialize_course(canvas_file_path, blackboard_file_path)
     metadata = Blacklight::CanvasCourse.metadata_from_file(canvas_file_path)
-    bb_zip = if blackboard_file_path
-               Zip::File.open(blackboard_file_path)
-             end
-    course = Blacklight::CanvasCourse.from_metadata(metadata, bb_zip)
-    course.upload_content(canvas_file_path)
+    Zip::File.open(blackboard_file_path, "rb") do |bb_zip|
+      course = Blacklight::CanvasCourse.from_metadata(metadata, bb_zip)
+      course.upload_content(canvas_file_path)
+    end
   end
 end
