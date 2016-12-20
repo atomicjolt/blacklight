@@ -15,16 +15,7 @@ module Blacklight
     def initialize(metadata, course_resource, blackboard_export)
       @metadata = metadata
       @course_resource = course_resource
-      @scorm_packages = CanvasCourse.get_scorm_packages(blackboard_export)
-    end
-
-    ##
-    # Extracts scorm packages from a blackboard export zip file
-    ##
-    def self.get_scorm_packages(blackboard_export)
-      ScormPackage.find_scorm_manifests(blackboard_export).map do |manifest|
-        ScormPackage.new blackboard_export, manifest
-      end
+      @scorm_packages = ScormPackage.get_scorm_packages(blackboard_export)
     end
 
     ##

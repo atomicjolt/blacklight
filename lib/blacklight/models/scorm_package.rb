@@ -32,6 +32,15 @@ module Blacklight
     end
 
     ##
+    # Extracts scorm packages from a blackboard export zip file
+    ##
+    def self.get_scorm_packages(blackboard_export)
+      find_scorm_manifests(blackboard_export).map do |manifest|
+        ScormPackage.new blackboard_export, manifest
+      end
+    end
+
+    ##
     # Returns array of all scorm manifest files inside of blackboard export
     ##
     def self.find_scorm_manifests(zip_file)
