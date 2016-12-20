@@ -12,21 +12,6 @@ module Blacklight
     questestinterop: "Assessment",
     content: "Content",
     staffinfo: "StaffInfo",
-
-    # categories: :iterate_categories,
-    # itemcategories: :iterate_itemcategories,
-    # coursemodulepages: :iterate_coursemodulepages,
-    # groupcontentlist: :iterate_groupcontentlist,
-    # learnrubrics: :iterate_learnrubrics,
-    # gradebook: :iterate_gradebook,
-    # collabsessions: :iterate_collabsessions,
-    # link: :iterate_link,
-    # cms_resource_link_list: :iterate_resource_link_list,
-    # courserubricassociations: :iterate_courserubricassociations,
-    # partentcontextinfo: :iterate_parentcontextinfo,
-    # notificationrules: :iterate_notificationrules,
-    # wiki: :iterate_wiki,
-    # safeassign: :iterate_safeassign,
   }.freeze
 
   PRE_RESOURCE_TYPE = {

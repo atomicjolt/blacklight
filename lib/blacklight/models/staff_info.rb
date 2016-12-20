@@ -62,12 +62,7 @@ module Blacklight
       page = CanvasCc::CanvasCC::Models::Page.new
       page.body = construct_body
       page.identifier = @id
-
-      page.page_name = if @title.empty?
-                         "Contact"
-                       else
-                         @title
-                       end
+      page.page_name = @title.empty? ? "Contact" : @title
 
       course.pages << page
       course
