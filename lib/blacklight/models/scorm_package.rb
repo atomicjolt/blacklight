@@ -24,7 +24,10 @@ module Blacklight
         text.delete(" ").downcase
       return schema_name == SCORM_SCHEMA
     # NOTE we occasionally run into malformed manifest files
-    rescue Nokogiri::XML::XPath::SyntaxError
+    rescue Nokogiri::XML::XPath::SyntaxError => e
+      filename = manifest.zipfile
+      STDERR.puts "Malformed scorm manifest found: #{manifest} in #{filename}"
+      STDERR.puts e.to_s
       false
     end
 
