@@ -163,23 +163,25 @@ module Blacklight
     end
 
     def upload_to_s3(migration, filename)
-      # Attach the file to the S3 auth
-      pre_attachment = migration.pre_attachment
-      upload_url = pre_attachment["upload_url"]
-      upload_params = pre_attachment["upload_params"]
-      upload_params[:file] = File.new(filename, "rb")
+      File.open(filename, "rb") do |file|
+        # Attach the file to the S3 auth
+        pre_attachment = migration.pre_attachment
+        upload_url = pre_attachment["upload_url"]
+        upload_params = pre_attachment["upload_params"]
+        upload_params[:file] = file
 
-      # Post to S3
-      RestClient.post(
-        upload_url,
-        upload_params,
-      ) do |response|
-        # Post to Canvas
+        # Post to S3
         RestClient.post(
-          response.headers[:location],
-          nil,
-          Authorization: "Bearer #{Blacklight.canvas_token}",
-        )
+          upload_url,
+          upload_params,
+        ) do |response|
+          # Post to Canvas
+          RestClient.post(
+            response.headers[:location],
+            nil,
+            Authorization: "Bearer #{Blacklight.canvas_token}",
+          )
+        end
       end
     end
   end
