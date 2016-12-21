@@ -1,6 +1,7 @@
+require "blacklight/models/resource"
 
 module Blacklight
-  class StaffInfo
+  class StaffInfo < Resource
     attr_reader(
       :id,
       :title,
@@ -58,7 +59,7 @@ module Blacklight
       HTML
     end
 
-    def canvas_conversion(course)
+    def canvas_conversion(course, _resources = nil)
       page = CanvasCc::CanvasCC::Models::Page.new
       page.body = construct_body
       page.identifier = @id
