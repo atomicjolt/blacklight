@@ -12,7 +12,7 @@ module Blacklight
 
     def canvas_conversion(*)
       query = "?canvas_download=1&amp;canvas_qs_wrap=1"
-      href = "$IMS_CC_FILEBASE$/#{@linkname}#{query}"
+      href = "$IMS_CC_FILEBASE$/#{IMPORTED_FILES_DIRNAME}/#{@linkname}#{query}"
       %{
         <a
           class="instructure_scribd_file instructure_file_link"
