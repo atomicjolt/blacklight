@@ -20,11 +20,7 @@ module Blacklight
 
     def canvas_conversion(question, resources)
       answer = CanvasCc::CanvasCC::Models::Answer.new(@answer_text)
-      answer.answer_text = if @answer_text.respond_to? :empty?
-                             fix_images(@answer_text, resources)
-                           else
-                             @answer_text
-                           end
+      answer.answer_text = fix_images(@answer_text, resources)
       answer.id = @id
       answer.fraction = @fraction
       answer.feedback = @feedback
