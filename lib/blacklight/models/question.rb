@@ -87,9 +87,11 @@ module Blacklight
       @question.points_possible = @points_possible
       @question.material = fix_images(@material, resources)
       @question.general_feedback = fix_images(@general_feedback, resources)
-      @general_correct_feedback = fix_images(@general_correct_feedback, resources)
+      @general_correct_feedback =
+        fix_images(@general_correct_feedback, resources)
       @question.general_correct_feedback = @general_correct_feedback
-      @general_incorrect_feedback = fix_images(@general_incorrect_feedback, resources)
+      @general_incorrect_feedback =
+        fix_images(@general_incorrect_feedback, resources)
       @question.general_incorrect_feedback = @general_incorrect_feedback
       @question.answers = []
       @answers.each do |answer|

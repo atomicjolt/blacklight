@@ -12,7 +12,9 @@ module Blacklight
           file_resource = resources.detect_xid(xid)
 
           if file_resource
-            element["src"] = "$IMS-CC-FILEBASE$/#{IMPORTED_FILES_DIRNAME}/#{file_resource.name}"
+            base = "$IMS-CC-FILEBASE$"
+            name = file_resource.name
+            element["src"] = "#{base}/#{IMPORTED_FILES_DIRNAME}/#{name}"
           end
         end
 
