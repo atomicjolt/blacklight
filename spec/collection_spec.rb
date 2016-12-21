@@ -31,11 +31,15 @@ describe Blacklight do
     end
 
     describe "detect_xid" do
-
-    end
-
-    describe "each" do
-      
+      it "should detect the resources with matching xid" do
+        xid = "xid-1234_1"
+        path = "fake/path/to/file__#{xid}.txt"
+        entry = MockZip::MockEntry.new(path)
+        file = Blacklight::BlacklightFile.new(entry)
+        resource = Blacklight::Resource.new
+        @collection.add([file, resource])
+        assert_equal(@collection.detect_xid(xid), file)
+      end
     end
   end
 end
