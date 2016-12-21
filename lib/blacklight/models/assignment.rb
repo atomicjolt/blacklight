@@ -1,11 +1,13 @@
+require "blacklight/models/resource"
+
 module Blacklight
   class Assignment < Content
-    def canvas_conversion(course, _resources = nil)
+    def canvas_conversion(course, resources)
       unless @title == "--TOP--"
         assignment = CanvasCc::CanvasCC::Models::Assignment.new
         assignment.identifier = @id
         assignment.title = @title
-        assignment.body = @body
+        assignment.body = fix_images(@body, resources)
         assignment.points_possible = @points
         assignment.assignment_group_identifier_ref = @group_id
         assignment.position = 1
