@@ -28,16 +28,6 @@ describe "BlacklightFile" do
     assert_equal(result.files.first.identifier, "file__xid-1234.txt")
   end
 
-  # it "should determine if file should be included in canvas course" do
-  #   mock_entries = [
-  #     MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
-  #     MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
-  #     MockZip::MockEntry.new("res/abc/123/test__xid-12.jpg"),
-  #   ]
-  #
-  #   mock_entries.map { |entry| BlacklightFile.valid_file }
-  # end
-
   it "should determine if file is blacklisted" do
     mock_entries = [
       MockZip::MockEntry.new("test.jpg"),

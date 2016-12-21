@@ -52,7 +52,7 @@ module Blacklight
 
     ##
     # Returns array of paths to scorm packages
-    ## 
+    ##
     def self.find_scorm_paths(zip_file)
       manifests = ScormPackage.find_scorm_manifests(zip_file)
       manifests.map { |manifest| File.dirname(manifest.name) }
