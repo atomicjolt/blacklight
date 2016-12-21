@@ -47,10 +47,7 @@ module Blacklight
     end
 
     def self.blacklisted?(file)
-      FILE_BLACKLIST.each do |list_item|
-        return true if File.fnmatch?(list_item, file.name)
-      end
-      false
+      FILE_BLACKLIST.any? { |list_item| File.fnmatch?(list_item, file.name) }
     end
 
     def self.metadata_file?(file_names, file)
@@ -67,15 +64,15 @@ module Blacklight
     end
 
     def self.belongs_to_scorm_package?(package_paths, file)
-      package_paths.each do |path|
-        return true if File.dirname(file.name).start_with? path
+      package_paths.any? do |path|
+        File.dirname(file.name).start_with? path
       end
-      false
     end
 
-    def self.valid_file?(file_names, file)
+    def self.valid_file?(file_names, scorm_paths, file)
       return false if BlacklightFile.blacklisted? file
       return false if BlacklightFile.metadata_file? file_names, file
+      return false if BlacklightFile.belongs_to_scorm_package? scorm_paths, file
       true
     end
   end
