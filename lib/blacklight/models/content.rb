@@ -69,7 +69,7 @@ module Blacklight
       module_item.canvas_conversion
     end
 
-    def canvas_conversion(course, _resources)
+    def canvas_conversion(course, _resources = nil)
       course
     end
 

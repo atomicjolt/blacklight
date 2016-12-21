@@ -33,7 +33,7 @@ describe "Assignment" do
 
     assignment_id = xml.xpath("/CONTENT/@id").first.text
 
-    result = assignment.canvas_conversion(course)
+    result = assignment.canvas_conversion(course, Resource.new)
 
     assert_equal(result.assignments.size, 1)
     assert_equal(result.assignments.first.identifier, assignment_id)

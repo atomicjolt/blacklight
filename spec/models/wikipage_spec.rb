@@ -33,7 +33,7 @@ describe "WikiPage" do
 
     page_id = xml.xpath("/CONTENT/@id").first.text
 
-    result = page.canvas_conversion(course)
+    result = page.canvas_conversion(course, Resource.new)
 
     assert_equal(result.pages.size, 1)
     assert_equal(result.pages.first.identifier, page_id)
