@@ -68,4 +68,22 @@ describe "BlacklightFile" do
       assert_equal(res, result[i])
     end
   end
+
+  it "should determine if a file belongs to a scorm package" do
+    package_paths = ["abc/def", "ghi"]
+    mock_entries = [
+      MockZip::MockEntry.new("abc/def/scorm.txt"),
+      MockZip::MockEntry.new("abc/not_scorm.txt"),
+      MockZip::MockEntry.new("also_not_scorm.txt"),
+      MockZip::MockEntry.new("ghi/is_scorm.txt"),
+    ]
+
+    expected_result = [true, false, false, true]
+    result = mock_entries.map do |entry|
+      BlacklightFile.belongs_to_scorm_package? package_paths, entry
+    end
+
+    assert_equal(expected_result, result)
+  end
+
 end
