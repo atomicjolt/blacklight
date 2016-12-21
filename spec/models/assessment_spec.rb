@@ -64,7 +64,8 @@ describe Blacklight do
         description = "<p>Do this test with honor</p>"
 
         assignment = @assessment.create_assignment
-        assessment = @assessment.setup_assessment(assessment, assignment, @resources)
+        assessment =
+          @assessment.setup_assessment(assessment, assignment, @resources)
         assert_equal assessment.title, title
         assert_equal assessment.description, description
       end

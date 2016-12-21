@@ -46,7 +46,10 @@ describe Blacklight do
         @matching = @matching.iterate_xml(xml.children.first)
         matches = @matching.instance_variable_get :@matches
 
-        assert_equal matches.first[:answer_text], "<p>that is not a question</p>"
+        assert_equal(
+          matches.first[:answer_text],
+          "<p>that is not a question</p>",
+        )
       end
 
       it "should iterate through xml and set matching_answers" do
