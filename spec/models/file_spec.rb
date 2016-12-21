@@ -27,4 +27,45 @@ describe "BlacklightFile" do
     assert_equal(result.files.size, 1)
     assert_equal(result.files.first.identifier, "file__xid-1234.txt")
   end
+
+  # it "should determine if file should be included in canvas course" do
+  #   mock_entries = [
+  #     MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
+  #     MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
+  #     MockZip::MockEntry.new("res/abc/123/test__xid-12.jpg"),
+  #   ]
+  #
+  #   mock_entries.map { |entry| BlacklightFile.valid_file }
+  # end
+
+  it "should determine if file is blacklisted" do
+    mock_entries = [
+      MockZip::MockEntry.new("test.jpg"),
+      MockZip::MockEntry.new("test.dat"),
+    ]
+
+    result = mock_entries.map { |entry| BlacklightFile.blacklisted?(entry) }
+    assert_equal(result[0], false)
+    assert_equal(result[1], true)
+  end
+
+  it "should determine if a file is a metadata file" do
+    mock_entries = [
+      MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.xml"),
+      MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.xml.xml"),
+      MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
+      MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg.xml"),
+    ]
+
+    file_names = mock_entries.map(&:name).sort
+    result = mock_entries.map do |entry|
+      BlacklightFile.metadata_file?(file_names, entry)
+    end
+
+    expected_result = [false, true, false, true]
+
+    expected_result.each_with_index do |res, i|
+      assert_equal(res, result[i])
+    end
+  end
 end
