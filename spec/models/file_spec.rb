@@ -85,5 +85,4 @@ describe "BlacklightFile" do
 
     assert_equal(expected_result, result)
   end
-
 end
