@@ -46,10 +46,16 @@ module Blacklight
       FileUtils.rm_r @@dir unless @@dir.nil?
     end
 
+    ##
+    # Determine if a file is on the blacklist
+    ##
     def self.blacklisted?(file)
       FILE_BLACKLIST.any? { |list_item| File.fnmatch?(list_item, file.name) }
     end
 
+    ##
+    # Determine whether or not a file is a metadata file or not
+    ##
     def self.metadata_file?(file_names, file)
       if File.extname(file.name) == ".xml"
         # Detect and skip metadata files.
@@ -63,12 +69,18 @@ module Blacklight
       end
     end
 
+    ##
+    # Determine whether or not a file is a part of a scorm package
+    ##
     def self.belongs_to_scorm_package?(package_paths, file)
       package_paths.any? do |path|
         File.dirname(file.name).start_with? path
       end
     end
 
+    ##
+    # Determine if a file should be included in course files or not
+    ##
     def self.valid_file?(file_names, scorm_paths, file)
       return false if BlacklightFile.blacklisted? file
       return false if BlacklightFile.metadata_file? file_names, file
