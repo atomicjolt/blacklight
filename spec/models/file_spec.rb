@@ -54,9 +54,7 @@ describe "BlacklightFile" do
 
     expected_result = [false, true, false, true]
 
-    expected_result.each_with_index do |res, i|
-      assert_equal(res, result[i])
-    end
+    assert_equal(expected_result, result)
   end
 
   it "should determine if a file belongs to a scorm package" do
