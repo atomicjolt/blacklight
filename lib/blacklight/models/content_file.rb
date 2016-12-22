@@ -1,5 +1,7 @@
+require "blacklight/models/resource"
+
 module Blacklight
-  class ContentFile
+  class ContentFile < Resource
     attr_accessor(:id, :name, :linkname)
 
     def initialize(xml)
@@ -8,9 +10,9 @@ module Blacklight
       @linkname = xml.xpath("./LINKNAME/@value").first.text
     end
 
-    def canvas_conversion
+    def canvas_conversion(*)
       query = "?canvas_download=1&amp;canvas_qs_wrap=1"
-      href = "$IMS_CC_FILEBASE$/#{@linkname}#{query}"
+      href = "$IMS_CC_FILEBASE$/#{IMPORTED_FILES_DIRNAME}/#{@linkname}#{query}"
       %{
         <a
           class="instructure_scribd_file instructure_file_link"

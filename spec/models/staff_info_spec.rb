@@ -8,7 +8,7 @@ require_relative "../../lib/blacklight/models/staff_info"
 describe "StaffInfo" do
   it "should parse xml" do
     xml = get_fixture_xml("staff_info.xml")
-    staff_info = StaffInfo.new.iterate_xml(xml)
+    staff_info = StaffInfo.new.iterate_xml(xml, nil)
 
     assert_equal(staff_info.id, "_112170_1")
     assert_equal(staff_info.title, "Test Title")
@@ -25,7 +25,8 @@ describe "StaffInfo" do
 
   it "should convert to canvas page" do
     course = CanvasCc::CanvasCC::Models::Course.new
-    staff_info = StaffInfo.new.iterate_xml(get_fixture_xml("staff_info.xml"))
+    staff_info =
+      StaffInfo.new.iterate_xml(get_fixture_xml("staff_info.xml"), nil)
     staff_info.canvas_conversion course
 
     assert_equal(course.pages.size, 1)

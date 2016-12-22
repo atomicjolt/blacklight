@@ -1,5 +1,7 @@
+require "blacklight/models/resource"
+
 module Blacklight
-  class Module
+  class Module < Resource
     attr_accessor :module_items
 
     def initialize(title, identifier)
@@ -8,7 +10,7 @@ module Blacklight
       @module_items = []
     end
 
-    def canvas_conversion
+    def canvas_conversion(*)
       CanvasCc::CanvasCC::Models::CanvasModule.new.tap do |cc_module|
         cc_module.identifier = @identifier
         cc_module.title = @title

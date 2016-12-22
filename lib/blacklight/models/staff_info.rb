@@ -1,6 +1,7 @@
+require "blacklight/models/resource"
 
 module Blacklight
-  class StaffInfo
+  class StaffInfo < Resource
     attr_reader(
       :id,
       :title,
@@ -29,7 +30,7 @@ module Blacklight
       resp
     end
 
-    def iterate_xml(xml)
+    def iterate_xml(xml, _pre_data)
       contact = xml.xpath("//CONTACT")
       @id = xml.xpath("//STAFFINFO/@id").text
       @title = xml.xpath("//STAFFINFO/TITLE/@value").text
@@ -58,7 +59,7 @@ module Blacklight
       HTML
     end
 
-    def canvas_conversion(course)
+    def canvas_conversion(course, _resources = nil)
       page = CanvasCc::CanvasCC::Models::Page.new
       page.body = construct_body
       page.identifier = @id

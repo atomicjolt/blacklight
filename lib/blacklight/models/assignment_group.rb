@@ -1,5 +1,7 @@
+require "blacklight/models/resource"
+
 module Blacklight
-  class AssignmentGroup
+  class AssignmentGroup < Resource
     attr_reader :id
     def initialize(name, group_id)
       @title = name
@@ -8,7 +10,7 @@ module Blacklight
       @id = group_id
     end
 
-    def canvas_conversion(course)
+    def canvas_conversion(course, _resources = nil)
       assignment_group = CanvasCc::CanvasCC::Models::AssignmentGroup.new
       assignment_group.identifier = @id
       assignment_group.title = @title

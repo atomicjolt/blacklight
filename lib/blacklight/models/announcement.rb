@@ -1,5 +1,7 @@
+require "blacklight/models/resource"
+
 module Blacklight
-  class Announcement
+  class Announcement < Resource
     def initialize
       @title = ""
       @text = ""
@@ -19,7 +21,7 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(course)
+    def canvas_conversion(course, _resources = nil)
       announcement = CanvasCc::CanvasCC::Models::Announcement.new
       announcement.title = @title
       announcement.text = @text

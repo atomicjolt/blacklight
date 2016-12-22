@@ -1,5 +1,7 @@
+require "blacklight/models/resource"
+
 module Blacklight
-  class Course
+  class Course < Resource
     ##
     # This class represents a reader for one zip file, and allows the usage of
     # individual files within zip file
@@ -24,7 +26,7 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(course)
+    def canvas_conversion(course, _resources = nil)
       course.identifier = @identifier
       course.title = @title
       course.description = @description

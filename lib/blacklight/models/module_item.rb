@@ -1,5 +1,7 @@
+require "blacklight/models/resource"
+
 module Blacklight
-  class ModuleItem
+  class ModuleItem < Resource
     def initialize(title, type, identifierref)
       @title = title
       @identifier = Blacklight.create_random_hex
@@ -8,7 +10,7 @@ module Blacklight
       @workflow_state = "active"
     end
 
-    def canvas_conversion
+    def canvas_conversion(*)
       CanvasCc::CanvasCC::Models::ModuleItem.new.tap do |item|
         item.title = @title
         item.identifier = @identifier

@@ -1,5 +1,7 @@
+require "blacklight/models/resource"
+
 module Blacklight
-  class Group
+  class Group < Resource
     def initialize
       @name = ""
       @description = ""
@@ -13,7 +15,7 @@ module Blacklight
       self
     end
 
-    def canvas_conversion(course)
+    def canvas_conversion(course, _resources = nil)
       course
     end
   end

@@ -77,7 +77,7 @@ describe "Content" do
 
       content_id = xml.xpath("/CONTENT/@id").first.text
 
-      result = content.canvas_conversion(course)
+      result = content.canvas_conversion(course, Blacklight::Collection.new)
 
       assert_equal(result.pages.size, 1)
       assert_equal(result.pages.first.identifier, content_id)

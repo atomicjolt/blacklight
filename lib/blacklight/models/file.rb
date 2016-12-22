@@ -1,6 +1,8 @@
+require "blacklight/models/resource"
 require "blacklight/exceptions"
+
 module Blacklight
-  class BlacklightFile
+  class BlacklightFile < Resource
     attr_accessor(:id, :location, :name)
     @@dir = nil
 
@@ -11,11 +13,17 @@ module Blacklight
     def initialize(zip_entry)
       path = zip_entry.name
       id = File.basename(path)
+      xid = id[/__(xid-[0-9]+_[0-9]+)/, 1]
       name = id.gsub(/__xid-[0-9]+_[0-9]+/, "")
 
       @location = extract_file(zip_entry) # Location of file on local filesystem
       @name = name
       @id = id
+      @xid = xid
+    end
+
+    def matches_xid?(xid)
+      @xid == xid
     end
 
     def extract_file(entry)
@@ -28,11 +36,11 @@ module Blacklight
       name
     end
 
-    def canvas_conversion(course)
+    def canvas_conversion(course, _resources = nil)
       file = CanvasCc::CanvasCC::Models::CanvasFile.new
       file.identifier = @id
       file.file_location = @location
-      file.file_path = @name
+      file.file_path = "#{IMPORTED_FILES_DIRNAME}/#{@name}"
       file.hidden = false
 
       course.files << file

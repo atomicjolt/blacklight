@@ -25,7 +25,7 @@ describe Blacklight do
         assert_equal matches.count, 4
       end
 
-      it "should iterate through xml and right content to id" do
+      it "should iterate through xml and write content to id" do
         xml = get_fixture_xml "matching.xml"
         @matching = @matching.iterate_xml(xml.children.first)
         matches = @matching.instance_variable_get :@matches
@@ -33,12 +33,12 @@ describe Blacklight do
         assert_equal matches.first[:id], "6d0161a74fec47128b7b4d30ef4be242"
       end
 
-      it "should iterate through xml and right content to question text" do
+      it "should iterate through xml and write content to question text" do
         xml = get_fixture_xml "matching.xml"
         @matching = @matching.iterate_xml(xml.children.first)
         matches = @matching.instance_variable_get :@matches
 
-        assert_equal matches.first[:question_text], "To be or not to be"
+        assert_equal matches.first[:question_text], "<p>To be or not to be</p>"
       end
 
       it "should iterate through xml and empty answer text" do
@@ -46,7 +46,10 @@ describe Blacklight do
         @matching = @matching.iterate_xml(xml.children.first)
         matches = @matching.instance_variable_get :@matches
 
-        assert_equal matches.first[:answer_text], "that is not a question"
+        assert_equal(
+          matches.first[:answer_text],
+          "<p>that is not a question</p>",
+        )
       end
 
       it "should iterate through xml and set matching_answers" do

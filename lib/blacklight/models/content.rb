@@ -1,5 +1,7 @@
+require "blacklight/models/resource"
+
 module Blacklight
-  class Content
+  class Content < Resource
     CONTENT_TYPES = {
       "x-bb-asmt-test-link" => "Quiz",
       "x-bb-asmt-survey-link" => "Quiz",
@@ -67,7 +69,7 @@ module Blacklight
       module_item.canvas_conversion
     end
 
-    def canvas_conversion(course)
+    def canvas_conversion(course, _resources = nil)
       course
     end
 
