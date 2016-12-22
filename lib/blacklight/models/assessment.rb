@@ -21,8 +21,17 @@ module Blacklight
       @id = pre_data[:assignment_id] || Blacklight.create_random_hex
       @title = data.at("assessment").attributes["title"].value
       @points_possible = data.at("qmd_absolutescore_max").text
-      @description = data.at("presentation_material").
+
+      description = data.at("presentation_material").
         at("mat_formattedtext").text
+      instructions = data.at("rubric").
+        at("mat_formattedtext").text
+
+      @description = %{
+        #{description}
+        #{instructions}
+      }
+
       @group_name = data.at("bbmd_assessmenttype").text
       data.at("section").children.map do |item|
         @items.push(item) if item.name == "item"
