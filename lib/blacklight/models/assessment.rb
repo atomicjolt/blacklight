@@ -46,7 +46,7 @@ module Blacklight
 
     def setup_assessment(assessment, assignment, resources)
       assessment.title = @title
-      assessment.description = @description
+      assessment.description = fix_html(@description, resources)
       assessment.available = @available
       assessment.quiz_type = @quiz_type
       assessment.points_possible = @points_possible
