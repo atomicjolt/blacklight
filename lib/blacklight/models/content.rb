@@ -36,6 +36,7 @@ module Blacklight
     def iterate_xml(xml, pre_data)
       @points = pre_data[:points] || 0
       @title = xml.xpath("/CONTENT/TITLE/@value").first.text
+      @url = xml.at("URL")["value"]
       @body = xml.xpath("/CONTENT/BODY/TEXT").first.text
       @type = xml.xpath("/CONTENT/RENDERTYPE/@value").first.text
       @parent_id = pre_data[:parent_id]
