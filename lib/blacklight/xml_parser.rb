@@ -113,23 +113,14 @@ module Blacklight
   # non-metadata file.
   ##
   def self.iterate_files(zipfile)
-    files = zipfile.glob("csfiles/**/**")
+    files = zipfile.glob("*/**/**")
     file_names = files.map(&:name)
+    scorm_paths = ScormPackage.find_scorm_paths(zipfile)
 
-    files = files.select do |file|
-      if File.extname(file.name) == ".xml"
-        # Detect and skip metadata files.
-        concrete_file = File.join(
-          File.dirname(file.name),
-          File.basename(file.name, ".xml"),
-        )
-        !file_names.include?(concrete_file)
-      else
-        true
-      end
-    end
-
-    files.map { |file| BlacklightFile.new(file) }
+    files.select do |file|
+      BlacklightFile.valid_file?(file_names, scorm_paths, file)
+    end.
+      map { |file| BlacklightFile.new(file) }
   end
 
   def self.create_random_hex

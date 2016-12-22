@@ -60,32 +60,19 @@ describe Blacklight do
     it "should return array of files" do
       mock_entries = [
         MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
-        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
+        MockZip::MockEntry.new("csfiles/home_dir/test__xid-13.jpg"),
+        MockZip::MockEntry.new("res/abc/123/test__xid-14.jpg"),
+        MockZip::MockEntry.new("res/abc/123/test__xid-14.jpg.xml"),
+        MockZip::MockEntry.new("test.dat"),
       ]
 
       result = Blacklight.iterate_files(MockZip.new(mock_entries))
-      assert_equal(result.size, 2)
+      assert_equal(result.size, 3)
       assert_equal(result.first.id, "test__xid-12.jpg")
       assert_includes(
         result.first.location,
         "csfiles/home_dir/test__xid-12.jpg",
       )
-    end
-
-    it "should filter metadata files" do
-      mock_entries = [
-        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.xml"),
-        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.xml.xml"),
-        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
-        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg.xml"),
-      ]
-
-      result = Blacklight.iterate_files(MockZip.new(mock_entries))
-      assert_equal(result.size, 2)
-
-      file_names = result.map(&:name).sort
-      expected_names = %w(test__xid-12.jpg test__xid-12.xml)
-      assert_equal(file_names, expected_names)
     end
   end
 
