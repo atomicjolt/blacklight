@@ -113,7 +113,8 @@ module Blacklight
   # non-metadata file.
   ##
   def self.iterate_files(zipfile)
-    files = zipfile.glob("*/**/**")
+    files = zipfile.entries.select(&:file?)
+
     file_names = files.map(&:name)
     scorm_paths = ScormPackage.find_scorm_paths(zipfile)
 
