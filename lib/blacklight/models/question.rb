@@ -85,13 +85,13 @@ module Blacklight
       @question.identifier = Blacklight.create_random_hex
       @question.title = @title
       @question.points_possible = @points_possible
-      @question.material = fix_images(@material, resources)
-      @question.general_feedback = fix_images(@general_feedback, resources)
+      @question.material = fix_html(@material, resources)
+      @question.general_feedback = fix_html(@general_feedback, resources)
       @general_correct_feedback =
-        fix_images(@general_correct_feedback, resources)
+        fix_html(@general_correct_feedback, resources)
       @question.general_correct_feedback = @general_correct_feedback
       @general_incorrect_feedback =
-        fix_images(@general_incorrect_feedback, resources)
+        fix_html(@general_incorrect_feedback, resources)
       @question.general_incorrect_feedback = @general_incorrect_feedback
       @question.answers = []
       @answers.each do |answer|

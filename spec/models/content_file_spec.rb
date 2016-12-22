@@ -20,7 +20,7 @@ describe "ContentFile" do
     file = Blacklight::ContentFile.new(xml.xpath("//FILE"))
     assert_includes(
       file.canvas_conversion,
-      "href=\"$IMS_CC_FILEBASE$/ADV",
+      "href=\"$IMS_CC_FILEBASE$/#{IMPORTED_FILES_DIRNAME}/ADV",
     )
     assert_includes(
       file.canvas_conversion,

@@ -7,7 +7,7 @@ module Blacklight
         assignment = CanvasCc::CanvasCC::Models::Assignment.new
         assignment.identifier = @id
         assignment.title = @title
-        assignment.body = fix_images(@body, resources)
+        assignment.body = fix_html(@body, resources)
         assignment.points_possible = @points
         assignment.assignment_group_identifier_ref = @group_id
         assignment.position = 1

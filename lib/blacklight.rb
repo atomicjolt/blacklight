@@ -12,6 +12,9 @@ require "zip"
 require_relative "./blacklight/exceptions"
 
 module Blacklight
+  IMPORTED_FILES_DIRNAME = "Imported".freeze
+  BASE = "$IMS-CC-FILEBASE$".freeze
+
   def self.parse(zip_path, imscc_path)
     Zip::File.open(zip_path) do |file|
       manifest = read_file(file, "imsmanifest.xml")

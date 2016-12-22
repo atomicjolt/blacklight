@@ -1,0 +1,1 @@
+&lt;p&gt;&lt;a href="@X@EmbeddedFile.requestUrlStub@X@bbcswebdav/xid-802_2" target="_blank"&gt;&lt;img width="500" height="350" src="@X@EmbeddedFile.requestUrlStub@X@bbcswebdav/xid-801_2"&gt; &lt;/a&gt;&lt;/p&gt;

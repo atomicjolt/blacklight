@@ -20,7 +20,7 @@ module Blacklight
 
     def canvas_conversion(question, resources)
       answer = CanvasCc::CanvasCC::Models::Answer.new(@answer_text)
-      answer.answer_text = fix_images(@answer_text, resources)
+      answer.answer_text = fix_html(@answer_text, resources)
       answer.id = @id
       answer.fraction = @fraction
       answer.feedback = @feedback

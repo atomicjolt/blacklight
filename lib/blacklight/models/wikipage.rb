@@ -8,7 +8,7 @@ module Blacklight
           select { |p| p.title.start_with? @title }.count
         @title = "#{@title}-#{page_count + 1}" if page_count > 0
         page = CanvasCc::CanvasCC::Models::Page.new
-        page.body = fix_images(@body, resources)
+        page.body = fix_html(@body, resources)
         page.identifier = @id
         page.page_name = @title
         page.workflow_state = "active"
