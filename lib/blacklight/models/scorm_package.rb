@@ -17,19 +17,19 @@ module Blacklight
     ##
     # Returns true if a manifest is a scorm manifest file, false otherwise
     ##
-    def self.scorm_manifest?(manifest)
-      parsed_manifest = Nokogiri::XML(manifest.get_input_stream.read)
-      schema_name = parsed_manifest.
-        xpath("//xmlns:metadata/xmlns:schema").
-        text.delete(" ").downcase
-      return schema_name == SCORM_SCHEMA
-    # NOTE we occasionally run into malformed manifest files
-    rescue Nokogiri::XML::XPath::SyntaxError => e
-      filename = manifest.zipfile
-      STDERR.puts "Malformed scorm manifest found: #{manifest} in #{filename}"
-      STDERR.puts e.to_s
-      false
-    end
+    # def self.scorm_manifest?(manifest)
+    #   parsed_manifest = Nokogiri::XML(manifest.get_input_stream.read)
+    #   schema_name = parsed_manifest.
+    #     xpath("//xmlns:metadata/xmlns:schema").
+    #     text.delete(" ").downcase
+    #   return schema_name == SCORM_SCHEMA
+    # # NOTE we occasionally run into malformed manifest files
+    # rescue Nokogiri::XML::XPath::SyntaxError => e
+    #   filename = manifest.zipfile
+    #   STDERR.puts "Malformed scorm manifest found: #{manifest} in #{filename}"
+    #   STDERR.puts e.to_s
+    #   false
+    # end
 
     ##
     # Extracts scorm packages from a blackboard export zip file
@@ -40,14 +40,35 @@ module Blacklight
       end
     end
 
+    def self.find_scorm_item_paths(zip_file)
+      manifest = Nokogiri::XML.parse(
+        Blacklight.read_file(zip_file, "imsmanifest.xml"),
+      )
+      manifest.
+        xpath("//resource[@type='resource/x-plugin-scormengine']").
+        map { |r| r.xpath("./@bb:file").text }
+    end
+
+    def self.find_scorm_items(zip_file)
+      find_scorm_item_paths(zip_file).map do |path|
+        Nokogiri::XML.parse(zip_file.get_input_stream(path).read)
+      end
+    end
+
     ##
     # Returns array of all scorm manifest files inside of blackboard export
     ##
     def self.find_scorm_manifests(zip_file)
-      return [] if zip_file.nil?
-      zip_file.entries.select do |e|
-        File.fnmatch("*imsmanifest.xml", e.name) && scorm_manifest?(e)
+      #scorm_items =
+      find_scorm_items(zip_file).map do |item|
+        zip_file.get_entry(
+          "#{item.xpath("/scormItem/@mappedContentId").text}/imsmanifest.xml",
+        )
       end
+      # return [] if zip_file.nil?
+      # zip_file.entries.select do |e|
+      #   File.fnmatch("*imsmanifest.xml", e.name) && scorm_manifest?(e)
+      # end
     end
 
     ##
