@@ -16,7 +16,6 @@ module Blacklight
       @metadata = metadata
       @course_resource = course_resource
       @scorm_packages = ScormPackage.get_scorm_packages(blackboard_export)
-      byebug
     end
 
     ##

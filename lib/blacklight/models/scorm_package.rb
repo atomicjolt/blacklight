@@ -59,16 +59,11 @@ module Blacklight
     # Returns array of all scorm manifest files inside of blackboard export
     ##
     def self.find_scorm_manifests(zip_file)
-      #scorm_items =
       find_scorm_items(zip_file).map do |item|
         zip_file.get_entry(
-          "#{item.xpath("/scormItem/@mappedContentId").text}/imsmanifest.xml",
+          "#{item.xpath('/scormItem/@mappedContentId').text}/imsmanifest.xml",
         )
       end
-      # return [] if zip_file.nil?
-      # zip_file.entries.select do |e|
-      #   File.fnmatch("*imsmanifest.xml", e.name) && scorm_manifest?(e)
-      # end
     end
 
     ##
