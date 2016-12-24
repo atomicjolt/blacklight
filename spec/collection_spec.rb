@@ -1,17 +1,17 @@
 require "minitest/autorun"
 
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
 require_relative "helpers.rb"
 require_relative "mocks/mockzip"
 
-include Blacklight
+include Senkyoshi
 
-describe Blacklight do
+describe Senkyoshi do
   describe "Collection" do
     before do
-      @collection = Blacklight::Collection.new
+      @collection = Senkyoshi::Collection.new
     end
 
     describe "initialize" do
@@ -22,10 +22,10 @@ describe Blacklight do
 
     describe "add" do
       it "adds resources to its collection" do
-        @collection.add([Blacklight::Resource.new])
+        @collection.add([Senkyoshi::Resource.new])
         assert_equal(@collection.resources.length, 1)
 
-        @collection.add([Blacklight::Resource.new])
+        @collection.add([Senkyoshi::Resource.new])
         assert_equal(@collection.resources.length, 2)
       end
     end
@@ -35,8 +35,8 @@ describe Blacklight do
         xid = "xid-1234_1"
         path = "fake/path/to/file__#{xid}.txt"
         entry = MockZip::MockEntry.new(path)
-        file = Blacklight::BlacklightFile.new(entry)
-        resource = Blacklight::Resource.new
+        file = Senkyoshi::SenkyoshiFile.new(entry)
+        resource = Senkyoshi::Resource.new
         @collection.add([file, resource])
         assert_equal(@collection.detect_xid(xid), file)
       end

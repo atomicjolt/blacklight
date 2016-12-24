@@ -1,10 +1,10 @@
 require "minitest/autorun"
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
-include Blacklight
+include Senkyoshi
 
-describe Blacklight do
+describe Senkyoshi do
   describe "Course" do
     before do
       @course = Course.new
