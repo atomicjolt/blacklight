@@ -57,18 +57,23 @@ Create a `senkyoshi.yml` and add credentials
 
 Run the rake task to convert from .zip to .imscc
 ```sh
-rake imscc
+rake senkyoshi:imscc
 ```
 This will take all your files in your source folder and convert them to your outputs folder
 
 Run converting files in parallel
 ```sh
-time rake imscc -m
+time rake senkyoshi:imscc -m
 ```
 
 Delete entire outputs folder
 ```sh
 rake clean
+```
+
+Upload to canvas to process
+```sh
+rake senkyoshi:upload
 ```
 
 ## Development
