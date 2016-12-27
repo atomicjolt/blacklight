@@ -46,7 +46,7 @@ module Senkyoshi
     ##
     def self.find_scorm_items(zip_file)
       find_scorm_item_paths(zip_file).map do |path|
-        Nokogiri::XML.parse(zip_file.get_input_stream(path).read)
+        Nokogiri::XML.parse Senkyoshi.read_file(zip_file, path)
       end
     end
 
