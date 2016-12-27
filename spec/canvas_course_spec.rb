@@ -1,7 +1,6 @@
 require "minitest/autorun"
 require "senkyoshi/canvas_course"
 require_relative "helpers/spec_helper"
-require "byebug"
 
 include Senkyoshi
 
