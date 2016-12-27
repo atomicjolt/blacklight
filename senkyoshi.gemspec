@@ -30,7 +30,6 @@ Gem::Specification.new do |spec|
     ["rubyzip", "~> 1.1"],
     ["nokogiri", "~> 1.6.6"],
     ["fileutils", "~> 0.7"],
-    ["require_all", "~> 1.3.3"],
     ["pandarus", "~> 0.6"],
     ["activesupport", "~> 4.2"],
     ["rest-client", "~> 2.0"],

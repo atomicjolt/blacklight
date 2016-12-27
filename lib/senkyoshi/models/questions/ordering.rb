@@ -1,3 +1,5 @@
+require "senkyoshi/models/question"
+
 module Senkyoshi
   class Ordering < Question
     def initialize

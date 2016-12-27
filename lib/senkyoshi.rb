@@ -9,7 +9,7 @@ require "ostruct"
 require "nokogiri"
 require "zip"
 
-require_relative "./senkyoshi/exceptions"
+require "senkyoshi/exceptions"
 
 module Senkyoshi
   IMPORTED_FILES_DIRNAME = "Imported".freeze
