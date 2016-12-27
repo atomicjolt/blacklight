@@ -43,7 +43,10 @@ module Senkyoshi
       end
     end
 
-    ## TODO document
+    ##
+    # Returns the zip file entry for the scorm package manifest, given
+    # a scormItem file
+    ##
     def self.find_scorm_manifest(zip_file, scorm_item)
       path = scorm_item.xpath("/scormItem/@mappedContentId").text
       zip_file.get_entry("#{path}/imsmanifest.xml")
