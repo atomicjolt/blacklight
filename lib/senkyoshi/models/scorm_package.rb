@@ -2,13 +2,6 @@ module Senkyoshi
   class ScormPackage
     attr_accessor(:entries, :manifest)
 
-    ##
-    # Scorm packages should include this string in the <schema> tag. We
-    # downcase, and remove spaces before checking to see if a manifest contains
-    # this schema to determine whether or not it belongs to a scorm package
-    ##
-    SCORM_SCHEMA = "adlscorm".freeze
-
     def initialize(zip_file, manifest)
       @manifest = manifest
       @entries = ScormPackage.get_entries zip_file, manifest
@@ -27,10 +20,9 @@ module Senkyoshi
     # Returns paths to scormItem files
     ##
     def self.find_scorm_item_paths(zip_file)
-      manifest = Nokogiri::XML.parse(
+      Nokogiri::XML.parse(
         Senkyoshi.read_file(zip_file, "imsmanifest.xml"),
-      )
-      manifest.
+      ).
         xpath("//resource[@type='resource/x-plugin-scormengine']").
         map { |r| r.xpath("./@bb:file").text }
     end
