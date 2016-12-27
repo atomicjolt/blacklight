@@ -48,7 +48,7 @@ describe Senkyoshi do
 
         assert_equal(
           matches.first[:answer_text],
-          "<p>that is not a question</p>",
+          "that is not a question",
         )
       end
 
