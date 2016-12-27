@@ -16,7 +16,7 @@ module Senkyoshi
       if match_block = data.at("flow[@class=RIGHT_MATCH_BLOCK]")
         matches_array = match_block.
           search("flow[@class=FORMATTED_TEXT_BLOCK]").map do |match|
-            match.text
+            Nokogiri::HTML(match.text).text
         end
       end
       if response_block = data.at("flow[@class=RESPONSE_BLOCK]")
@@ -28,7 +28,7 @@ module Senkyoshi
           flow_label = response.at("flow_label")
           flow_label.children.each_with_index do |label, index|
             if label.attributes["ident"].value == answer_id
-              answer = matches_array[index]
+              answer = Nokogiri::HTML(matches_array[index]).text
             end
           end
           answers << answer
