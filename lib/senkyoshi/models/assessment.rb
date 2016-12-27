@@ -24,6 +24,10 @@ module Senkyoshi
       @description = data.at("presentation_material").
         at("mat_formattedtext").text
       @group_name = data.at("bbmd_assessmenttype").text
+      case @group_name.downcase
+      when "survey"
+        @quiz_type = "survey"
+      end
       data.at("section").children.map do |item|
         @items.push(item) if item.name == "item"
       end
