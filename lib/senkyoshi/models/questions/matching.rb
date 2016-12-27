@@ -16,7 +16,7 @@ module Senkyoshi
       if match_block = data.at("flow[@class=RIGHT_MATCH_BLOCK]")
         matches_array = match_block.
           search("flow[@class=FORMATTED_TEXT_BLOCK]").map do |match|
-            Nokogiri::HTML(match.text).text
+          Nokogiri::HTML(match.text).text
         end
       end
       if response_block = data.at("flow[@class=RESPONSE_BLOCK]")
@@ -35,7 +35,7 @@ module Senkyoshi
           @matches << { id: id, question_text: question, answer_text: answer }
         end
       end
-      @distractors = matches_array.reject {|i| answers.include?(i) }
+      @distractors = matches_array.reject { |i| answers.include?(i) }
       self
     end
 
