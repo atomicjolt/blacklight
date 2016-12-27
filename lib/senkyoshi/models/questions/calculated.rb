@@ -1,3 +1,5 @@
+require "senkyoshi/models/question"
+
 module Senkyoshi
   class Calculated < Question
     attr_reader :dataset_definitions, :var_sets

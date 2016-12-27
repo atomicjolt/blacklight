@@ -1,3 +1,5 @@
+require "senkyoshi/models/question"
+
 module Senkyoshi
   class OpinionScale < Question
     def iterate_xml(data)

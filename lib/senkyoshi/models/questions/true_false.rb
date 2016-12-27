@@ -1,3 +1,5 @@
+require "senkyoshi/models/question"
+
 module Senkyoshi
   class TrueFalse < Question
     def iterate_xml(data)

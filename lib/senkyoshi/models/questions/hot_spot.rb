@@ -1,3 +1,5 @@
+require "senkyoshi/models/question"
+
 module Senkyoshi
   class HotSpot < Question
     def iterate_xml(data)
