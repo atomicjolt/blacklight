@@ -42,7 +42,7 @@ module Senkyoshi
 
     def self.find_scorm_item_paths(zip_file)
       manifest = Nokogiri::XML.parse(
-        Blacklight.read_file(zip_file, "imsmanifest.xml"),
+        Senkyoshi.read_file(zip_file, "imsmanifest.xml"),
       )
       manifest.
         xpath("//resource[@type='resource/x-plugin-scormengine']").
