@@ -5,8 +5,11 @@ module Senkyoshi
     def initialize(zip_file, manifest, scorm_item = nil)
       @manifest = manifest
       @entries = ScormPackage.get_entries zip_file, manifest
-      # @scorm_item = scorm_item
-      # byebug
+      @points_possible = if scorm_item
+                           scorm_item.xpath(
+                             "/scormItem/gradebookInfo/@pointsPossible",
+                           ).text
+                         end
     end
 
     ##

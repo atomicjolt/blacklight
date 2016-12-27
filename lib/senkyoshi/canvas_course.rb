@@ -76,7 +76,7 @@ module Senkyoshi
         assignment__external_tool_tag_attributes__: {
           url: url,
         },
-        # points_possible: pointsPossible,
+        assignment__points_possible__: scorm_package["points_possible"],
       }
 
       CanvasCourse.client.create_assignment(
@@ -102,7 +102,9 @@ module Senkyoshi
           },
           SharedAuthorization: Senkyoshi.scorm_shared_auth,
         ) do |resp|
-          JSON.parse(resp.body)["response"]
+          result = JSON.parse(resp.body)["response"]
+          result["points_possible"] = scorm_package.points_possible
+          result
         end
       end
     end
