@@ -6,6 +6,10 @@ class MockZip
       @ftype = ftype
     end
 
+    def file?
+      true
+    end
+
     def extract(dummy = nil) end
   end
 

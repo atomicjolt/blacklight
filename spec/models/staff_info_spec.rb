@@ -1,9 +1,9 @@
 require "minitest/autorun"
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
 require_relative "../mocks/mockzip"
-require_relative "../../lib/blacklight/models/staff_info"
+require_relative "../../lib/senkyoshi/models/staff_info"
 
 describe "StaffInfo" do
   it "should parse xml" do
