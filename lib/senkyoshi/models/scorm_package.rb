@@ -32,6 +32,8 @@ module Senkyoshi
       ).
         xpath("//resource[@type='resource/x-plugin-scormengine']").
         map { |r| r.xpath("./@bb:file").text }
+    rescue Exceptions::MissingFileError
+      []
     end
 
     ##
