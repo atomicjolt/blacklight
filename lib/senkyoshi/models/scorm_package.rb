@@ -32,7 +32,12 @@ module Senkyoshi
       ).
         xpath("//resource[@type='resource/x-plugin-scormengine']").
         map { |r| r.xpath("./@bb:file").text }
-    rescue Exceptions::MissingFileError
+    rescue Exceptions::MissingFileError => e
+      if(zip_file)
+        STDERR.puts "Blackboard export manifest file missing: #{zip_file.name}"
+      end
+      STDERR.puts e.to_s
+      
       []
     end
 
