@@ -19,5 +19,5 @@
 /spec/examples/
 *.gem
 .idea/
-blacklight.iml
-blacklight.yml
+senkyoshi.iml
+senkyoshi.yml

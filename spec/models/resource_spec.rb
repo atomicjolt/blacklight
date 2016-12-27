@@ -1,14 +1,14 @@
 require "minitest/autorun"
 
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
 require_relative "../helpers.rb"
 require_relative "../mocks/mockzip"
 
-include Blacklight
+include Senkyoshi
 
-describe Blacklight do
+describe Senkyoshi do
   describe "Resource" do
     before do
       @resource = Resource.new
@@ -21,21 +21,21 @@ describe Blacklight do
       before do
         path = "fake/path/to/image123__xid-123_1.jpg"
         entry = MockZip::MockEntry.new(path)
-        @file1 = Blacklight::BlacklightFile.new(entry)
+        @file1 = Senkyoshi::SenkyoshiFile.new(entry)
 
         path = "fake/path/to/image456__xid-456_1.jpg"
         entry = MockZip::MockEntry.new(path)
-        @file2 = Blacklight::BlacklightFile.new(entry)
+        @file2 = Senkyoshi::SenkyoshiFile.new(entry)
 
         path = "fake/path/to/pdf789__xid-802_2.pdf"
         entry = MockZip::MockEntry.new(path)
-        @file3 = Blacklight::BlacklightFile.new(entry)
+        @file3 = Senkyoshi::SenkyoshiFile.new(entry)
 
         path = "fake/path/to/image987__xid-801_2.jpg"
         entry = MockZip::MockEntry.new(path)
-        @file4 = Blacklight::BlacklightFile.new(entry)
+        @file4 = Senkyoshi::SenkyoshiFile.new(entry)
 
-        @resources = Blacklight::Collection.new
+        @resources = Senkyoshi::Collection.new
       end
 
       it "fixes the src attribute for image tags" do

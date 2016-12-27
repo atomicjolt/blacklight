@@ -1,13 +1,13 @@
 require "minitest/autorun"
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
 require_relative "../helpers.rb"
-require_relative "../../lib/blacklight/models/gradebook"
+require_relative "../../lib/senkyoshi/models/gradebook"
 
 describe "Gradebook" do
   before do
-    @gradebook = Blacklight::Gradebook.new
+    @gradebook = Senkyoshi::Gradebook.new
   end
 
   describe "initialize" do

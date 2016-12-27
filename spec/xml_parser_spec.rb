@@ -1,12 +1,12 @@
 require "minitest/autorun"
 
-require "blacklight"
+require "senkyoshi"
 require "pry"
 require_relative "mocks/mockzip"
 
-include Blacklight
+include Senkyoshi
 
-describe Blacklight do
+describe Senkyoshi do
   describe "get_single_pre_data" do
     it "should return a single pre data" do
       id = "res00023"
@@ -19,7 +19,7 @@ describe Blacklight do
                     file_name: "res00003" },
                   { id: master_parent_id, parent_id: "{unset id}",
                     file_name: "res00004" }]
-      result = Blacklight.get_single_pre_data(pre_data, file_name)
+      result = Senkyoshi.get_single_pre_data(pre_data, file_name)
 
       assert_equal(result, first_data)
     end
@@ -35,7 +35,7 @@ describe Blacklight do
                     file_name: "res00003" },
                   { id: master_parent_id, parent_id: "{unset id}",
                     file_name: "res00004" }]
-      results = Blacklight.build_heirarchy(pre_data)
+      results = Senkyoshi.build_heirarchy(pre_data)
       assert_equal(results.first[:parent_id], master_parent_id)
     end
   end
@@ -51,7 +51,7 @@ describe Blacklight do
                     file_name: "res00003" },
                   { id: master_parent_id, parent_id: "{unset id}",
                     file_name: "res00004" }]
-      result = Blacklight.get_master_parent(pre_data, parents_ids, parent_id)
+      result = Senkyoshi.get_master_parent(pre_data, parents_ids, parent_id)
       assert_equal(result, master_parent_id)
     end
   end
@@ -66,7 +66,7 @@ describe Blacklight do
         MockZip::MockEntry.new("test.dat"),
       ]
 
-      result = Blacklight.iterate_files(MockZip.new(mock_entries))
+      result = Senkyoshi.iterate_files(MockZip.new(mock_entries))
       assert_equal(result.size, 3)
       assert_equal(result.first.id, "test__xid-12.jpg")
       assert_includes(
@@ -78,7 +78,7 @@ describe Blacklight do
 
   describe "create_random_hex" do
     it "should return a random string" do
-      assert_equal Blacklight.create_random_hex.length, 32
+      assert_equal Senkyoshi.create_random_hex.length, 32
     end
   end
 
@@ -100,7 +100,7 @@ describe Blacklight do
         end
       end.to_xml
       xml_data = Nokogiri::XML.parse(xml_content)
-      assert_equal Blacklight.get_attribute_value(xml_data, type), ""
+      assert_equal Senkyoshi.get_attribute_value(xml_data, type), ""
     end
 
     it "should get xml data" do
@@ -120,7 +120,7 @@ describe Blacklight do
         end
       end.to_xml
       xml_data = Nokogiri::XML.parse(xml_content)
-      assert_equal Blacklight.get_attribute_value(xml_data, type), title
+      assert_equal Senkyoshi.get_attribute_value(xml_data, type), title
     end
   end
 
@@ -141,7 +141,7 @@ describe Blacklight do
         end
       end.to_xml
       xml_data = Nokogiri::XML.parse(xml_content)
-      assert_equal Blacklight.get_text(xml_data, "text"), ""
+      assert_equal Senkyoshi.get_text(xml_data, "text"), ""
     end
 
     it "should get xml data" do
@@ -160,7 +160,7 @@ describe Blacklight do
         end
       end.to_xml
       xml_data = Nokogiri::XML.parse(xml_content)
-      assert_equal Blacklight.get_text(xml_data, "TEXT"), description
+      assert_equal Senkyoshi.get_text(xml_data, "TEXT"), description
     end
 
     it "should get xml data" do
@@ -179,7 +179,7 @@ describe Blacklight do
         end
       end.to_xml
       xml_data = Nokogiri::XML.parse(xml_content)
-      assert_equal Blacklight.get_text(xml_data, "TEXT"), description
+      assert_equal Senkyoshi.get_text(xml_data, "TEXT"), description
     end
   end
 
@@ -198,7 +198,7 @@ describe Blacklight do
         end
       end.to_xml
       xml_data = Nokogiri::XML.parse(xml_content)
-      assert_equal Blacklight.get_description(xml_data), ""
+      assert_equal Senkyoshi.get_description(xml_data), ""
     end
 
     it "should get xml data" do
@@ -217,7 +217,7 @@ describe Blacklight do
         end
       end.to_xml
       xml_data = Nokogiri::XML.parse(xml_content)
-      assert_equal Blacklight.get_description(xml_data), description
+      assert_equal Senkyoshi.get_description(xml_data), description
     end
 
     it "should get xml data" do
@@ -236,7 +236,7 @@ describe Blacklight do
         end
       end.to_xml
       xml_data = Nokogiri::XML.parse(xml_content)
-      assert_equal Blacklight.get_description(xml_data), description
+      assert_equal Senkyoshi.get_description(xml_data), description
     end
   end
 end

@@ -1,14 +1,14 @@
 require "minitest/autorun"
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
 require_relative "../helpers.rb"
-require_relative "../../lib/blacklight/models/wikipage"
+require_relative "../../lib/senkyoshi/models/wikipage"
 
 describe "WikiPage" do
   it "should iterate_xml" do
     xml = get_fixture_xml "content.xml"
-    page = Blacklight::WikiPage.new
+    page = Senkyoshi::WikiPage.new
     pre_data = {}
 
     page.iterate_xml(xml, pre_data)
@@ -27,7 +27,7 @@ describe "WikiPage" do
   it "should convert to canvas wiki page" do
     course = CanvasCc::CanvasCC::Models::Course.new
     xml = get_fixture_xml "content.xml"
-    page = Blacklight::WikiPage.new
+    page = Senkyoshi::WikiPage.new
     pre_data = {}
     page.iterate_xml(xml, pre_data)
 

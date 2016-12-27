@@ -1,10 +1,10 @@
 require "minitest/autorun"
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
-include Blacklight
+include Senkyoshi
 
-describe Blacklight do
+describe Senkyoshi do
   describe "EitherOr" do
     before do
       @either_or = EitherOr.new

@@ -1,14 +1,14 @@
 require "minitest/autorun"
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
 require_relative "../helpers.rb"
-require_relative "../../lib/blacklight/models/assignment"
+require_relative "../../lib/senkyoshi/models/assignment"
 
 describe "Assignment" do
   it "should iterate_xml" do
     xml = get_fixture_xml "content.xml"
-    assignment = Blacklight::Assignment.new
+    assignment = Senkyoshi::Assignment.new
     pre_data = {}
 
     assignment.iterate_xml(xml, pre_data)
@@ -27,7 +27,7 @@ describe "Assignment" do
   it "should convert to canvas wiki page" do
     course = CanvasCc::CanvasCC::Models::Course.new
     xml = get_fixture_xml "content.xml"
-    assignment = Blacklight::Assignment.new
+    assignment = Senkyoshi::Assignment.new
     pre_data = {}
     assignment.iterate_xml(xml, pre_data)
 

@@ -1,9 +1,9 @@
 require "minitest/autorun"
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
 require_relative "../helpers.rb"
-require_relative "../../lib/blacklight/models/content"
+require_relative "../../lib/senkyoshi/models/content"
 
 describe "Content" do
   describe "from" do
@@ -18,7 +18,7 @@ describe "Content" do
   describe "iterate_xml" do
     it "should iterate_xml" do
       xml = get_fixture_xml "content.xml"
-      content = Blacklight::Content.new
+      content = Senkyoshi::Content.new
       pre_data = {}
       content.iterate_xml(xml, pre_data)
 
@@ -53,7 +53,7 @@ describe "Content" do
   describe "set_module" do
     it "should return the converted module item" do
       xml = get_fixture_xml "content.xml"
-      content = Blacklight::Content.new
+      content = Senkyoshi::Content.new
       pre_data = {}
       result = content.iterate_xml(xml, pre_data)
 
@@ -77,7 +77,7 @@ describe "Content" do
 
       content_id = xml.xpath("/CONTENT/@id").first.text
 
-      result = content.canvas_conversion(course, Blacklight::Collection.new)
+      result = content.canvas_conversion(course, Senkyoshi::Collection.new)
 
       assert_equal(result.pages.size, 1)
       assert_equal(result.pages.first.identifier, content_id)
@@ -87,7 +87,7 @@ describe "Content" do
   describe "create_module" do
     it "should return a module" do
       xml = get_fixture_xml "content.xml"
-      content = Blacklight::Content.new
+      content = Senkyoshi::Content.new
       pre_data = {}
       content = content.iterate_xml(xml, pre_data)
       course = CanvasCc::CanvasCC::Models::Course.new

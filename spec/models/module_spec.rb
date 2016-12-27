@@ -1,15 +1,15 @@
 require "minitest/autorun"
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
 require_relative "../helpers.rb"
-require_relative "../../lib/blacklight/models/module"
+require_relative "../../lib/senkyoshi/models/module"
 
 describe "Module" do
   before do
     @title = "Module Name"
-    @identifier = Blacklight.create_random_hex
-    @module = Blacklight::Module.new(@title, @identifier)
+    @identifier = Senkyoshi.create_random_hex
+    @module = Senkyoshi::Module.new(@title, @identifier)
   end
 
   describe "initialize" do
@@ -29,7 +29,7 @@ describe "Module" do
   end
 
   it "should convert to canvas wiki page" do
-    module_item = Blacklight::ModuleItem.new(@title, @content_type,
+    module_item = Senkyoshi::ModuleItem.new(@title, @content_type,
                                              @identifierref)
 
     @module.module_items << module_item

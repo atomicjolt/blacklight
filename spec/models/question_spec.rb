@@ -1,16 +1,16 @@
 require "minitest/autorun"
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
 require_relative "../helpers.rb"
 
-include Blacklight
+include Senkyoshi
 
-describe Blacklight do
+describe Senkyoshi do
   describe "Question" do
     before do
       @question = Question.new
-      @resources = Blacklight::Collection.new
+      @resources = Senkyoshi::Collection.new
     end
 
     describe "initialize" do
