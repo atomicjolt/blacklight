@@ -1,4 +1,4 @@
-require "senkyoshi/models/resource"
+require "senkyoshi/models/content"
 
 module Senkyoshi
   class Assignment < Content

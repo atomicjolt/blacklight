@@ -1,7 +1,6 @@
 require "rake"
 require "rake/clean"
 require "senkyoshi"
-require "byebug"
 
 ## CHANGED THESE TO CHANGE THE FOLDER LOCATIONS
 SOURCE_DIR = "sources".freeze

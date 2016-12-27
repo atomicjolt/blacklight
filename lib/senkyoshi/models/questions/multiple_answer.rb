@@ -1,3 +1,5 @@
+require "senkyoshi/models/question"
+
 module Senkyoshi
   class MultipleAnswer < Question
     def iterate_xml(data)
