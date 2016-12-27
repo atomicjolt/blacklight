@@ -1,19 +1,23 @@
 module Senkyoshi
   class ScormPackage
-    attr_accessor(:entries, :manifest)
+    attr_accessor(:entries, :manifest, :points_possible)
 
-    def initialize(zip_file, manifest)
+    def initialize(zip_file, manifest, scorm_item = nil)
       @manifest = manifest
       @entries = ScormPackage.get_entries zip_file, manifest
+      # @scorm_item = scorm_item
+      # byebug
     end
 
     ##
     # Extracts scorm packages from a blackboard export zip file
     ##
     def self.get_scorm_packages(blackboard_export)
-      find_scorm_manifests(blackboard_export).map do |manifest|
-        ScormPackage.new blackboard_export, manifest
-      end
+      find_scorm_items(blackboard_export).
+        map do |item|
+          manifest_entry = find_scorm_manifest(blackboard_export, item)
+          ScormPackage.new blackboard_export, manifest_entry, item
+        end
     end
 
     ##
@@ -36,14 +40,18 @@ module Senkyoshi
       end
     end
 
+    ## TODO document
+    def self.find_scorm_manifest(zip_file, scorm_item)
+      path = scorm_item.xpath("/scormItem/@mappedContentId").text
+      zip_file.get_entry("#{path}/imsmanifest.xml")
+    end
+
     ##
     # Returns array of all scorm manifest files inside of blackboard export
     ##
     def self.find_scorm_manifests(zip_file)
-      find_scorm_items(zip_file).map do |item|
-        zip_file.get_entry(
-          "#{item.xpath('/scormItem/@mappedContentId').text}/imsmanifest.xml",
-        )
+      find_scorm_items(zip_file).map do |scorm_item|
+        find_scorm_manifest(zip_file, scorm_item)
       end
     end
 

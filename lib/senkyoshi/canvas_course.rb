@@ -76,6 +76,7 @@ module Senkyoshi
         assignment__external_tool_tag_attributes__: {
           url: url,
         },
+        # points_possible: pointsPossible,
       }
 
       CanvasCourse.client.create_assignment(
