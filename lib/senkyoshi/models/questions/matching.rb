@@ -4,6 +4,7 @@ module Senkyoshi
       super
       @matches = []
       @matching_answers = {}
+      @distractors = []
     end
 
     def iterate_xml(data)
@@ -11,11 +12,11 @@ module Senkyoshi
       resprocessing = data.at("resprocessing")
       @matching_answers = set_matching_answers(resprocessing)
       matches_array = []
+      answers = []
       if match_block = data.at("flow[@class=RIGHT_MATCH_BLOCK]")
-        matches_array = match_block.children.map do |match|
-          if match.at("mat_formattedtext")
-            match.at("mat_formattedtext").text
-          end
+        matches_array = match_block.
+          search("flow[@class=FORMATTED_TEXT_BLOCK]").map do |match|
+            match.text
         end
       end
       if response_block = data.at("flow[@class=RESPONSE_BLOCK]")
@@ -30,14 +31,17 @@ module Senkyoshi
               answer = matches_array[index]
             end
           end
+          answers << answer
           @matches << { id: id, question_text: question, answer_text: answer }
         end
       end
+      @distractors = matches_array.reject {|i| answers.include?(i) }
       self
     end
 
     def canvas_conversion(assessment, _resources = nil)
       @question.matches = @matches
+      @question.distractors = @distractors
       super
     end
 
