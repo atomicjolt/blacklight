@@ -13,7 +13,9 @@ module Blacklight
       matches_array = []
       if match_block = data.at("flow[@class=RIGHT_MATCH_BLOCK]")
         matches_array = match_block.children.map do |match|
-          match.at("mat_formattedtext").text
+          if match.at("mat_formattedtext")
+            match.at("mat_formattedtext").text
+          end
         end
       end
       if response_block = data.at("flow[@class=RESPONSE_BLOCK]")
