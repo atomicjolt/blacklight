@@ -1,3 +1,5 @@
+require "senkyoshi/models/question"
+
 module Senkyoshi
   class FillInBlankPlus < Question
     def iterate_xml(data)

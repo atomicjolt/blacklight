@@ -1,3 +1,5 @@
+require "senkyoshi/models/question"
+
 module Senkyoshi
   class JumbledSentence < Question
     def initialize

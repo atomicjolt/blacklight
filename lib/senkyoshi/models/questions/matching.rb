@@ -1,3 +1,5 @@
+require "senkyoshi/models/question"
+
 module Senkyoshi
   class Matching < Question
     def initialize
