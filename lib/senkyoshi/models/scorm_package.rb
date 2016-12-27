@@ -15,23 +15,6 @@ module Senkyoshi
     end
 
     ##
-    # Returns true if a manifest is a scorm manifest file, false otherwise
-    ##
-    # def self.scorm_manifest?(manifest)
-    #   parsed_manifest = Nokogiri::XML(manifest.get_input_stream.read)
-    #   schema_name = parsed_manifest.
-    #     xpath("//xmlns:metadata/xmlns:schema").
-    #     text.delete(" ").downcase
-    #   return schema_name == SCORM_SCHEMA
-    # # NOTE we occasionally run into malformed manifest files
-    # rescue Nokogiri::XML::XPath::SyntaxError => e
-    #   filename = manifest.zipfile
-    #   STDERR.puts "Malformed scorm manifest found: #{manifest} in #{filename}"
-    #   STDERR.puts e.to_s
-    #   false
-    # end
-
-    ##
     # Extracts scorm packages from a blackboard export zip file
     ##
     def self.get_scorm_packages(blackboard_export)
@@ -40,6 +23,9 @@ module Senkyoshi
       end
     end
 
+    ##
+    # Returns paths to scormItem files
+    ##
     def self.find_scorm_item_paths(zip_file)
       manifest = Nokogiri::XML.parse(
         Senkyoshi.read_file(zip_file, "imsmanifest.xml"),
@@ -49,6 +35,9 @@ module Senkyoshi
         map { |r| r.xpath("./@bb:file").text }
     end
 
+    ##
+    # Returns array of parsed scormItem files
+    ##
     def self.find_scorm_items(zip_file)
       find_scorm_item_paths(zip_file).map do |path|
         Nokogiri::XML.parse(zip_file.get_input_stream(path).read)
