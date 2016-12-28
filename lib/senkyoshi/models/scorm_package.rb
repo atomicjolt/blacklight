@@ -1,52 +1,70 @@
 module Senkyoshi
   class ScormPackage
-    attr_accessor(:entries, :manifest)
+    attr_accessor(:entries, :manifest, :points_possible)
 
-    ##
-    # Scorm packages should include this string in the <schema> tag. We
-    # downcase, and remove spaces before checking to see if a manifest contains
-    # this schema to determine whether or not it belongs to a scorm package
-    ##
-    SCORM_SCHEMA = "adlscorm".freeze
-
-    def initialize(zip_file, manifest)
+    def initialize(zip_file, manifest, scorm_item = nil)
       @manifest = manifest
       @entries = ScormPackage.get_entries zip_file, manifest
-    end
-
-    ##
-    # Returns true if a manifest is a scorm manifest file, false otherwise
-    ##
-    def self.scorm_manifest?(manifest)
-      parsed_manifest = Nokogiri::XML(manifest.get_input_stream.read)
-      schema_name = parsed_manifest.
-        xpath("//xmlns:metadata/xmlns:schema").
-        text.delete(" ").downcase
-      return schema_name == SCORM_SCHEMA
-    # NOTE we occasionally run into malformed manifest files
-    rescue Nokogiri::XML::XPath::SyntaxError => e
-      filename = manifest.zipfile
-      STDERR.puts "Malformed scorm manifest found: #{manifest} in #{filename}"
-      STDERR.puts e.to_s
-      false
+      @points_possible = if scorm_item
+                           scorm_item.xpath(
+                             "/scormItem/gradebookInfo/@pointsPossible",
+                           ).text
+                         end
     end
 
     ##
     # Extracts scorm packages from a blackboard export zip file
     ##
     def self.get_scorm_packages(blackboard_export)
-      find_scorm_manifests(blackboard_export).map do |manifest|
-        ScormPackage.new blackboard_export, manifest
+      find_scorm_items(blackboard_export).
+        map do |item|
+          manifest_entry = find_scorm_manifest(blackboard_export, item)
+          ScormPackage.new blackboard_export, manifest_entry, item
+        end
+    end
+
+    ##
+    # Returns paths to scormItem files
+    ##
+    def self.find_scorm_item_paths(zip_file)
+      Nokogiri::XML.parse(
+        Senkyoshi.read_file(zip_file, "imsmanifest.xml"),
+      ).
+        xpath("//resource[@type='resource/x-plugin-scormengine']").
+        map { |r| r.xpath("./@bb:file").text }
+    rescue Exceptions::MissingFileError => e
+      if zip_file
+        STDERR.puts "Blackboard export manifest file missing: #{zip_file.name}"
       end
+      STDERR.puts e.to_s
+
+      []
+    end
+
+    ##
+    # Returns array of parsed scormItem files
+    ##
+    def self.find_scorm_items(zip_file)
+      find_scorm_item_paths(zip_file).map do |path|
+        Nokogiri::XML.parse Senkyoshi.read_file(zip_file, path)
+      end
+    end
+
+    ##
+    # Returns the zip file entry for the scorm package manifest, given
+    # a scormItem file
+    ##
+    def self.find_scorm_manifest(zip_file, scorm_item)
+      path = scorm_item.xpath("/scormItem/@mappedContentId").text
+      zip_file.get_entry("#{path}/imsmanifest.xml")
     end
 
     ##
     # Returns array of all scorm manifest files inside of blackboard export
     ##
     def self.find_scorm_manifests(zip_file)
-      return [] if zip_file.nil?
-      zip_file.entries.select do |e|
-        File.fnmatch("*imsmanifest.xml", e.name) && scorm_manifest?(e)
+      find_scorm_items(zip_file).map do |scorm_item|
+        find_scorm_manifest(zip_file, scorm_item)
       end
     end
 

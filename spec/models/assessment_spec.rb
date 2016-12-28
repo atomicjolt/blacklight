@@ -25,19 +25,22 @@ describe Senkyoshi do
         pre_data = {}
         @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
 
-        points_possible = "120.0"
         title = "Just a test"
-        description = "<p>Do this test with honor</p>"
+        points_possible = "120.0"
         group_name = "Test"
+        description = "<p>Do this test with honor</p>"
+        instructions = "<p>Don't forget your virtue</p>"
 
         assert_equal (@assessment.instance_variable_get :@title), title
         assert_equal (@assessment.
           instance_variable_get :@points_possible), points_possible
         assert_equal (@assessment.
-          instance_variable_get :@description), description
-        assert_equal (@assessment.
           instance_variable_get :@group_name), group_name
         assert_equal (@assessment.instance_variable_get :@items).count, 12
+
+        actual_description = @assessment.instance_variable_get :@description
+        assert_includes actual_description, description
+        assert_includes actual_description, instructions
       end
     end
 
@@ -62,12 +65,14 @@ describe Senkyoshi do
 
         title = "Just a test"
         description = "<p>Do this test with honor</p>"
+        instructions = "<p>Don't forget your virtue</p>"
 
         assignment = @assessment.create_assignment
         assessment =
           @assessment.setup_assessment(assessment, assignment, @resources)
         assert_equal assessment.title, title
-        assert_equal assessment.description, description
+        assert_includes assessment.description, description
+        assert_includes assessment.description, instructions
       end
     end
 
