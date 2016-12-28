@@ -1,6 +1,6 @@
 require "rake/testtask"
 require "bundler/gem_tasks"
-require "blacklight/tasks"
+require "senkyoshi/tasks"
 
 Rake.application.options.trace_rules = true
 
@@ -13,4 +13,4 @@ end
 
 task default: :spec
 
-Blacklight::Tasks.install_tasks
+Senkyoshi::Tasks.install_tasks

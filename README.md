@@ -1,4 +1,4 @@
-# Blacklight Converter [![Build Status](https://travis-ci.org/atomicjolt/blacklight.svg?branch=master)](https://travis-ci.org/atomicjolt/blacklight)
+# Senkyoshi Converter [![Build Status](https://travis-ci.org/atomicjolt/senkyoshi.svg?branch=master)](https://travis-ci.org/atomicjolt/senkyoshi)
 
 TODO: Describe the gem
 
@@ -7,7 +7,7 @@ TODO: Describe the gem
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "blacklight"
+gem "senkyoshi"
 gem "canvas_cc", git: "https://github.com/atomicjolt/canvas_cc.git"
 ```
 
@@ -18,16 +18,16 @@ $ bundle
 
 Or install it yourself as:
 ```sh
-$ gem install blacklight
+$ gem install senkyoshi
 ```
 
 Create a `Rakefile` and add
 ```ruby
-require "blacklight/tasks"
-Blacklight::Tasks.install_tasks
+require "senkyoshi/tasks"
+Senkyoshi::Tasks.install_tasks
 ```
 
-Create a `blacklight.yml` and add credentials
+Create a `senkyoshi.yml` and add credentials
 ```yaml
 # Generally looks like https://< mycanvas_instance >/api
 :canvas_url: <canvas instance api url>
@@ -57,18 +57,23 @@ Create a `blacklight.yml` and add credentials
 
 Run the rake task to convert from .zip to .imscc
 ```sh
-rake imscc
+rake senkyoshi:imscc
 ```
 This will take all your files in your source folder and convert them to your outputs folder
 
 Run converting files in parallel
 ```sh
-time rake imscc -m
+time rake senkyoshi:imscc -m
 ```
 
 Delete entire outputs folder
 ```sh
 rake clean
+```
+
+Upload to canvas to process
+```sh
+rake senkyoshi:upload
 ```
 
 ## Development
@@ -79,7 +84,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/blacklight. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/senkyoshi. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 
 ## License

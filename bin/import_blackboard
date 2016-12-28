@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require "blacklight"
+require "senkyoshi"
 
 # ruby -Ilib ./bin/import_blackboard ~/sources ~/canvas
-Blacklight.parse(*ARGV)
+Senkyoshi.parse(*ARGV)

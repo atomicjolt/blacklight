@@ -6,6 +6,10 @@ class MockZip
       @ftype = ftype
     end
 
+    def file?
+      true
+    end
+
     def extract(dummy = nil) end
   end
 
@@ -15,6 +19,10 @@ class MockZip
 
   def entries
     @entries
+  end
+
+  def name
+    "MockZip"
   end
 
   def glob(*)

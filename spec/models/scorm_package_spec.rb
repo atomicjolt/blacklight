@@ -1,8 +1,8 @@
 require "minitest/autorun"
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
-require_relative "../../lib/blacklight/models/scorm_package"
+require_relative "../../lib/senkyoshi/models/scorm_package"
 
 def get_manifest_entry(zip)
   zip.entries.detect do |i|
@@ -13,7 +13,7 @@ end
 describe "ScormPackage" do
   it "should find all entries in same directory as manifest" do
     get_zip_manifest("scorm_package.zip") do |zip, manifest|
-      result = Blacklight::ScormPackage.get_entries(zip, manifest)
+      result = Senkyoshi::ScormPackage.get_entries(zip, manifest)
       assert_equal(result.size, 2)
       assert_equal(
         manifest.get_input_stream.read.include?("ADL SCORM"),
@@ -24,7 +24,7 @@ describe "ScormPackage" do
 
   it "should convert to zip file" do
     get_zip_manifest("scorm_package.zip") do |zip, manifest|
-      package = Blacklight::ScormPackage.new(zip, manifest)
+      package = Senkyoshi::ScormPackage.new(zip, manifest)
       EXPORT_NAME = "zip_export.zip".freeze
       begin
         result_location = package.write_zip(EXPORT_NAME)
@@ -37,7 +37,7 @@ describe "ScormPackage" do
           )
         end
       ensure
-        Blacklight::ScormPackage.cleanup # Remove temp files
+        Senkyoshi::ScormPackage.cleanup # Remove temp files
       end
     end
   end
@@ -45,14 +45,14 @@ describe "ScormPackage" do
   it "should correct paths in scorm package" do
     nested_path = "fake/nested/directory"
     assert_equal(
-      Blacklight::ScormPackage.correct_path(
+      Senkyoshi::ScormPackage.correct_path(
         "#{nested_path}/test.jpg", nested_path
       ),
       "test.jpg",
     )
 
     assert_equal(
-      Blacklight::ScormPackage.correct_path(
+      Senkyoshi::ScormPackage.correct_path(
         "#{nested_path}/nested/test.jpg", nested_path
       ),
       "nested/test.jpg",

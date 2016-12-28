@@ -1,15 +1,15 @@
 require "minitest/autorun"
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
 require_relative "../mocks/mockzip"
-require_relative "../../lib/blacklight/models/file"
+require_relative "../../lib/senkyoshi/models/file"
 
-describe "BlacklightFile" do
+describe "SenkyoshiFile" do
   before do
     @path = "fake/path/to/file__xid-1234_1.txt"
     entry = MockZip::MockEntry.new(@path)
-    @file = Blacklight::BlacklightFile.new(entry)
+    @file = Senkyoshi::SenkyoshiFile.new(entry)
   end
 
   it "should iterate_xml" do
@@ -38,7 +38,7 @@ describe "BlacklightFile" do
       MockZip::MockEntry.new("test.dat"),
     ]
 
-    result = mock_entries.map { |entry| BlacklightFile.blacklisted?(entry) }
+    result = mock_entries.map { |entry| SenkyoshiFile.blacklisted?(entry) }
     assert_equal(result[0], false)
     assert_equal(result[1], true)
   end
@@ -53,7 +53,7 @@ describe "BlacklightFile" do
 
     file_names = mock_entries.map(&:name).sort
     result = mock_entries.map do |entry|
-      BlacklightFile.metadata_file?(file_names, entry)
+      SenkyoshiFile.metadata_file?(file_names, entry)
     end
 
     expected_result = [false, true, false, true]
@@ -72,7 +72,7 @@ describe "BlacklightFile" do
 
     expected_result = [true, false, false, true]
     result = mock_entries.map do |entry|
-      BlacklightFile.belongs_to_scorm_package? package_paths, entry
+      SenkyoshiFile.belongs_to_scorm_package? package_paths, entry
     end
 
     assert_equal(expected_result, result)

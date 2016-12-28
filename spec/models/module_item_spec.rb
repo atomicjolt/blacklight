@@ -1,16 +1,16 @@
 require "minitest/autorun"
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
 require_relative "../helpers.rb"
-require_relative "../../lib/blacklight/models/module_item"
+require_relative "../../lib/senkyoshi/models/module_item"
 
 describe "ModuleItem" do
   before do
     @title = "Module Item Name"
     @content_type = "Assignment"
-    @identifierref = Blacklight.create_random_hex
-    @module_item = Blacklight::ModuleItem.new(@title, @content_type,
+    @identifierref = Senkyoshi.create_random_hex
+    @module_item = Senkyoshi::ModuleItem.new(@title, @content_type,
                                               @identifierref)
   end
 

@@ -1,14 +1,14 @@
 require "minitest/autorun"
-require "blacklight"
+require "senkyoshi"
 require "pry"
 
 require_relative "../helpers.rb"
-require_relative "../../lib/blacklight/models/quiz"
+require_relative "../../lib/senkyoshi/models/quiz"
 
 describe "Quiz" do
   it "should iterate_xml" do
     xml = get_fixture_xml "quiz.xml"
-    quiz = Blacklight::Quiz.new
+    quiz = Senkyoshi::Quiz.new
     pre_data = {}
     quiz.iterate_xml(xml, pre_data)
 
@@ -25,7 +25,7 @@ describe "Quiz" do
 
   it "should convert to canvas module item" do
     xml = get_fixture_xml "quiz.xml"
-    quiz = Blacklight::Quiz.new
+    quiz = Senkyoshi::Quiz.new
     pre_data = {}
     quiz.iterate_xml(xml, pre_data)
 
