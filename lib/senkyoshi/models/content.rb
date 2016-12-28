@@ -7,12 +7,12 @@ module Senkyoshi
       "x-bb-asmt-survey-link" => "Quiz",
       "x-bb-assignment" => "Assignment",
       "x-bbpi-selfpeer-type1" => "Assignment",
-      "x-bb-document" => "WikiPage",
-      "x-bb-file" => "WikiPage",
-      "x-bb-audio" => "WikiPage",
-      "x-bb-image" => "WikiPage",
-      "x-bb-video" => "WikiPage",
-      "x-bb-externallink" => "WikiPage",
+      "x-bb-document" => "Attachment",
+      "x-bb-file" => "Attachment",
+      "x-bb-audio" => "Attachment",
+      "x-bb-image" => "Attachment",
+      "x-bb-video" => "Attachment",
+      "x-bb-externallink" => "ExternalUrl",
       "x-bb-blankpage" => "WikiPage",
       "x-bb-lesson" => "WikiPage",
       "x-bb-folder" => "WikiPage",
@@ -21,7 +21,7 @@ module Senkyoshi
       "x-bb-syllabus" => "WikiPage",
     }.freeze
 
-    attr_accessor(:title, :body, :id, :files)
+    attr_accessor(:title, :body, :id, :files, :url)
 
     def self.from(xml, pre_data)
       type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
@@ -47,10 +47,12 @@ module Senkyoshi
       if pre_data[:assignment_id] && !pre_data[:assignment_id].empty?
         @id = pre_data[:assignment_id]
       end
-      @module_item = set_module if @module_type
+
       @files = xml.xpath("//FILES/FILE").map do |file|
         ContentFile.new(file)
       end
+      @module_item = set_module if @module_type
+
       self
     end
 
@@ -66,7 +68,7 @@ module Senkyoshi
 
     def set_module
       @module_type = "Quizzes::Quiz" if @module_type == "Quiz"
-      module_item = ModuleItem.new(@title, @module_type, @id)
+      module_item = ModuleItem.new(@title, @module_type, @id, self)
       module_item.canvas_conversion
     end
 

@@ -20,10 +20,11 @@ module Senkyoshi
       manifest = read_file(file, "imsmanifest.xml")
 
       resources = Senkyoshi::Collection.new
-      resources.add(Senkyoshi.parse_manifest(file, manifest))
       resources.add(Senkyoshi.iterate_files(file))
+      resources.add(Senkyoshi.parse_manifest(file, manifest))
 
       course = create_canvas_course(resources, zip_path)
+      byebug
       build_file(course, imscc_path)
     end
   end

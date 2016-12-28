@@ -12,9 +12,12 @@ module Senkyoshi
 
     def initialize(zip_entry)
       path = zip_entry.name
+      # byebug
       id = File.basename(path)
+
       xid = id[/__(xid-[0-9]+_[0-9]+)/, 1]
       name = id.gsub(/__xid-[0-9]+_[0-9]+/, "")
+      id = name
 
       @location = extract_file(zip_entry) # Location of file on local filesystem
       @name = name
