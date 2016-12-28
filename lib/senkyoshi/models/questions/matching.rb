@@ -17,9 +17,8 @@ module Senkyoshi
       answers = []
       if match_block = data.at("flow[@class=RIGHT_MATCH_BLOCK]")
         matches_array = match_block.
-          search("flow[@class=FORMATTED_TEXT_BLOCK]").map do |match|
-          match.text
-        end
+          search("flow[@class=FORMATTED_TEXT_BLOCK]").
+          map(&:text)
       end
       if response_block = data.at("flow[@class=RESPONSE_BLOCK]")
         response_block.children.each do |response|
