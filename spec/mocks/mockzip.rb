@@ -21,6 +21,10 @@ class MockZip
     @entries
   end
 
+  def name
+    "MockZip"
+  end
+
   def glob(*)
     entries
   end
