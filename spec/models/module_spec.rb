@@ -30,7 +30,7 @@ describe "Module" do
 
   it "should convert to canvas wiki page" do
     module_item = Senkyoshi::ModuleItem.new(@title, @content_type,
-                                             @identifierref)
+                                            @identifierref)
 
     @module.module_items << module_item
     result = @module.canvas_conversion

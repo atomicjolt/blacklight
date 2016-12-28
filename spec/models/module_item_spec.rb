@@ -11,7 +11,7 @@ describe "ModuleItem" do
     @content_type = "Assignment"
     @identifierref = Senkyoshi.create_random_hex
     @module_item = Senkyoshi::ModuleItem.new(@title, @content_type,
-                                              @identifierref)
+                                             @identifierref)
   end
 
   describe "initialize" do

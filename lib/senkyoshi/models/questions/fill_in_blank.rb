@@ -4,7 +4,9 @@ module Senkyoshi
   class FillInBlank < Question
     def iterate_xml(data)
       super
-      conditionvar = data.at("resprocessing").at("conditionvar")
+      if data.at("resprocessing")
+        conditionvar = data.at("resprocessing").at("conditionvar")
+      end
       # not all fill in the blank questions have answers(ie: surveys)
       if conditionvar
         answer = Answer.new(conditionvar.at("varequal").text)

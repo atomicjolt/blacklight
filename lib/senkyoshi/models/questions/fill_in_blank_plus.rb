@@ -4,7 +4,9 @@ module Senkyoshi
   class FillInBlankPlus < Question
     def iterate_xml(data)
       super
-      conditionvar = data.at("resprocessing").at("conditionvar")
+      if data.at("resprocessing")
+        conditionvar = data.at("resprocessing").at("conditionvar")
+      end
       # not all fill in the blank questions have answers(ie: surveys)
       if conditionvar
         conditionvar.at("and").children.each do |or_child|
