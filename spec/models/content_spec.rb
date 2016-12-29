@@ -11,7 +11,7 @@ describe "Content" do
       xml = get_fixture_xml "content.xml"
       result = Content.from(xml, {})
       assert_equal (result.is_a? Object), true
-      assert_equal (result.is_a? WikiPage), true
+      assert_equal (result.is_a? Attachment), true
     end
   end
 
@@ -61,26 +61,10 @@ describe "Content" do
       title = xml.xpath("/CONTENT/TITLE/@value").first.text
 
       assert_equal((result.instance_variable_get :@module_item).
-        content_type, "WikiPage")
+        content_type, "Attachment")
       assert_equal((result.instance_variable_get :@module_item).
         identifierref, id)
       assert_equal((result.instance_variable_get :@module_item).title, title)
-    end
-  end
-
-  describe "canvas_conversion" do
-    it "should convert to canvas wiki page" do
-      course = CanvasCc::CanvasCC::Models::Course.new
-      xml = get_fixture_xml "content.xml"
-      pre_data = {}
-      content = Content.from(xml, pre_data)
-
-      content_id = xml.xpath("/CONTENT/@id").first.text
-
-      result = content.canvas_conversion(course, Senkyoshi::Collection.new)
-
-      assert_equal(result.pages.size, 1)
-      assert_equal(result.pages.first.identifier, content_id)
     end
   end
 

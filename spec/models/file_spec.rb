@@ -13,7 +13,7 @@ describe "SenkyoshiFile" do
   end
 
   it "should iterate_xml" do
-    assert_equal(@file.id, "file__xid-1234_1.txt")
+    assert_equal(@file.xid, "xid-1234_1")
     assert_equal(@file.name, "file.txt")
     assert_includes(@file.location, @path)
   end
@@ -24,7 +24,7 @@ describe "SenkyoshiFile" do
     result = @file.canvas_conversion(course)
 
     assert_equal(result.files.size, 1)
-    assert_equal(result.files.first.identifier, "file__xid-1234_1.txt")
+    assert_equal(result.files.first.identifier, "xid-1234_1")
   end
 
   it "matches_xid? method returns the correct results" do

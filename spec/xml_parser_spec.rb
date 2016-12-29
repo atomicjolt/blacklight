@@ -59,19 +59,19 @@ describe Senkyoshi do
   describe "iterate_files" do
     it "should return array of files" do
       mock_entries = [
-        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
-        MockZip::MockEntry.new("csfiles/home_dir/test__xid-13.jpg"),
-        MockZip::MockEntry.new("res/abc/123/test__xid-14.jpg"),
-        MockZip::MockEntry.new("res/abc/123/test__xid-14.jpg.xml"),
+        MockZip::MockEntry.new("csfiles/home_dir/test__xid-12_1.jpg"),
+        MockZip::MockEntry.new("csfiles/home_dir/test__xid-13_1.jpg"),
+        MockZip::MockEntry.new("res/abc/123/test__xid-14_1.jpg"),
+        MockZip::MockEntry.new("res/abc/123/test__xid-14_1.jpg.xml"),
         MockZip::MockEntry.new("test.dat"),
       ]
 
       result = Senkyoshi.iterate_files(MockZip.new(mock_entries))
       assert_equal(result.size, 3)
-      assert_equal(result.first.id, "test__xid-12.jpg")
+      assert_equal(result.first.xid, "xid-12_1")
       assert_includes(
         result.first.location,
-        "csfiles/home_dir/test__xid-12.jpg",
+        "csfiles/home_dir/test__xid-12_1.jpg",
       )
     end
   end
