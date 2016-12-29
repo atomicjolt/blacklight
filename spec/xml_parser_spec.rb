@@ -1,7 +1,7 @@
 require "minitest/autorun"
-
 require "senkyoshi"
 require "pry"
+
 require_relative "mocks/mockzip"
 
 include Senkyoshi
@@ -30,29 +30,16 @@ describe Senkyoshi do
       id = "res00023"
       parent_id = "res00028"
       master_parent_id = "res00036"
+      organizations = get_fixture_xml "organizations.xml"
       pre_data = [{ id: id, parent_id: parent_id, file_name: "res00002" },
-                  { id: parent_id, parent_id: master_parent_id,
+                  { id: parent_id, parent_id: parent_id,
                     file_name: "res00003" },
                   { id: master_parent_id, parent_id: "{unset id}",
                     file_name: "res00004" }]
-      results = Senkyoshi.build_heirarchy(pre_data)
-      assert_equal(results.first[:parent_id], master_parent_id)
-    end
-  end
-
-  describe "get_master_parent" do
-    it "should return the master parent" do
-      id = "res00023"
-      parent_id = "res00028"
-      master_parent_id = "res00036"
-      parents_ids = [master_parent_id, "res00015"]
-      pre_data = [{ id: id, parent_id: parent_id, file_name: "res00002" },
-                  { id: parent_id, parent_id: master_parent_id,
-                    file_name: "res00003" },
-                  { id: master_parent_id, parent_id: "{unset id}",
-                    file_name: "res00004" }]
-      result = Senkyoshi.get_master_parent(pre_data, parents_ids, parent_id)
-      assert_equal(result, master_parent_id)
+      results = Senkyoshi.build_heirarchy(organizations, pre_data)
+      assert_equal(results.first[:parent_id], parent_id)
+      assert_equal(results.first[:title], nil)
+      assert_equal(results.last[:title], "Home Page")
     end
   end
 
