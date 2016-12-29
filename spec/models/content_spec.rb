@@ -72,9 +72,8 @@ describe "Content" do
     it "should return a module" do
       xml = get_fixture_xml "content.xml"
       content = Senkyoshi::Content.new
-      parent_id = "random_id"
       pre_data = {
-        parent_id: parent_id
+        parent_id: "random_id"
       }
       content = content.iterate_xml(xml, pre_data)
       course = CanvasCc::CanvasCC::Models::Course.new
