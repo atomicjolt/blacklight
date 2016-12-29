@@ -1,5 +1,4 @@
 require "senkyoshi/models/resource"
-require "byebug"
 
 module Senkyoshi
   class ModuleItem < Resource
@@ -26,7 +25,6 @@ module Senkyoshi
         end
 
         if @content_type == "ExternalUrl"
-          # byebug
           item.url = @item.url
         end
       end

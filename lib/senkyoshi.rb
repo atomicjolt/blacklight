@@ -24,7 +24,6 @@ module Senkyoshi
       resources.add(Senkyoshi.parse_manifest(file, manifest))
 
       course = create_canvas_course(resources, zip_path)
-      byebug
       build_file(course, imscc_path)
     end
   end
