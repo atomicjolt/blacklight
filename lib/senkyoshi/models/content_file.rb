@@ -6,8 +6,11 @@ module Senkyoshi
 
     def initialize(xml)
       @id = xml.xpath("./@id").first.text
-      @name = xml.xpath("./NAME").first.text
       @linkname = xml.xpath("./LINKNAME/@value").first.text
+      @name = xml.xpath("./NAME").first.text
+
+      # Remove leading slash if necessary
+      @name = @name[1, @name.length] if @name.start_with? "/"
     end
 
     def canvas_conversion(*)

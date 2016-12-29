@@ -11,7 +11,7 @@ describe "ContentFile" do
     file = Senkyoshi::ContentFile.new(xml.xpath("//FILE"))
 
     assert_equal(file.id, "_2041185_1")
-    assert_equal(file.name, "/xid-9066097_2")
+    assert_equal(file.name, "xid-9066097_2/")
     assert_equal(file.linkname, "ADV &amp; DisAdv.pdf")
   end
 
@@ -26,5 +26,11 @@ describe "ContentFile" do
       file.canvas_conversion,
       "ADV &amp; DisAdv.pdf",
     )
+  end
+
+  it "should strip only leading slash from name" do
+    xml = get_fixture_xml "file.xml"
+    file = Senkyoshi::ContentFile.new(xml.xpath("//FILE"))
+    assert_equal(file.name.start_with?("/"), false)
   end
 end
