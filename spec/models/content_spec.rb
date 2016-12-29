@@ -72,15 +72,19 @@ describe "Content" do
     it "should return a module" do
       xml = get_fixture_xml "content.xml"
       content = Senkyoshi::Content.new
-      pre_data = {}
+      parent_id = "random_id"
+      pre_data = {
+        parent_id: "random_id"
+      }
       content = content.iterate_xml(xml, pre_data)
       course = CanvasCc::CanvasCC::Models::Course.new
 
       result = content.create_module(course)
 
       assert_equal(result.canvas_modules.size, 1)
+
       assert_equal(result.canvas_modules.first.identifier, (content.
-        instance_variable_get :@identifier))
+        instance_variable_get :@parent_id))
     end
   end
 end
