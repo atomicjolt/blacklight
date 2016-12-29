@@ -136,8 +136,7 @@ module Senkyoshi
       parent_id = content[:parent_id]
       parent = pre_data.detect { |p| p[:id] == parent_id }
       if parent_id == unset_id
-        item = organizations.at("item[@identifierref=#{content[:file_name]}]")
-        content[:title] = item.parent.at("title").text
+        content[:title] = get_title(organizations, content)
       elsif parent[:parent_id] == unset_id
         content[:parent_title] = parent[:title]
       end
@@ -147,6 +146,11 @@ module Senkyoshi
       parent[:parent_id] = parent[:id]
       parent[:parent_title] = nil
     end
+  end
+
+  def self.get_title(organizations, content)
+    item = organizations.at("item[@identifierref=#{content[:file_name]}]")
+    item.parent.at("title").text
   end
 
   ##
