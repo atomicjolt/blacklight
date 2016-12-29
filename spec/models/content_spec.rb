@@ -74,7 +74,7 @@ describe "Content" do
       content = Senkyoshi::Content.new
       parent_id = "random_id"
       pre_data = {
-        parent_id: "random_id"
+        parent_id: parent_id
       }
       content = content.iterate_xml(xml, pre_data)
       course = CanvasCc::CanvasCC::Models::Course.new
