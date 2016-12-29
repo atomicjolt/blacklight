@@ -35,6 +35,7 @@ module Senkyoshi
 
     def iterate_xml(xml, pre_data)
       @points = pre_data[:points] || 0
+      @parent_title = pre_data[:parent_title]
       @title = xml.xpath("/CONTENT/TITLE/@value").first.text
       @url = xml.at("URL")["value"]
       @body = xml.xpath("/CONTENT/BODY/TEXT").first.text
@@ -83,7 +84,8 @@ module Senkyoshi
       if cc_module
         cc_module.module_items << @module_item
       else
-        cc_module = Module.new(@title, @parent_id)
+        title = @parent_title || @title
+        cc_module = Module.new(title, @parent_id)
         cc_module = cc_module.canvas_conversion
         cc_module.module_items << @module_item
         course.canvas_modules << cc_module
