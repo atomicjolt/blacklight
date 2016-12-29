@@ -2,13 +2,13 @@ require "senkyoshi/models/resource"
 
 module Senkyoshi
   class ModuleItem < Resource
-    def initialize(title, type, identifierref, item = nil)
+    def initialize(title, type, identifierref, url)
       @title = title
       @identifier = Senkyoshi.create_random_hex
       @content_type = type
       @identifierref = identifierref
       @workflow_state = "active"
-      @item = item
+      @url = url
     end
 
     def canvas_conversion(*)
@@ -18,15 +18,7 @@ module Senkyoshi
         item.content_type = @content_type
         item.identifierref = @identifierref
         item.workflow_state = @workflow_state
-
-        if @content_type == "Attachment"
-          item.identifierref = @item.files.first.linkname
-          # byebug
-        end
-
-        if @content_type == "ExternalUrl"
-          item.url = @item.url
-        end
+        item.url = @url
       end
     end
   end
