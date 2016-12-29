@@ -38,7 +38,7 @@ describe Senkyoshi do
                     file_name: "res00004" }]
       results = Senkyoshi.build_heirarchy(organizations, pre_data)
       assert_equal(results.first[:parent_id], parent_id)
-      assert_equal(results.first[:title], nil)
+      assert_nil(results.first[:title])
       assert_equal(results.last[:title], "Home Page")
     end
   end
