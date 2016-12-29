@@ -73,7 +73,7 @@ describe "Content" do
       xml = get_fixture_xml "content.xml"
       content = Senkyoshi::Content.new
       pre_data = {
-        parent_id: "random_id"
+        parent_id: "random_id",
       }
       content = content.iterate_xml(xml, pre_data)
       course = CanvasCc::CanvasCC::Models::Course.new
