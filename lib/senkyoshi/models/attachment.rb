@@ -5,7 +5,7 @@ module Senkyoshi
   class Attachment < Content
     def iterate_xml(xml, pre_data)
       super
-      @id = self.files.first.linkname
+      @id = @files.first.linkname
       @module_item = set_module if @module_type
       self
     end
