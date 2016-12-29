@@ -10,7 +10,10 @@ module Senkyoshi
 
     def iterate_xml(data)
       super
-      conditionvar = data.at("resprocessing").at("conditionvar")
+      if data.at("resprocessing")
+        conditionvar = data.at("resprocessing").at("conditionvar")
+      end
+
       if conditionvar
         range = CanvasCc::CanvasCC::Models::Range.new
         range.low_range = conditionvar.at("vargte").text.to_i
