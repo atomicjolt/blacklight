@@ -7,7 +7,7 @@ module Senkyoshi
       "x-bb-asmt-survey-link" => "Quiz",
       "x-bb-assignment" => "Assignment",
       "x-bbpi-selfpeer-type1" => "Assignment",
-      "x-bb-document" => "Attachment",
+      "x-bb-document" => "WikiPage",
       "x-bb-file" => "Attachment",
       "x-bb-audio" => "Attachment",
       "x-bb-image" => "Attachment",
