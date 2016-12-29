@@ -131,20 +131,12 @@ module Senkyoshi
       select { |p| p[:parent_id] == "{unset id}" }.
       map { |u| u[:id] }
     pre_data.each do |content|
+      parent_id = content[:parent_id]
       next if parents_ids.include?(content[:id])
-      next if parents_ids.include?(content[:parent_id])
-      parent_id = get_master_parent(pre_data, parents_ids,
-                                    content[:parent_id])
-      content[:parent_id] = parent_id
-    end
-  end
-
-  def self.get_master_parent(pre_data, parents_ids, parent_id)
-    parent = pre_data.detect { |p| p[:id] == parent_id }
-    if parents_ids.include? parent[:id]
-      parent[:id]
-    else
-      get_master_parent(pre_data, parents_ids, parent[:parent_id])
+      next if parents_ids.include?(parent_id)
+      parents_ids << parent_id
+      parent = pre_data.detect { |p| p[:id] == parent_id }
+      parent[:parent_id] = parent[:id]
     end
   end
 
