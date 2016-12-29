@@ -1,12 +1,17 @@
 require "senkyoshi/models/content"
+require "senkyoshi/models/module_item"
 require "byebug"
 
 module Senkyoshi
   class Attachment < Content
     def iterate_xml(xml, pre_data)
       super
-      @id = self.files.first.linkname
-      @module_item = set_module if @module_type
+      @module_item = ModuleItem.new(
+        @title,
+        @module_type,
+        @files.first.name,
+        @url,
+      ).canvas_conversion
       self
     end
 
