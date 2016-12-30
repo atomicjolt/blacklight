@@ -49,22 +49,21 @@ module Senkyoshi
       Nokogiri::XML(extendeddata).
         search("LessonPlanComponent").
         map do |node|
-          visible = true?(node.search("vislableToStudents").attr("value").to_s)
-          overridden = true?(node.search("labelOverridden").attr("value").to_s)
-          _component_label(node.search("componentLabel"), visible, overridden) +
-            node.search("componentValue").attr("value").to_s
+          _component_label(node) + node.search("componentValue/@value").to_s
         end.
         compact.
         join(" ")
     end
 
-    def _component_label(component_label, visible, overridden)
+    def _component_label(node)
+      visible = true?(node.search("vislableToStudents/@value").to_s)
       if visible
-        val = component_label.attr("value").to_s
+        component_label = node.search("componentLabel/@value").to_s
+        overridden = true?(node.search("labelOverridden/@value").to_s)
         if overridden
-          val
+          component_label
         else
-          val.split(".").last.capitalize
+          component_label.split(".").last.capitalize
         end
       else
         ""
