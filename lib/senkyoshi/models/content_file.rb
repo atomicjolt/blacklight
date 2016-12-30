@@ -11,7 +11,7 @@ module Senkyoshi
 
       # Remove leading slash if necessary so that ContentFile.name will match
       # the Senkyoshi.xid
-      @name = @name[1, @name.length] if @name.start_with? "/"
+      @name = @name[1..-1] if @name.start_with? "/"
     end
 
     def canvas_conversion(*)
