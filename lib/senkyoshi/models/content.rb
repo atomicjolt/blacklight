@@ -22,6 +22,7 @@ module Senkyoshi
     }.freeze
 
     attr_accessor(:title, :body, :id, :files)
+    attr_reader(:extendeddata)
 
     def self.from(xml, pre_data)
       type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
@@ -38,6 +39,10 @@ module Senkyoshi
       @title = xml.xpath("/CONTENT/TITLE/@value").first.text
       @url = xml.at("URL")["value"]
       @body = xml.xpath("/CONTENT/BODY/TEXT").first.text
+      @extendeddata = xml.at("/CONTENT/EXTENDEDDATA/ENTRY")
+      if @extendeddata
+        @extendeddata = @extendeddata.text
+      end
       @type = xml.xpath("/CONTENT/RENDERTYPE/@value").first.text
       @parent_id = pre_data[:parent_id]
       bb_type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
