@@ -1,6 +1,5 @@
 require "senkyoshi/models/content"
 require "senkyoshi/models/module_item"
-require "byebug"
 
 module Senkyoshi
   class Attachment < Content
