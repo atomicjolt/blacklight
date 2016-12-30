@@ -10,20 +10,7 @@ module Senkyoshi
           select { |p| p.title.start_with? @title }.count
         @title = "#{@title}-#{page_count + 1}" if page_count > 0
         page = CanvasCc::CanvasCC::Models::Page.new
-        if !@url.empty?
-          @body = %{
-            <a href="#{@url}">
-              #{@url}
-            </a>
-            #{@body}
-          }
-        end
-        if @extendeddata
-          @body = %{
-            #{@body}
-            #{_extendeddata(@extendeddata)}
-          }
-        end
+        @body = _set_body(@body, @url, @extendeddata)
         page.body = fix_html(@body, resources)
         page.identifier = @id
         page.page_name = @title
@@ -37,6 +24,25 @@ module Senkyoshi
       end
 
       course
+    end
+
+    def _set_body(original_body, url, extendeddata)
+      body = original_body.dup
+      if !url.empty?
+        body = %{
+          <a href="#{url}">
+            #{url}
+          </a>
+          #{body}
+        }
+      end
+      if extendeddata
+        body = %{
+          #{body}
+          #{_extendeddata(extendeddata)}
+        }
+      end
+      body
     end
 
     def _extendeddata(extendeddata)
