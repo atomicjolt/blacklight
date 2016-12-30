@@ -38,4 +38,15 @@ describe "WikiPage" do
     assert_equal(result.pages.size, 1)
     assert_equal(result.pages.first.identifier, page_id)
   end
+
+  it "should include extended data" do
+    xml = get_fixture_xml "content.xml"
+    page = Senkyoshi::WikiPage.new
+    pre_data = {}
+
+    page.iterate_xml(xml, pre_data)
+
+    page_extendeddata = xml.at("/CONTENT/EXTENDEDDATA/ENTRY").text
+    assert_equal page.extendeddata, page_extendeddata
+  end
 end

@@ -22,6 +22,7 @@ module Senkyoshi
     }.freeze
 
     attr_accessor(:title, :body, :id, :files)
+    attr_reader(:extendeddata)
 
     def self.from(xml, pre_data)
       type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
