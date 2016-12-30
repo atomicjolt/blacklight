@@ -2,6 +2,8 @@ require "senkyoshi/models/content"
 
 module Senkyoshi
   class WikiPage < Content
+    include Senkyoshi
+
     def canvas_conversion(course, resources)
       unless @title == "--TOP--"
         page_count = course.pages.
@@ -14,6 +16,12 @@ module Senkyoshi
               #{@url}
             </a>
             #{@body}
+          }
+        end
+        if @extendeddata
+          @body = %{
+            #{@body}
+            #{_extendeddata(@extendeddata)}
           }
         end
         page.body = fix_html(@body, resources)
@@ -29,6 +37,32 @@ module Senkyoshi
       end
 
       course
+    end
+
+    def _extendeddata(extendeddata)
+      Nokogiri::XML(extendeddata).
+        search("LessonPlanComponent").
+        map do |node|
+          visible = true?(node.search("vislableToStudents").attr("value").to_s)
+          overridden = true?(node.search("labelOverridden").attr("value").to_s)
+          _component_label(node.search("componentLabel"), visible, overridden) +
+            node.search("componentValue").attr("value").to_s
+        end.
+        compact.
+        join(" ")
+    end
+
+    def _component_label(component_label, visible, overridden)
+      if visible
+        val = component_label.attr("value").to_s
+        if overridden
+          val
+        else
+          val.split(".").last.capitalize
+        end
+      else
+        ""
+      end
     end
   end
 end
