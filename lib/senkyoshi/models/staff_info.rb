@@ -21,7 +21,7 @@ module Senkyoshi
     end
 
     def initialize
-      @@entries |= []
+      @@entries ||= []
       @@page_created = false
     end
 
@@ -58,19 +58,23 @@ module Senkyoshi
       self
     end
 
+    def add_to_body(str, var)
+      @body << str if var && !var.empty?
+    end
+
     def construct_body
-      <<-HTML
-        <div>
-          <h3>#{@name}</h3>
-          <p>#{@bio}</p>
-          <ul>
-            <li>Email: #{@email}</li>
-            <li>Phone: #{@phone}</li>
-            <li>Office Hours: #{@office_hours}</li>
-            <li>Office Address: #{@office_address}</li>
-          </ul>
-        </div>
-      HTML
+      @body = "<div>"
+      add_to_body "<img src=#{@image}/>", @image
+      add_to_body "<h3>#{@name}</h3>", @name
+      add_to_body "<p>#{@bio}</p>", @bio
+
+      @body << "<ul>"
+      add_to_body "<li>Email: #{@email}</li>", @email
+      add_to_body "<li>Phone: #{@phone}</li>", @phone
+      add_to_body "<li>Office Hours: #{@office_hours}</li>", @office_hours
+      add_to_body "<li>Office Address: #{@office_address}</li>", @office_address
+      add_to_body "<li>Home Page: #{@home_page}</li>", @home_page
+      @body << "</ul></div>"
     end
 
     def canvas_conversion(course, _resources = nil)
