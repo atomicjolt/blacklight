@@ -59,7 +59,7 @@ module Senkyoshi
       assessment.description = fix_html(@description, resources)
       if @items.count == 0
         assessment.description +=
-        "Empty Quiz -- No questions were contained in the blackboard quiz"
+          "Empty Quiz -- No questions were contained in the blackboard quiz"
       end
       assessment.available = @available
       assessment.quiz_type = @quiz_type
