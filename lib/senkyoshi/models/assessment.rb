@@ -43,22 +43,24 @@ module Senkyoshi
     end
 
     def canvas_conversion(course, resources)
-      if @items.count > 0
-        assessment = CanvasCc::CanvasCC::Models::Assessment.new
-        assessment.identifier = @id
-        course = create_assignment_group(course, resources)
-        assignment = create_assignment
-        assignment.quiz_identifier_ref = assessment.identifier
-        course.assignments << assignment
-        assessment = setup_assessment(assessment, assignment, resources)
-        course.assessments << assessment
-      end
+      assessment = CanvasCc::CanvasCC::Models::Assessment.new
+      assessment.identifier = @id
+      course = create_assignment_group(course, resources)
+      assignment = create_assignment
+      assignment.quiz_identifier_ref = assessment.identifier
+      course.assignments << assignment
+      assessment = setup_assessment(assessment, assignment, resources)
+      course.assessments << assessment
       course
     end
 
     def setup_assessment(assessment, assignment, resources)
       assessment.title = @title
       assessment.description = fix_html(@description, resources)
+      if @items.count == 0
+        assessment.description +=
+        "Empty Quiz -- No questions were contained in the blackboard quiz"
+      end
       assessment.available = @available
       assessment.quiz_type = @quiz_type
       assessment.points_possible = @points_possible
