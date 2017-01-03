@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<STAFFINFO id="_118975_1">
+  <TITLE value=""/>
+  <BIOGRAPHY>
+    <TEXT/>
+    <TEXTCOLOR value=""/>
+    <FLAGS>
+      <ISHTML    value="true"/>
+      <ISNEWLINELITERAL value="false"/>
+    </FLAGS>
+  </BIOGRAPHY>
+  <FLAGS>
+    <ISAVAILABLE value="true"/>
+    <ISFOLDER    value="false"/>
+  </FLAGS>
+  <CONTACT>
+    <NAME>
+      <FORMALTITLE value="Mr."/>
+      <GIVEN value="Spec"/>
+      <FAMILY   value="Test"/>
+    </NAME>
+    <EMAIL value="fake_email@example.com"/>
+    <PHONE value="555-867-5309"/>
+    <OFFICE>
+      <HOURS    value="0730-1630 Monday-Friday"/>
+      <ADDRESS value="123 Fake St."/>
+    </OFFICE>
+  </CONTACT>
+  <HOMEPAGE  value=""/>
+  <IMAGE value=""/>
+  <DATES>
+    <CREATED value=""/>
+    <UPDATED value="2016-05-10 07:07:39 CDT"/>
+  </DATES>
+</STAFFINFO>
