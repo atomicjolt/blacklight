@@ -33,9 +33,8 @@ describe "StaffInfo" do
       StaffInfo.new.iterate_xml(get_fixture_xml("staff_info_1.xml"), nil),
       StaffInfo.new.iterate_xml(get_fixture_xml("staff_info_2.xml"), nil),
     ]
-    results[0].canvas_conversion course
+    results.each { |staff| staff.canvas_conversion course }
 
-    assert_nil(results[1])
     assert_equal(course.pages.size, 1)
     assert_equal(course.pages.first.body.include?("Mr. Test Name"), true)
     assert_equal(course.pages.first.body.include?("Ms. Spec Test"), true)

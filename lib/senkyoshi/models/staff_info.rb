@@ -17,10 +17,12 @@ module Senkyoshi
 
     def self.reset_entries
       @@entries = []
+      @@page_created = false
     end
 
     def initialize
-      @@entries ||= []
+      @@entries |= []
+      @@page_created = false
     end
 
     def parse_name(contact)
@@ -53,10 +55,6 @@ module Senkyoshi
 
       @@entries << construct_body
 
-      # We want to create only a single "Contact" page, so once we already have
-      # a StaffInfo resource, we won't want another one
-      return nil if @@entries.size > 1
-
       self
     end
 
@@ -76,10 +74,15 @@ module Senkyoshi
     end
 
     def canvas_conversion(course, _resources = nil)
+      # We want to create only a single "Contact" page, so once we already have
+      # a StaffInfo resource, we won't want another one
+      return course if @@page_created
+
       page = CanvasCc::CanvasCC::Models::Page.new
       page.body = @@entries.join(" ")
       page.identifier = @id
       page.page_name = @title.empty? ? "Contact" : @title
+      @@page_created = true
 
       course.pages << page
       course
