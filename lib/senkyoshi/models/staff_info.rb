@@ -15,6 +15,14 @@ module Senkyoshi
       :image,
     )
 
+    def self.reset_entries
+      @@entries = []
+    end
+
+    def initialize
+      @@entries ||= []
+    end
+
     def parse_name(contact)
       parts = [
         contact.xpath("./NAME/FORMALTITLE/@value").text,
@@ -43,25 +51,33 @@ module Senkyoshi
       @home_page = xml.xpath("//HOMEPAGE/@value").text
       @image = xml.xpath("//IMAGE/@value").text
 
+      @@entries << construct_body
+
+      # We want to create only a single "Contact" page, so once we already have
+      # a StaffInfo resource, we won't want another one
+      return nil if @@entries.size > 1
+
       self
     end
 
     def construct_body
       <<-HTML
-        <h3>#{@name}</h3>
-        <p>#{@bio}</p>
-        <ul>
-          <li>Email: #{@email}</li>
-          <li>Phone: #{@phone}</li>
-          <li>Office Hours: #{@office_hours}</li>
-          <li>Office Address: #{@office_address}</li>
-        </ul>
+        <div>
+          <h3>#{@name}</h3>
+          <p>#{@bio}</p>
+          <ul>
+            <li>Email: #{@email}</li>
+            <li>Phone: #{@phone}</li>
+            <li>Office Hours: #{@office_hours}</li>
+            <li>Office Address: #{@office_address}</li>
+          </ul>
+        </div>
       HTML
     end
 
     def canvas_conversion(course, _resources = nil)
       page = CanvasCc::CanvasCC::Models::Page.new
-      page.body = construct_body
+      page.body = @@entries.join(" ")
       page.identifier = @id
       page.page_name = @title.empty? ? "Contact" : @title
 
