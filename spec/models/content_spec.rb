@@ -9,9 +9,9 @@ describe "Content" do
   describe "from" do
     it "should return the right content type" do
       xml = get_fixture_xml "content.xml"
-      result = Content.from(xml, {})
+      result = Content.from(xml, {}, [])
       assert_equal (result.is_a? Object), true
-      assert_equal (result.is_a? Attachment), true
+      assert_equal (result.is_a? WikiPage), true
     end
   end
 
@@ -53,11 +53,11 @@ describe "Content" do
   describe "set_module" do
     it "should return the converted module item" do
       xml = get_fixture_xml "content.xml"
-      content = Senkyoshi::Content.new
+      content = Senkyoshi::Attachment.new
       pre_data = {}
       result = content.iterate_xml(xml, pre_data)
 
-      id = xml.xpath("/CONTENT/@id").first.text
+      id = xml.xpath("/CONTENT/FILES/FILE/NAME").first.text.gsub("/", "")
       title = xml.xpath("/CONTENT/TITLE/@value").first.text
 
       assert_equal((result.instance_variable_get :@module_item).
