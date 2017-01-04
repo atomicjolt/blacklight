@@ -72,12 +72,6 @@ module Senkyoshi
       }
     end
 
-    def set_module
-      @module_type = "Quizzes::Quiz" if @module_type == "Quiz"
-      module_item = ModuleItem.new(@title, @module_type, @id, @url)
-      module_item.canvas_conversion
-    end
-
     def canvas_conversion(course, _resources = nil)
       course
     end
