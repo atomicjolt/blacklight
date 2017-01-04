@@ -65,6 +65,11 @@ module Senkyoshi
       self
     end
 
+    def set_module
+      module_item = ModuleItem.new(@title, @module_type, @id, @url)
+      module_item.canvas_conversion
+    end
+
     def get_pre_data(xml, file_name)
       id = xml.xpath("/CONTENT/@id").first.text
       parent_id = xml.xpath("/CONTENT/PARENTID/@value").first.text

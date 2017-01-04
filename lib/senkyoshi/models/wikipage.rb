@@ -33,11 +33,6 @@ module Senkyoshi
       course
     end
 
-    def set_module
-      module_item = ModuleItem.new(@title, @module_type, @id, @url)
-      module_item.canvas_conversion
-    end
-
     def _set_body(original_body, url, extendeddata)
       body = original_body.dup
       if !url.empty?
