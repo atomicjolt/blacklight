@@ -19,7 +19,7 @@ module Senkyoshi
         # Add page links to page body
         @files.each do |file|
           if course.files.detect { |f| f.identifier == file.name }
-            page.body << f.canvas_conversion
+            page.body << file.canvas_conversion
           else
             page.body << "<p>File: " + file.linkname +
               " -- doesn't exist in blackboard</p>"
