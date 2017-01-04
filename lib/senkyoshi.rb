@@ -66,4 +66,8 @@ module Senkyoshi
       course.upload_content(canvas_file_path)
     end
   end
+
+  def true?(obj)
+    obj.to_s == "true"
+  end
 end
