@@ -21,7 +21,10 @@ module Senkyoshi
 
       resources = Senkyoshi::Collection.new
       resources.add(Senkyoshi.iterate_files(file))
-      resources.add(Senkyoshi.parse_manifest(file, manifest))
+      resource_xids = resources.resources.
+        map(&:xid).
+        select { |r| r.include?("xid-") }
+      resources.add(Senkyoshi.parse_manifest(file, manifest, resource_xids))
 
       course = create_canvas_course(resources, zip_path)
       build_file(course, imscc_path)

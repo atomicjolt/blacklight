@@ -24,9 +24,16 @@ module Senkyoshi
     attr_accessor(:title, :body, :id, :files, :url)
     attr_reader(:extendeddata)
 
-    def self.from(xml, pre_data)
+    def self.from(xml, pre_data, resource_xids)
       type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
       type.slice! "resource/"
+      xml.xpath("//FILES/FILE").map do |file|
+        file_name = file.at("NAME").text.gsub("/", "")
+        if !resource_xids.include?(file_name)
+          type = "x-bb-document"
+          break
+        end
+      end
       if content_type = CONTENT_TYPES[type]
         content_class = Senkyoshi.const_get content_type
         content = content_class.new
@@ -46,19 +53,15 @@ module Senkyoshi
       end
       @type = xml.xpath("/CONTENT/RENDERTYPE/@value").first.text
       @parent_id = pre_data[:parent_id]
-      bb_type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
-      bb_type.slice! "resource/"
-      @module_type = CONTENT_TYPES[bb_type]
+      @module_type = self.class.name.gsub("Senkyoshi::", "")
       @id = xml.xpath("/CONTENT/@id").first.text
       if pre_data[:assignment_id] && !pre_data[:assignment_id].empty?
         @id = pre_data[:assignment_id]
       end
-
       @files = xml.xpath("//FILES/FILE").map do |file|
         ContentFile.new(file)
       end
       @module_item = set_module if @module_type
-
       self
     end
 

@@ -59,21 +59,22 @@ module Senkyoshi
     gradebook: "Gradebook",
   }.freeze
 
-  def self.parse_manifest(zip_file, manifest)
+  def self.parse_manifest(zip_file, manifest, resource_xids)
     doc = Nokogiri::XML.parse(manifest)
     resources = doc.at("resources")
     organizations = doc.at("organizations")
-    iterate_xml(organizations, resources, zip_file).flatten - ["", nil]
+    iterate_xml(organizations, resources, zip_file, resource_xids).
+      flatten - ["", nil]
   end
 
-  def self.iterate_xml(organizations, resources, zip_file)
+  def self.iterate_xml(organizations, resources, zip_file, resource_xids)
     pre_data = pre_iterator(organizations, resources, zip_file)
     iterator_master(resources, zip_file) do |xml_data, type, file|
       if RESOURCE_TYPE[type.to_sym]
         single_pre_data = get_single_pre_data(pre_data, file)
         res_class = Senkyoshi.const_get RESOURCE_TYPE[type.to_sym]
         if type == "content"
-          Content.from(xml_data, single_pre_data)
+          Content.from(xml_data, single_pre_data, resource_xids)
         else
           resource = res_class.new
           resource.iterate_xml(xml_data, single_pre_data)
