@@ -1,4 +1,5 @@
 require "senkyoshi/models/resource"
+require "senkyoshi/models/content_file"
 
 module Senkyoshi
   class Content < Resource
@@ -36,7 +37,7 @@ module Senkyoshi
       type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
       type.slice! "resource/"
       xml.xpath("//FILES/FILE").map do |file|
-        file_name = file.at("NAME").text.gsub("/", "")
+        file_name = ContentFile.clean_xid file.at("NAME").text
         if !resource_xids.include?(file_name)
           type = "x-bb-document"
           break
