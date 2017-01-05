@@ -2,7 +2,7 @@ require "senkyoshi/models/resource"
 
 module Senkyoshi
   class ContentFile < Resource
-    attr_accessor(:id, :name, :linkname)
+    attr_reader(:id, :name, :linkname)
 
     def initialize(xml)
       @id = xml.xpath("./@id").first.text
