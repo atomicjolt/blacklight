@@ -27,7 +27,7 @@ module Senkyoshi
     def self.from(xml, pre_data, resource_xids)
       type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
       type.slice! "resource/"
-      xml.xpath("//FILES/FILE").map do |file|
+      xml.xpath("//FILES/FILE").each do |file|
         file_name = file.at("NAME").text.gsub("/", "")
         is_attachment = CONTENT_TYPES[type] == "Attachment"
         if !resource_xids.include?(file_name) && is_attachment
