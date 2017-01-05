@@ -18,12 +18,12 @@ module Senkyoshi
       xid[1..-1] if xid.start_with? "/"
     end
 
-    def self.correct_file_name(canvas_file)
+    def self.correct_linkname(canvas_file)
       canvas_file.file_path.split("/").last
     end
 
-    def canvas_conversion(canvas_file)
-      @linkname = ContentFile.correct_file_name(canvas_file)
+    def canvas_conversion(canvas_file = nil)
+      @linkname = ContentFile.correct_linkname(canvas_file) if !canvas_file.nil?
       query = "?canvas_download=1&amp;canvas_qs_wrap=1"
       href = "$IMS_CC_FILEBASE$/#{IMPORTED_FILES_DIRNAME}/#{@linkname}#{query}"
       %{
