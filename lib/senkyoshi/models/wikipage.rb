@@ -18,7 +18,9 @@ module Senkyoshi
 
         # Add page links to page body
         @files.each do |file|
-          if course.files.detect { |f| f.identifier == file.name }
+          if canvas_file = course.files.detect { |f| f.identifier == file.name }
+            canvas_file_path = canvas_file.file_path.split('/').last
+            file.linkname = canvas_file_path
             page.body << file.canvas_conversion
           else
             page.body << "<p>File: " + file.linkname +
