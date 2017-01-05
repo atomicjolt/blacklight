@@ -29,7 +29,8 @@ module Senkyoshi
       type.slice! "resource/"
       xml.xpath("//FILES/FILE").map do |file|
         file_name = file.at("NAME").text.gsub("/", "")
-        if !resource_xids.include?(file_name)
+        is_attachment = CONTENT_TYPES[type] == "Attachment"
+        if !resource_xids.include?(file_name) && is_attachment
           type = "x-bb-document"
           break
         end
