@@ -3,7 +3,6 @@ require "senkyoshi/models/assignment"
 require "senkyoshi/models/question"
 require "senkyoshi/models/resource"
 
-
 ASSESSMENT_TYPE = {
   "Test" => "assignment",
   "Survey" => "survey",
