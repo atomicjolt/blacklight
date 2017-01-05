@@ -11,6 +11,10 @@ class MockZip
     end
 
     def extract(dummy = nil) end
+
+    def file_path(*)
+      @name
+    end
   end
 
   def initialize(entries = nil)

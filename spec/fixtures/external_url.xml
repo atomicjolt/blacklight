@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONTENT id="_2702178_1">
+  <TITLE value="External Url"/>
+  <TITLECOLOR value="#000000"/>
+  <BODY>
+    <TEXT/>
+    <TYPE   value="H"/>
+  </BODY>
+  <DATES>
+    <CREATED value="2016-08-16 13:51:56 CDT"/>
+    <UPDATED value="2016-10-13 14:17:47 CDT"/>
+    <START   value="2016-10-21 11:30:00 CDT"/>
+    <END value="2016-10-26 15:00:00 CDT"/>
+  </DATES>
+  <FLAGS>
+    <ISAVAILABLE   value="true"/>
+    <ISFROMCARTRIDGE value="false"/>
+    <ISFOLDER value="false"/>
+    <ISDESCRIBED value="false"/>
+    <ISTRACKED   value="false"/>
+    <ISLESSON value="false"/>
+    <ISSEQUENTIAL value="false"/>
+    <ALLOWGUESTS value="true"/>
+    <ALLOWOBSERVERS   value="true"/>
+    <LAUNCHINNEWWINDOW value="true"/>
+    <ISREVIEWABLE value="false"/>
+    <ISGROUPCONTENT   value="false"/>
+    <ISSAMPLECONTENT value="false"/>
+  </FLAGS>
+  <CONTENTHANDLER  value="resource/x-bb-externallink"/>
+  <RENDERTYPE value="URL"/>
+  <URL  value="http://example.com"/>
+  <VIEWMODE  value="TEXT_ICON_ONLY"/>
+  <OFFLINENAME value=""/>
+  <OFFLINEPATH value=""/>
+  <LINKREF value=""/>
+  <PARENTID  value="_2702175_1"/>
+  <VERSION value="3"/>
+  <EXTENDEDDATA/>
+  <FILES/>
+</CONTENT>

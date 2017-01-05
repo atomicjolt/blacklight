@@ -10,8 +10,9 @@ describe "ModuleItem" do
     @title = "Module Item Name"
     @content_type = "Assignment"
     @identifierref = Senkyoshi.create_random_hex
+    @url = "fake/url"
     @module_item = Senkyoshi::ModuleItem.new(@title, @content_type,
-                                             @identifierref)
+                                             @identifierref, @url)
   end
 
   describe "initialize" do

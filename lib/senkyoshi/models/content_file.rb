@@ -2,15 +2,32 @@ require "senkyoshi/models/resource"
 
 module Senkyoshi
   class ContentFile < Resource
-    attr_accessor(:id, :name, :linkname)
+    attr_reader(:id, :name, :linkname)
 
     def initialize(xml)
       @id = xml.xpath("./@id").first.text
-      @name = xml.xpath("./NAME").first.text
       @linkname = xml.xpath("./LINKNAME/@value").first.text
+      @name = ContentFile.clean_xid xml.xpath("./NAME").first.text
     end
 
-    def canvas_conversion(*)
+    ##
+    # Remove leading slash if necessary so that ContentFile.name will match
+    # the Senkyoshi.xid
+    ##
+    def self.clean_xid(xid)
+      if xid.start_with? "/"
+        xid[1..-1]
+      else
+        xid
+      end
+    end
+
+    def self.correct_linkname(canvas_file)
+      canvas_file.file_path.split("/").last
+    end
+
+    def canvas_conversion(canvas_file = nil)
+      @linkname = ContentFile.correct_linkname(canvas_file) if canvas_file
       query = "?canvas_download=1&amp;canvas_qs_wrap=1"
       href = "$IMS_CC_FILEBASE$/#{IMPORTED_FILES_DIRNAME}/#{@linkname}#{query}"
       %{

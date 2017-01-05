@@ -17,7 +17,14 @@ module Senkyoshi
         page.workflow_state = "active"
 
         # Add page links to page body
-        @files.each { |f| page.body << f.canvas_conversion }
+        @files.each do |file|
+          if canvas_file = course.files.detect { |f| f.identifier == file.name }
+            page.body << file.canvas_conversion(canvas_file)
+          else
+            page.body << "<p>File: " + file.linkname +
+              " -- doesn't exist in blackboard</p>"
+          end
+        end
         course.pages << page
 
         course = create_module(course)

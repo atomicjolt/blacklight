@@ -1,4 +1,5 @@
 require "senkyoshi/models/resource"
+require "senkyoshi/models/content_file"
 
 module Senkyoshi
   class Content < Resource
@@ -8,11 +9,11 @@ module Senkyoshi
       "x-bb-assignment" => "Assignment",
       "x-bbpi-selfpeer-type1" => "Assignment",
       "x-bb-document" => "WikiPage",
-      "x-bb-file" => "WikiPage",
-      "x-bb-audio" => "WikiPage",
-      "x-bb-image" => "WikiPage",
-      "x-bb-video" => "WikiPage",
-      "x-bb-externallink" => "WikiPage",
+      "x-bb-file" => "Attachment",
+      "x-bb-audio" => "Attachment",
+      "x-bb-image" => "Attachment",
+      "x-bb-video" => "Attachment",
+      "x-bb-externallink" => "ExternalUrl",
       "x-bb-blankpage" => "WikiPage",
       "x-bb-lesson" => "WikiPage",
       "x-bb-folder" => "WikiPage",
@@ -21,12 +22,28 @@ module Senkyoshi
       "x-bb-syllabus" => "WikiPage",
     }.freeze
 
-    attr_accessor(:title, :body, :id, :files)
+    MODULE_TYPES = {
+      "Senkyoshi::Attachment" => "Attachment",
+      "Senkyoshi::Assignment" => "Assignment",
+      "Senkyoshi::ExternalUrl" => "ExternalUrl",
+      "Senkyoshi::WikiPage" => "WikiPage",
+      "Senkyoshi::Quiz" => "Quizzes::Quiz",
+    }.freeze
+
+    attr_accessor(:title, :body, :id, :files, :url)
     attr_reader(:extendeddata)
 
-    def self.from(xml, pre_data)
+    def self.from(xml, pre_data, resource_xids)
       type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
       type.slice! "resource/"
+      xml.xpath("//FILES/FILE").each do |file|
+        file_name = ContentFile.clean_xid file.at("NAME").text
+        is_attachment = CONTENT_TYPES[type] == "Attachment"
+        if !resource_xids.include?(file_name) && is_attachment
+          type = "x-bb-document"
+          break
+        end
+      end
       if content_type = CONTENT_TYPES[type]
         content_class = Senkyoshi.const_get content_type
         content = content_class.new
@@ -36,6 +53,7 @@ module Senkyoshi
 
     def iterate_xml(xml, pre_data)
       @points = pre_data[:points] || 0
+      @parent_title = pre_data[:parent_title]
       @title = xml.xpath("/CONTENT/TITLE/@value").first.text
       @url = xml.at("URL")["value"]
       @body = xml.xpath("/CONTENT/BODY/TEXT").first.text
@@ -45,18 +63,21 @@ module Senkyoshi
       end
       @type = xml.xpath("/CONTENT/RENDERTYPE/@value").first.text
       @parent_id = pre_data[:parent_id]
-      bb_type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
-      bb_type.slice! "resource/"
-      @module_type = CONTENT_TYPES[bb_type]
+      @module_type = MODULE_TYPES[self.class.name]
       @id = xml.xpath("/CONTENT/@id").first.text
       if pre_data[:assignment_id] && !pre_data[:assignment_id].empty?
         @id = pre_data[:assignment_id]
       end
-      @module_item = set_module if @module_type
       @files = xml.xpath("//FILES/FILE").map do |file|
         ContentFile.new(file)
       end
+      @module_item = set_module if @module_type
       self
+    end
+
+    def set_module
+      module_item = ModuleItem.new(@title, @module_type, @id, @url)
+      module_item.canvas_conversion
     end
 
     def get_pre_data(xml, file_name)
@@ -67,12 +88,6 @@ module Senkyoshi
         parent_id: parent_id,
         file_name: file_name,
       }
-    end
-
-    def set_module
-      @module_type = "Quizzes::Quiz" if @module_type == "Quiz"
-      module_item = ModuleItem.new(@title, @module_type, @id)
-      module_item.canvas_conversion
     end
 
     def canvas_conversion(course, _resources = nil)
@@ -86,7 +101,8 @@ module Senkyoshi
       if cc_module
         cc_module.module_items << @module_item
       else
-        cc_module = Module.new(@title, @parent_id)
+        title = @parent_title || @title
+        cc_module = Module.new(title, @parent_id)
         cc_module = cc_module.canvas_conversion
         cc_module.module_items << @module_item
         course.canvas_modules << cc_module
