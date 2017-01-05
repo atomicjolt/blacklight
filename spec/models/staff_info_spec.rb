@@ -6,8 +6,12 @@ require_relative "../mocks/mockzip"
 require_relative "../../lib/senkyoshi/models/staff_info"
 
 describe "StaffInfo" do
+  def setup
+    StaffInfo.reset_entries
+  end
+
   it "should parse xml" do
-    xml = get_fixture_xml("staff_info.xml")
+    xml = get_fixture_xml("staff_info_1.xml")
     staff_info = StaffInfo.new.iterate_xml(xml, nil)
 
     assert_equal(staff_info.id, "_112170_1")
@@ -23,13 +27,16 @@ describe "StaffInfo" do
     assert_equal(staff_info.image, "example.com/image.png")
   end
 
-  it "should convert to canvas page" do
+  it "should convert to a single canvas page" do
     course = CanvasCc::CanvasCC::Models::Course.new
-    staff_info =
-      StaffInfo.new.iterate_xml(get_fixture_xml("staff_info.xml"), nil)
-    staff_info.canvas_conversion course
+    results = [
+      StaffInfo.new.iterate_xml(get_fixture_xml("staff_info_1.xml"), nil),
+      StaffInfo.new.iterate_xml(get_fixture_xml("staff_info_2.xml"), nil),
+    ]
+    results.each { |staff| staff.canvas_conversion course }
 
     assert_equal(course.pages.size, 1)
     assert_equal(course.pages.first.body.include?("Mr. Test Name"), true)
+    assert_equal(course.pages.first.body.include?("Ms. Spec Test"), true)
   end
 end
