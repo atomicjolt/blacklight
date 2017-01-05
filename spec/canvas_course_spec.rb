@@ -1,6 +1,7 @@
 require "minitest/autorun"
 require "senkyoshi/canvas_course"
 require_relative "helpers/spec_helper"
+require_relative "mocks/mock_client.rb"
 
 include Senkyoshi
 
@@ -16,10 +17,11 @@ describe Senkyoshi::CanvasCourse do
   describe "from_metadata" do
     it "should return a canvas course" do
       name = "bfcoding 101"
-      stub_active_courses_in_account([{ name: name }])
-      metadata = { name: name }
-      course = Senkyoshi::CanvasCourse.from_metadata(metadata)
-      assert_kind_of Senkyoshi::CanvasCourse, course
+      CanvasCourse.stub(:client, MockClient.new) do
+        metadata = { name: name }
+        course = Senkyoshi::CanvasCourse.from_metadata(metadata)
+        assert_kind_of Senkyoshi::CanvasCourse, course
+      end
     end
   end
 end

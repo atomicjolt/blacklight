@@ -48,14 +48,12 @@ module Senkyoshi
     ##
     def self.from_metadata(metadata, blackboard_export = nil)
       course_name = metadata[:name] || metadata[:title]
-      courses = client.list_active_courses_in_account(Senkyoshi.account_id)
-      canvas_course = courses.detect { |course| course.name == course_name } ||
-        client.create_new_course(
-          Senkyoshi.account_id,
-          course: {
-            name: course_name,
-          },
-        )
+      canvas_course = client.create_new_course(
+        Senkyoshi.account_id,
+        course: {
+          name: course_name,
+        },
+      )
       CanvasCourse.new(metadata, canvas_course, blackboard_export)
     end
 
