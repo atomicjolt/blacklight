@@ -21,6 +21,14 @@ module Senkyoshi
       "x-bb-syllabus" => "WikiPage",
     }.freeze
 
+    MODULE_TYPES = {
+      "Senkyoshi::Attachment" => "Attachment",
+      "Senkyoshi::Assignment" => "Assignment",
+      "Senkyoshi::ExternalUrl" => "ExternalUrl",
+      "Senkyoshi::WikiPage" => "WikiPage",
+      "Senkyoshi::Quiz" => "Quizzes::Quiz",
+    }.freeze
+
     attr_accessor(:title, :body, :id, :files, :url)
     attr_reader(:extendeddata)
 
@@ -53,7 +61,7 @@ module Senkyoshi
       end
       @type = xml.xpath("/CONTENT/RENDERTYPE/@value").first.text
       @parent_id = pre_data[:parent_id]
-      @module_type = self.class.name.gsub("Senkyoshi::", "")
+      @module_type = MODULE_TYPES[self.class.name]
       @id = xml.xpath("/CONTENT/@id").first.text
       if pre_data[:assignment_id] && !pre_data[:assignment_id].empty?
         @id = pre_data[:assignment_id]
