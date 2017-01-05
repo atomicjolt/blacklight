@@ -57,7 +57,7 @@ module Senkyoshi
     def setup_assessment(assessment, assignment, resources)
       assessment.title = @title
       assessment.description = fix_html(@description, resources)
-      if @items.count == 0
+      if @items.count.zero?
         assessment.description +=
           "Empty Quiz -- No questions were contained in the blackboard quiz"
       end
