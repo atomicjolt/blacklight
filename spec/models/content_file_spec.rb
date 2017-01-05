@@ -33,7 +33,7 @@ describe "ContentFile" do
   it "should strip only leading slash from name" do
     xml = get_fixture_xml "file.xml"
     file = Senkyoshi::ContentFile.new(xml.xpath("//FILE"))
-    assert_equal(file.name.start_with?("/"), false)
+    refute(file.name.start_with?("/"))
     assert_equal(file.name, "xid-9066097_2/")
   end
 end
