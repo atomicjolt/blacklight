@@ -7,11 +7,15 @@ module Senkyoshi
     def initialize(xml)
       @id = xml.xpath("./@id").first.text
       @linkname = xml.xpath("./LINKNAME/@value").first.text
-      @name = xml.xpath("./NAME").first.text
+      @name = ContentFile.clean_xid xml.xpath("./NAME").first.text
+    end
 
-      # Remove leading slash if necessary so that ContentFile.name will match
-      # the Senkyoshi.xid
-      @name = @name[1..-1] if @name.start_with? "/"
+    ##
+    # Remove leading slash if necessary so that ContentFile.name will match
+    # the Senkyoshi.xid
+    ##
+    def self.clean_xid(xid)
+      xid[1..-1] if xid.start_with? "/"
     end
 
     def canvas_conversion(*)

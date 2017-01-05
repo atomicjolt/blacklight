@@ -1,4 +1,5 @@
 require "senkyoshi/models/resource"
+require "senkyoshi/models/content_file"
 
 module Senkyoshi
   class Content < Resource
@@ -21,14 +22,22 @@ module Senkyoshi
       "x-bb-syllabus" => "WikiPage",
     }.freeze
 
+    MODULE_TYPES = {
+      "Senkyoshi::Attachment" => "Attachment",
+      "Senkyoshi::Assignment" => "Assignment",
+      "Senkyoshi::ExternalUrl" => "ExternalUrl",
+      "Senkyoshi::WikiPage" => "WikiPage",
+      "Senkyoshi::Quiz" => "Quizzes::Quiz",
+    }.freeze
+
     attr_accessor(:title, :body, :id, :files, :url)
     attr_reader(:extendeddata)
 
     def self.from(xml, pre_data, resource_xids)
       type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
       type.slice! "resource/"
-      xml.xpath("//FILES/FILE").each do |file|
-        file_name = file.at("NAME").text.gsub("/", "")
+      xml.xpath("//FILES/FILE").map do |file|
+        file_name = ContentFile.clean_xid file.at("NAME").text
         is_attachment = CONTENT_TYPES[type] == "Attachment"
         if !resource_xids.include?(file_name) && is_attachment
           type = "x-bb-document"
@@ -54,7 +63,7 @@ module Senkyoshi
       end
       @type = xml.xpath("/CONTENT/RENDERTYPE/@value").first.text
       @parent_id = pre_data[:parent_id]
-      @module_type = self.class.name.gsub("Senkyoshi::", "")
+      @module_type = MODULE_TYPES[self.class.name]
       @id = xml.xpath("/CONTENT/@id").first.text
       if pre_data[:assignment_id] && !pre_data[:assignment_id].empty?
         @id = pre_data[:assignment_id]
