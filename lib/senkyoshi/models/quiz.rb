@@ -7,7 +7,6 @@ module Senkyoshi
     end
 
     def set_module
-      @module_type = "Quizzes::Quiz"
       super
     end
   end
