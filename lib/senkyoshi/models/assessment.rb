@@ -3,12 +3,18 @@ require "senkyoshi/models/assignment"
 require "senkyoshi/models/question"
 require "senkyoshi/models/resource"
 
+
+ASSESSMENT_TYPE = {
+  "Test" => "assignment",
+  "Survey" => "survey",
+}.freeze
+
 module Senkyoshi
   class Assessment < Resource
     def initialize
       @title = ""
       @description = ""
-      @quiz_type = "assignment"
+      @quiz_type = ""
       @points_possible = 0
       @items = []
       @group_name = ""
@@ -17,6 +23,8 @@ module Senkyoshi
     end
 
     def iterate_xml(data, pre_data)
+      @group_name = data.at("bbmd_assessmenttype").text
+      @quiz_type = ASSESSMENT_TYPE[@group_name]
       pre_data ||= {}
       @id = pre_data[:assignment_id] || Senkyoshi.create_random_hex
       @title = data.at("assessment").attributes["title"].value
@@ -30,12 +38,6 @@ module Senkyoshi
         #{description}
         #{instructions}
       }
-
-      @group_name = data.at("bbmd_assessmenttype").text
-      case @group_name.downcase
-      when "survey"
-        @quiz_type = "survey"
-      end
       data.at("section").children.map do |item|
         @items.push(item) if item.name == "item"
       end
@@ -43,14 +45,16 @@ module Senkyoshi
     end
 
     def canvas_conversion(course, resources)
-      assessment = CanvasCc::CanvasCC::Models::Assessment.new
-      assessment.identifier = @id
-      course = create_assignment_group(course, resources)
-      assignment = create_assignment
-      assignment.quiz_identifier_ref = assessment.identifier
-      course.assignments << assignment
-      assessment = setup_assessment(assessment, assignment, resources)
-      course.assessments << assessment
+      if @quiz_type
+        assessment = CanvasCc::CanvasCC::Models::Assessment.new
+        assessment.identifier = @id
+        course = create_assignment_group(course, resources)
+        assignment = create_assignment
+        assignment.quiz_identifier_ref = assessment.identifier
+        course.assignments << assignment
+        assessment = setup_assessment(assessment, assignment, resources)
+        course.assessments << assessment
+      end
       course
     end
 
