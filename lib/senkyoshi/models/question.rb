@@ -81,7 +81,7 @@ module Senkyoshi
       self
     end
 
-    def canvas_conversion(assessment, resources)
+    def canvas_conversion(_, resources)
       @question.identifier = Senkyoshi.create_random_hex
       @question.title = @title
       @question.points_possible = @points_possible

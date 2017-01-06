@@ -14,8 +14,8 @@ module Senkyoshi
 
     def setup_question_bank(question_bank, resources)
       if @items.count.zero?
-        question_bank.description +=
-          "Empty Quiz -- No questions were contained in the blackboard quiz bank"
+        question_bank.description += "Empty Quiz -- No questions
+          were contained in the blackboard quiz bank"
       end
       question_bank = create_items(question_bank, resources)
       question_bank
@@ -29,7 +29,8 @@ module Senkyoshi
       question_bank.questions = []
       questions.each do |item|
         question = item.canvas_conversion(question_bank, resources)
-        question.material.gsub!("<p><span size=\"2\" style=\"font-size: small;\">.</span></p>", "")
+        question.material.gsub!("<p><span size=\"2\"
+          style=\"font-size: small;\">.</span></p>", "")
         question.material.gsub!("<p>.</p>", "")
         question.material.strip!
         puts question.material
