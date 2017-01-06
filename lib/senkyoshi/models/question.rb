@@ -97,8 +97,7 @@ module Senkyoshi
       @answers.each do |answer|
         @question = answer.canvas_conversion(@question, resources)
       end
-      assessment.items << @question
-      assessment
+      @question
     end
 
     def get_fraction(answer_text)
