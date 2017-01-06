@@ -12,7 +12,6 @@ require "zip"
 require "senkyoshi/exceptions"
 
 module Senkyoshi
-  IMPORTED_FILES_DIRNAME = "Imported".freeze
   BASE = "$IMS-CC-FILEBASE$".freeze
 
   def self.parse(zip_path, imscc_path)
