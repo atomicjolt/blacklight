@@ -65,14 +65,15 @@ module Senkyoshi
     ##
     # Determine whether or not a file is a metadata file or not
     ##
-    def self.metadata_file?(file_names, file)
+    def self.metadata_file?(entry_names, file)
       if File.extname(file.name) == ".xml"
         # Detect and skip metadata files.
-        concrete_file = File.join(
+        non_meta_file = File.join(
           File.dirname(file.name),
           File.basename(file.name, ".xml"),
         )
-        file_names.include?(concrete_file)
+
+        entry_names.include?(non_meta_file)
       else
         false
       end
@@ -90,9 +91,9 @@ module Senkyoshi
     ##
     # Determine if a file should be included in course files or not
     ##
-    def self.valid_file?(file_names, scorm_paths, file)
+    def self.valid_file?(entry_names, scorm_paths, file)
       return false if SenkyoshiFile.blacklisted? file
-      return false if SenkyoshiFile.metadata_file? file_names, file
+      return false if SenkyoshiFile.metadata_file? entry_names, file
       return false if SenkyoshiFile.belongs_to_scorm_package? scorm_paths, file
       true
     end
