@@ -11,13 +11,12 @@ module Senkyoshi
     ].freeze
 
     def initialize(zip_entry)
-      path = zip_entry.name
-      base_name = File.basename(path)
+      @path = zip_entry.name.gsub(/__xid-[0-9]+_[0-9]+/, "")
+      @location = extract_file(zip_entry) # Location of file on local filesystem
 
+      base_name = File.basename(@path)
       @xid = base_name[/__(xid-[0-9]+_[0-9]+)/, 1] ||
         Senkyoshi.create_random_hex
-      @name = base_name.gsub(/__xid-[0-9]+_[0-9]+/, "")
-      @location = extract_file(zip_entry) # Location of file on local filesystem
     end
 
     def matches_xid?(xid)
@@ -38,7 +37,7 @@ module Senkyoshi
       file = CanvasCc::CanvasCC::Models::CanvasFile.new
       file.identifier = @xid
       file.file_location = @location
-      file.file_path = "#{IMPORTED_FILES_DIRNAME}/#{@name}"
+      file.file_path = "#{IMPORTED_FILES_DIRNAME}/#{@path}"
       file.hidden = false
 
       course.files << file
