@@ -43,15 +43,15 @@ describe Senkyoshi do
 
         results = @resource.fix_html(@contents, @resources)
 
-        assert_includes(results, "%24IMS-CC-FILEBASE%24/Imported/image123.jpg")
+        assert_includes(results, "%24IMS-CC-FILEBASE%24/fake/path/to/image123.jpg")
       end
 
       it "works correctly with multiple image tags" do
         @resources.add([@file1, @file2])
 
         results = @resource.fix_html(@contents, @resources)
-        correct_result_one = "%24IMS-CC-FILEBASE%24/Imported/image123.jpg"
-        correct_result_two = "%24IMS-CC-FILEBASE%24/Imported/image456.jpg"
+        correct_result_one = "%24IMS-CC-FILEBASE%24/fake/path/to/image123.jpg"
+        correct_result_two = "%24IMS-CC-FILEBASE%24/fake/path/to/image456.jpg"
 
         assert_includes(results, correct_result_one)
         assert_includes(results, correct_result_two)
@@ -76,8 +76,8 @@ describe Senkyoshi do
 
         results = @resource.fix_html(@contents, @resources)
 
-        href = "%24IMS-CC-FILEBASE%24/#{IMPORTED_FILES_DIRNAME}/pdf789.pdf"
-        src = "%24IMS-CC-FILEBASE%24/#{IMPORTED_FILES_DIRNAME}/image987.jpg"
+        href = "%24IMS-CC-FILEBASE%24/fake/path/to/pdf789.pdf"
+        src = "%24IMS-CC-FILEBASE%24/fake/path/to/image987.jpg"
 
         assert_includes(results, href)
         assert_includes(results, src)

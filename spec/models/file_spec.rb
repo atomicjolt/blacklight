@@ -14,7 +14,7 @@ describe "SenkyoshiFile" do
 
   it "should iterate_xml" do
     assert_equal(@file.xid, "xid-1234_1")
-    assert_equal(@file.name, "file.txt")
+    assert_equal(@file.path, "fake/path/to/file.txt")
     assert_includes(@file.location, @path)
   end
 
