@@ -23,10 +23,8 @@ module Senkyoshi
         if original_src
           xid = original_src.split("/").last
           file_resource = resources.detect_xid(xid)
-
           if file_resource
-            path = file_resource.path
-            element[attr] = "#{BASE}/#{IMPORTED_FILES_DIRNAME}/#{path}"
+            element[attr] = "#{BASE}/#{file_resource.path}"
           end
         end
       end
