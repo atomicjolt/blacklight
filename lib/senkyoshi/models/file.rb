@@ -10,12 +10,8 @@ module Senkyoshi
       "*.dat",
     ].freeze
 
-    # Blackboard course files and folders are located at this file path. They
-    # have no meaning in canvas, so we remove them
-    BLACKBOARD_FILE_PREFIX = "csfiles/home_dir/".freeze
-
     def initialize(zip_entry)
-      @path = strip_xid zip_entry.name.gsub(BLACKBOARD_FILE_PREFIX, "")
+      @path = strip_xid zip_entry.name
       @location = extract_file(zip_entry) # Location of file on local filesystem
 
       base_name = File.basename(zip_entry.name)
