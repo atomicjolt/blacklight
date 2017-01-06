@@ -29,6 +29,11 @@ module Senkyoshi
       question_bank.questions = []
       questions.each do |item|
         question = item.canvas_conversion(question_bank, resources)
+        question.material.gsub!("<p><span size=\"2\" style=\"font-size: small;\">.</span></p>", "")
+        question.material.gsub!("<p>.</p>", "")
+        question.material.strip!
+        puts question.material
+        puts question.answers.inspect
         question_bank.questions << question
       end
       question_bank
