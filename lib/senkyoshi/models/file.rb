@@ -3,7 +3,7 @@ require "senkyoshi/exceptions"
 
 module Senkyoshi
   class SenkyoshiFile < Resource
-    attr_accessor(:xid, :location, :name, :path)
+    attr_accessor(:xid, :location, :path)
     @@dir = nil
 
     FILE_BLACKLIST = [
