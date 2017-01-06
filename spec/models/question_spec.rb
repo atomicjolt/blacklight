@@ -61,7 +61,7 @@ describe Senkyoshi do
 
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.items = []
-        @question.canvas_conversion(assessment, @resources)
+        assessment.items << @question.canvas_conversion(assessment, @resources)
         assert_equal assessment.items.count, 1
       end
 
@@ -72,7 +72,7 @@ describe Senkyoshi do
 
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.items = []
-        @question.canvas_conversion(assessment, @resources)
+        assessment.items << @question.canvas_conversion(assessment, @resources)
         assert_equal assessment.items.first.title, title
         assert_equal assessment.items.first.answers.count, 0
       end
@@ -85,7 +85,7 @@ describe Senkyoshi do
 
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.items = []
-        question.canvas_conversion(assessment, @resources)
+        assessment.items << question.canvas_conversion(assessment, @resources)
         assert_equal assessment.items.first.answers.count, 2
       end
     end
