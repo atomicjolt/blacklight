@@ -10,13 +10,21 @@ module Senkyoshi
       "*.dat",
     ].freeze
 
+    # Blackboard course files and folders are located at this file path. They
+    # have no meaning in canvas, so we remove them
+    BLACKBOARD_FILE_PREFIX = "csfiles/home_dir/".freeze
+
     def initialize(zip_entry)
-      @path = zip_entry.name.gsub(/__xid-[0-9]+_[0-9]+/, "")
+      @path = strip_xid zip_entry.name.gsub(BLACKBOARD_FILE_PREFIX, "")
       @location = extract_file(zip_entry) # Location of file on local filesystem
 
       base_name = File.basename(zip_entry.name)
       @xid = base_name[/__(xid-[0-9]+_[0-9]+)/, 1] ||
         Senkyoshi.create_random_hex
+    end
+
+    def strip_xid(name)
+      name.gsub(/__xid-[0-9]+_[0-9]+/, "")
     end
 
     def matches_xid?(xid)
