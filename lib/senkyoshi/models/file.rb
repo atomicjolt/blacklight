@@ -3,7 +3,7 @@ require "senkyoshi/exceptions"
 
 module Senkyoshi
   class SenkyoshiFile < Resource
-    attr_accessor(:xid, :location, :name)
+    attr_accessor(:xid, :location, :name, :path)
     @@dir = nil
 
     FILE_BLACKLIST = [
@@ -14,7 +14,7 @@ module Senkyoshi
       @path = zip_entry.name.gsub(/__xid-[0-9]+_[0-9]+/, "")
       @location = extract_file(zip_entry) # Location of file on local filesystem
 
-      base_name = File.basename(@path)
+      base_name = File.basename(zip_entry.name)
       @xid = base_name[/__(xid-[0-9]+_[0-9]+)/, 1] ||
         Senkyoshi.create_random_hex
     end
@@ -37,7 +37,7 @@ module Senkyoshi
       file = CanvasCc::CanvasCC::Models::CanvasFile.new
       file.identifier = @xid
       file.file_location = @location
-      file.file_path = "#{IMPORTED_FILES_DIRNAME}/#{@path}"
+      file.file_path = @path
       file.hidden = false
 
       course.files << file
