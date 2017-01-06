@@ -9,7 +9,9 @@ include Senkyoshi
 describe Senkyoshi do
   describe "Assessment" do
     before do
-      @assessment = Assessment.new
+      xml = get_fixture_xml "assessment.xml"
+      pre_data = {}
+      @assessment = QTI.from(xml.children.first, pre_data)
       @resources = Senkyoshi::Collection.new
     end
 
@@ -21,10 +23,6 @@ describe Senkyoshi do
 
     describe "iterate_xml" do
       it "should iterate through xml" do
-        xml = get_fixture_xml "assessment.xml"
-        pre_data = {}
-        @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
-
         title = "Just a test"
         points_possible = "120.0"
         group_name = "Test"
@@ -48,10 +46,6 @@ describe Senkyoshi do
 
     describe "canvas_conversion" do
       it "should create a canvas assessment" do
-        xml = get_fixture_xml "assessment.xml"
-        pre_data = {}
-        @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
-
         course = CanvasCc::CanvasCC::Models::Course.new
         @assessment.canvas_conversion(course, @resources)
         assert_equal course.assessments.count, 1
@@ -60,9 +54,6 @@ describe Senkyoshi do
 
     describe "setup_assessment" do
       it "should return assessment with details" do
-        xml = get_fixture_xml "assessment.xml"
-        pre_data = {}
-        @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
 
         title = "Just a test"
@@ -80,9 +71,6 @@ describe Senkyoshi do
 
     describe "create_items" do
       it "should create items" do
-        xml = get_fixture_xml "assessment.xml"
-        pre_data = {}
-        @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
 
         assessment = @assessment.create_items(assessment, @resources)
@@ -92,9 +80,6 @@ describe Senkyoshi do
 
     describe "create_assignment_group" do
       it "should create assignment groups in course" do
-        xml = get_fixture_xml "assessment.xml"
-        pre_data = {}
-        @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
         course = CanvasCc::CanvasCC::Models::Course.new
 
         course = @assessment.create_assignment_group(course, @resources)
@@ -104,10 +89,7 @@ describe Senkyoshi do
 
     describe "create_assignment" do
       it "should create an assignment" do
-        xml = get_fixture_xml "assessment.xml"
-        pre_data = {}
         quiz_type = "assignment"
-        @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
 
         assignment = @assessment.create_assignment
         assert_equal assignment.title,
