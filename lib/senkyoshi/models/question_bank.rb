@@ -1,5 +1,4 @@
 require "senkyoshi/models/qti"
-require "byebug"
 
 module Senkyoshi
   class QuestionBank < QTI
