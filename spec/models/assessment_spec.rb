@@ -15,7 +15,7 @@ describe Senkyoshi do
 
     describe "initialize" do
       it "should initialize assessment" do
-        assert_equal (@assessment.is_a? Object), true
+        assert_equal @assessment.class.name, "Senkyoshi::Assessment"
       end
     end
 

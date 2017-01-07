@@ -17,7 +17,7 @@ describe Senkyoshi do
 
     describe "initialize" do
       it "should initialize question_bank" do
-        assert_equal (@question_bank.is_a? Object), true
+        assert_equal @question_bank.class.name, "Senkyoshi::QuestionBank"
       end
     end
 
