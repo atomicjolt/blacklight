@@ -81,6 +81,7 @@ module Senkyoshi
         when "content"
           Content.from(xml_data, single_pre_data, resource_xids)
         when "questestinterop"
+          single_pre_data = { file_name: file } if single_pre_data.nil?
           QTI.from(xml_data, single_pre_data)
         else
           resource = res_class.new

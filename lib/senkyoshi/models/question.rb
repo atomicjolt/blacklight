@@ -84,6 +84,7 @@ module Senkyoshi
     def canvas_conversion(_, resources)
       @question.identifier = Senkyoshi.create_random_hex
       @question.title = @title
+      @question.original_identifier = @original_identifier
       @question.points_possible = @points_possible
       @question.material = fix_html(@material, resources)
       @question.general_feedback = fix_html(@general_feedback, resources)

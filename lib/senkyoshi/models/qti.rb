@@ -31,8 +31,7 @@ module Senkyoshi
 
     def iterate_xml(data, pre_data)
       @group_name = data.at("bbmd_assessmenttype").text
-      pre_data ||= {}
-      @id = pre_data[:assignment_id] || Senkyoshi.create_random_hex
+      @id = pre_data[:assignment_id] || pre_data[:file_name]
       @title = data.at("assessment").attributes["title"].value
       @points_possible = data.at("qmd_absolutescore_max").text
 
@@ -44,10 +43,29 @@ module Senkyoshi
         #{description}
         #{instructions}
       }
-      data.at("section").children.map do |item|
-        @items.push(item) if item.name == "item"
-      end
+      @items = data.search("item").to_a
+      get_quiz_pool_items(data.search("selection_ordering"))
       self
+    end
+
+    def get_quiz_pool_items(selection_order)
+      selection_order.each do |selection|
+        selection_number = selection.at("selection_number").text
+        if selection.at("sourcebank_ref")
+          sourcebank_ref = selection.at("sourcebank_ref").text
+          @items.push(
+            file_name: sourcebank_ref,
+            selection_number: selection_number,
+          )
+        elsif selection.at("or_selection")
+          items = selection.search("selection_metadata").to_a
+          items.sample(selection_number.to_i).each do |metadata|
+            @items.push(
+              question_id: metadata.text,
+            )
+          end
+        end
+      end
     end
 
     def canvas_conversion(course, resources)
@@ -58,6 +76,7 @@ module Senkyoshi
       assignment.quiz_identifier_ref = assessment.identifier
       course.assignments << assignment
       assessment = setup_assessment(assessment, assignment, resources)
+      assessment = create_items(course, assessment, resources)
       course.assessments << assessment
       course
     end
@@ -72,21 +91,46 @@ module Senkyoshi
       assessment.available = @available
       assessment.quiz_type = @quiz_type
       assessment.points_possible = @points_possible
-      assessment = create_items(assessment, resources)
       assessment.assignment = assignment
       assessment
     end
 
-    def create_items(assessment, resources)
+    def create_items(course, assessment, resources)
       @items = @items - ["", nil]
-      questions = @items.map do |item|
-        Question.from(item)
+      question_ids = @items.map { |i| i[:question_id] } - [nil]
+      questions = @items.flat_map do |item|
+        if !item[:question_id] && !item[:file_name]
+          Question.from(item)
+        else
+          get_quiz_pool_questions(course, item, question_ids)
+        end
       end
       assessment.items = []
       questions.each do |item|
-        assessment.items << item.canvas_conversion(assessment, resources)
+        if canvas_module?(item)
+          assessment.items << item
+        else
+          assessment.items << item.canvas_conversion(assessment, resources)
+        end
       end
       assessment
+    end
+
+    def canvas_module?(item)
+      item.class.to_s.include?("CanvasCc::CanvasCC::Models")
+    end
+
+    def get_quiz_pool_questions(course, item, question_ids)
+      if item[:file_name]
+        question_bank = course.question_banks.
+          detect { |qb| qb.identifier == item[:file_name] }
+        filtered_questions = question_bank.questions.
+          reject { |q| question_ids.include?(q.original_identifier) }
+        filtered_questions.sample(item[:selection_number].to_i)
+      elsif item[:question_id]
+        questions = course.question_banks.flat_map(&:questions)
+        questions.detect { |q| q.original_identifier == item[:question_id] }
+      end
     end
 
     def create_assignment_group(course, resources)

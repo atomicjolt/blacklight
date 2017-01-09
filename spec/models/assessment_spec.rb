@@ -83,9 +83,10 @@ describe Senkyoshi do
         xml = get_fixture_xml "assessment.xml"
         pre_data = {}
         @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
+        course = CanvasCc::CanvasCC::Models::Course.new
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
 
-        assessment = @assessment.create_items(assessment, @resources)
+        assessment = @assessment.create_items(course, assessment, @resources)
         assert_equal assessment.items.count, 12
       end
     end

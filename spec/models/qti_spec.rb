@@ -71,9 +71,9 @@ describe Senkyoshi do
 
     describe "create_items" do
       it "should create items" do
+        course = CanvasCc::CanvasCC::Models::Course.new
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
-
-        assessment = @assessment.create_items(assessment, @resources)
+        assessment = @assessment.create_items(course, assessment, @resources)
         assert_equal assessment.items.count, 12
       end
     end
