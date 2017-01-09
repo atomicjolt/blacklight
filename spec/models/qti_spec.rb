@@ -44,6 +44,20 @@ describe Senkyoshi do
       end
     end
 
+    describe "get_quiz_pool_items" do
+      it "should return an array of quiz items" do
+        xml = get_fixture_xml "qti_pool.xml"
+        pre_data = {}
+        qti_pool = QTI.from(xml.children.first, pre_data)
+
+        selection_order = xml.search("selection_ordering")
+        items = qti_pool.get_quiz_pool_items(selection_order)
+        assert_equal (items.map{ |i| i[:question_id] } - [nil]).count, 2
+        assert_equal (items.map{ |i| i[:file_name] } - [nil]).count, 1
+        assert_equal items.count, 3
+      end
+    end
+
     describe "canvas_conversion" do
       it "should create a canvas assessment" do
         course = CanvasCc::CanvasCC::Models::Course.new
@@ -67,6 +81,19 @@ describe Senkyoshi do
         assert_includes assessment.description, description
         assert_includes assessment.description, instructions
       end
+
+      it "should return assessment with a description of an empty quiz" do
+        xml = get_fixture_xml "empty_quiz.xml"
+        pre_data = {}
+        empty_quiz = QTI.from(xml.children.first, pre_data)
+        assessment = CanvasCc::CanvasCC::Models::Assessment.new
+
+        assignment = empty_quiz.create_assignment
+        assessment =
+          empty_quiz.setup_assessment(assessment, assignment, @resources)
+        assert_equal (empty_quiz.instance_variable_get :@items).count, 0
+        assert_includes assessment.description, "Empty Quiz"
+      end
     end
 
     describe "create_items" do
@@ -75,6 +102,62 @@ describe Senkyoshi do
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment = @assessment.create_items(course, assessment, @resources)
         assert_equal assessment.items.count, 12
+      end
+
+      it "should create qti_pool items" do
+        course = CanvasCc::CanvasCC::Models::Course.new
+        assessment = CanvasCc::CanvasCC::Models::Assessment.new
+
+        quiz_bank_xml = get_fixture_xml "question_bank.xml"
+        pre_data = { file_name: "res00039" }
+        quiz_bank = QTI.from(quiz_bank_xml.children.first, pre_data)
+        course = quiz_bank.canvas_conversion(course, @resources)
+
+        pool_xml = get_fixture_xml "qti_pool.xml"
+        pool_pre_data = {}
+        qti_pool = QTI.from(pool_xml.children.first, pool_pre_data)
+
+        assessment = qti_pool.create_items(course, assessment, @resources)
+        assert_equal assessment.items.count, 7
+      end
+    end
+
+    describe "canvas_module?" do
+      it "should return true" do
+        question = CanvasCc::CanvasCC::Models::Question.new
+        assert_equal @assessment.canvas_module?(question), true
+      end
+
+      it "should return false" do
+        assert_equal @assessment.canvas_module?(@assessment), false
+      end
+    end
+
+    describe "get_quiz_pool_questions" do
+      it "should return the array with the correct questions" do
+        course = CanvasCc::CanvasCC::Models::Course.new
+
+        quiz_bank_xml = get_fixture_xml "question_bank.xml"
+        pre_data = { file_name: "res00039" }
+        quiz_bank = QTI.from(quiz_bank_xml.children.first, pre_data)
+        course = quiz_bank.canvas_conversion(course, @resources)
+
+        pool_xml = get_fixture_xml "qti_pool.xml"
+        pool_pre_data = {}
+        qti_pool = QTI.from(pool_xml.children.first, pool_pre_data)
+
+        selection_order = pool_xml.search("selection_ordering")
+        items = qti_pool.get_quiz_pool_items(selection_order)
+        question_ids = items.map { |i| i[:question_id] } - [nil]
+
+        item = items.detect{ |i| i[:question_id] == "_46854312_1" }
+
+        question = qti_pool.
+          get_quiz_pool_questions(course, item, question_ids)
+
+        assert_equal qti_pool.canvas_module?(question), true
+        assert_equal question.question_type, "calculated_question"
+        assert_equal question.title, "Question Liff"
       end
     end
 
