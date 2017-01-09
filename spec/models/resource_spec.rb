@@ -43,7 +43,8 @@ describe Senkyoshi do
 
         results = @resource.fix_html(@contents, @resources)
 
-        assert_includes(results, "%24IMS-CC-FILEBASE%24/fake/path/to/image123.jpg")
+        expected_results = "%24IMS-CC-FILEBASE%24/fake/path/to/image123.jpg"
+        assert_includes(results, expected_results)
       end
 
       it "works correctly with multiple image tags" do
