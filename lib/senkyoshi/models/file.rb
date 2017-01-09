@@ -3,7 +3,7 @@ require "senkyoshi/exceptions"
 
 module Senkyoshi
   class SenkyoshiFile < Resource
-    attr_accessor(:xid, :location, :name)
+    attr_accessor(:xid, :location, :path)
     @@dir = nil
 
     FILE_BLACKLIST = [
@@ -11,13 +11,16 @@ module Senkyoshi
     ].freeze
 
     def initialize(zip_entry)
-      path = zip_entry.name
-      base_name = File.basename(path)
+      @path = strip_xid zip_entry.name
+      @location = extract_file(zip_entry) # Location of file on local filesystem
 
+      base_name = File.basename(zip_entry.name)
       @xid = base_name[/__(xid-[0-9]+_[0-9]+)/, 1] ||
         Senkyoshi.create_random_hex
-      @name = base_name.gsub(/__xid-[0-9]+_[0-9]+/, "")
-      @location = extract_file(zip_entry) # Location of file on local filesystem
+    end
+
+    def strip_xid(name)
+      name.gsub(/__xid-[0-9]+_[0-9]+/, "")
     end
 
     def matches_xid?(xid)
@@ -38,7 +41,7 @@ module Senkyoshi
       file = CanvasCc::CanvasCC::Models::CanvasFile.new
       file.identifier = @xid
       file.file_location = @location
-      file.file_path = "#{IMPORTED_FILES_DIRNAME}/#{@name}"
+      file.file_path = @path
       file.hidden = false
 
       course.files << file
@@ -62,14 +65,15 @@ module Senkyoshi
     ##
     # Determine whether or not a file is a metadata file or not
     ##
-    def self.metadata_file?(file_names, file)
+    def self.metadata_file?(entry_names, file)
       if File.extname(file.name) == ".xml"
         # Detect and skip metadata files.
-        concrete_file = File.join(
+        non_meta_file = File.join(
           File.dirname(file.name),
           File.basename(file.name, ".xml"),
         )
-        file_names.include?(concrete_file)
+
+        entry_names.include?(non_meta_file)
       else
         false
       end
@@ -87,9 +91,9 @@ module Senkyoshi
     ##
     # Determine if a file should be included in course files or not
     ##
-    def self.valid_file?(file_names, scorm_paths, file)
+    def self.valid_file?(entry_names, scorm_paths, file)
       return false if SenkyoshiFile.blacklisted? file
-      return false if SenkyoshiFile.metadata_file? file_names, file
+      return false if SenkyoshiFile.metadata_file? entry_names, file
       return false if SenkyoshiFile.belongs_to_scorm_package? scorm_paths, file
       true
     end

@@ -77,13 +77,13 @@ module Senkyoshi
       @body << "</ul></div>"
     end
 
-    def canvas_conversion(course, _resources = nil)
+    def canvas_conversion(course, resources)
       # We want to create only a single "Contact" page, so once we already have
       # a StaffInfo resource, we won't want another one
       return course if @@page_created
 
       page = CanvasCc::CanvasCC::Models::Page.new
-      page.body = @@entries.join(" ")
+      page.body = fix_html(@@entries.join(" "), resources)
       page.identifier = @id
       page.page_name = @title.empty? ? "Contact" : @title
       @@page_created = true

@@ -22,7 +22,7 @@ describe "ContentFile" do
     mock_entry = MockZip::MockEntry.new("ADV &amp;amp; DisAdv.pdf")
     assert_includes(
       file.canvas_conversion(mock_entry),
-      "href=\"$IMS_CC_FILEBASE$/#{IMPORTED_FILES_DIRNAME}/ADV",
+      "href=\"$IMS_CC_FILEBASE$/ADV",
     )
     assert_includes(
       file.canvas_conversion(mock_entry),

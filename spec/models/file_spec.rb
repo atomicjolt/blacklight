@@ -14,7 +14,7 @@ describe "SenkyoshiFile" do
 
   it "should iterate_xml" do
     assert_equal(@file.xid, "xid-1234_1")
-    assert_equal(@file.name, "file.txt")
+    assert_equal(@file.path, "fake/path/to/file.txt")
     assert_includes(@file.location, @path)
   end
 
@@ -47,16 +47,21 @@ describe "SenkyoshiFile" do
     mock_entries = [
       MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.xml"),
       MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.xml.xml"),
-      MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg"),
-      MockZip::MockEntry.new("csfiles/home_dir/test__xid-12.jpg.xml"),
+      MockZip::MockEntry.new("csfiles/home_dir/test__xid-23.jpg"),
+      MockZip::MockEntry.new("csfiles/home_dir/test__xid-23.jpg.xml"),
+      MockZip::MockEntry.new("csfiles/home_dir/test__xid-34"),
+      MockZip::MockEntry.new("csfiles/home_dir/test__xid-34.xml"),
     ]
 
-    file_names = mock_entries.map(&:name).sort
+    file_names = mock_entries.map(&:name)
+    dir_names = mock_entries.map { |entry| File.dirname(entry.name) }
+    entry_names = dir_names + file_names
+
     result = mock_entries.map do |entry|
-      SenkyoshiFile.metadata_file?(file_names, entry)
+      SenkyoshiFile.metadata_file?(entry_names, entry)
     end
 
-    expected_result = [false, true, false, true]
+    expected_result = [false, true, false, true, false, true]
 
     assert_equal(expected_result, result)
   end
