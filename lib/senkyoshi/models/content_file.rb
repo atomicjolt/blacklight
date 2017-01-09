@@ -27,9 +27,9 @@ module Senkyoshi
     end
 
     def canvas_conversion(canvas_file = nil)
-      @linkname = ContentFile.correct_linkname(canvas_file) if canvas_file
+      path = canvas_file ? canvas_file.file_path : @linkname
       query = "?canvas_download=1&amp;canvas_qs_wrap=1"
-      href = "$IMS_CC_FILEBASE$/#{IMPORTED_FILES_DIRNAME}/#{@linkname}#{query}"
+      href = "$IMS_CC_FILEBASE$/#{path}#{query}"
       %{
         <a
           class="instructure_scribd_file instructure_file_link"

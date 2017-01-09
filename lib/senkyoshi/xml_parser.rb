@@ -169,11 +169,14 @@ module Senkyoshi
   def self.iterate_files(zipfile)
     files = zipfile.entries.select(&:file?)
 
+    dir_names = zipfile.entries.map { |entry| File.dirname(entry.name) }.uniq
     file_names = files.map(&:name)
+    entry_names = dir_names + file_names
+
     scorm_paths = ScormPackage.find_scorm_paths(zipfile)
 
     files.select do |file|
-      SenkyoshiFile.valid_file?(file_names, scorm_paths, file)
+      SenkyoshiFile.valid_file?(entry_names, scorm_paths, file)
     end.
       map { |file| SenkyoshiFile.new(file) }
   end
