@@ -1,6 +1,15 @@
+require "byebug"
 module Senkyoshi
   class Gradebook
-    def get_pre_data(data, _)
+
+    def initialize
+    end
+
+    def iterate_xml(xml_data, single_pre_data)
+      byebug
+    end
+
+    def self.get_pre_data(data, _)
       categories = get_categories(data)
       data.search("OUTCOMEDEFINITIONS").children.map do |outcome|
         content_id = outcome.at("CONTENTID").attributes["value"].value
@@ -17,7 +26,7 @@ module Senkyoshi
       end
     end
 
-    def get_categories(data)
+    def self.get_categories(data)
       data.at("CATEGORIES").children.
         each_with_object({}) do |category, categories|
         id = category.attributes["id"].value
