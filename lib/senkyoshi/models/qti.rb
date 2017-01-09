@@ -44,25 +44,25 @@ module Senkyoshi
         #{instructions}
       }
       @items = data.search("item").to_a
-      get_quiz_pool_items(data.search("selection_ordering"))
+      @items += get_quiz_pool_items(data.search("selection_ordering"))
       self
     end
 
     def get_quiz_pool_items(selection_order)
-      selection_order.each do |selection|
+      selection_order.flat_map do |selection|
         selection_number = selection.at("selection_number").text
         if selection.at("sourcebank_ref")
           sourcebank_ref = selection.at("sourcebank_ref").text
-          @items.push(
+          {
             file_name: sourcebank_ref,
             selection_number: selection_number,
-          )
+          }
         elsif selection.at("or_selection")
           items = selection.search("selection_metadata").to_a
-          items.sample(selection_number.to_i).each do |metadata|
-            @items.push(
+          items.sample(selection_number.to_i).flat_map do |metadata|
+            {
               question_id: metadata.text,
-            )
+            }
           end
         end
       end
