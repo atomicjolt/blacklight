@@ -52,8 +52,8 @@ describe Senkyoshi do
 
         selection_order = xml.search("selection_ordering")
         items = qti_pool.get_quiz_pool_items(selection_order)
-        assert_equal (items.map{ |i| i[:question_id] } - [nil]).count, 2
-        assert_equal (items.map{ |i| i[:file_name] } - [nil]).count, 1
+        assert_equal (items.map { |i| i[:question_id] } - [nil]).count, 2
+        assert_equal (items.map { |i| i[:file_name] } - [nil]).count, 1
         assert_equal items.count, 3
       end
     end
@@ -150,7 +150,7 @@ describe Senkyoshi do
         items = qti_pool.get_quiz_pool_items(selection_order)
         question_ids = items.map { |i| i[:question_id] } - [nil]
 
-        item = items.detect{ |i| i[:question_id] == "_46854312_1" }
+        item = items.detect { |i| i[:question_id] == "_46854312_1" }
 
         question = qti_pool.
           get_quiz_pool_questions(course, item, question_ids)
