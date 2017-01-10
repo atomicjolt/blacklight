@@ -36,4 +36,14 @@ describe "Gradebook" do
       assert_equal(categories.length, count)
     end
   end
+
+  describe "get_outcome_definitions" do
+    it "should return all outcome definitions" do
+      xml = get_fixture_xml "gradebook.xml"
+      result = Gradebook.get_outcome_definitions xml
+
+      assert_equal(result.size, 4)
+      assert_equal(result.map(&:class).uniq, [Senkyoshi::OutcomeDefinition])
+    end
+  end
 end
