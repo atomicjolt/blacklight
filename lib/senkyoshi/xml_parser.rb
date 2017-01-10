@@ -173,8 +173,13 @@ module Senkyoshi
       map { |file| SenkyoshiFile.new(file) }
   end
 
+  ##
+  # Create a random hex prepended with aj_
+  # This is because the instructure qti migration tool requires
+  # the first character to be a letter.
+  ##
   def self.create_random_hex
-    SecureRandom.hex
+    "aj_" + SecureRandom.hex(32)
   end
 
   def self.get_attribute_value(xml_data, type)
