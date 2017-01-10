@@ -28,7 +28,7 @@ describe Senkyoshi do
         title = "Just a test"
         points_possible = "120.0"
         group_name = "Survey"
-        quiz_type = "survey"
+        quiz_type = "graded_survey"
         description = "<p>Do this test with honor</p>"
         instructions = "<p>Don't forget your virtue</p>"
 
@@ -108,7 +108,7 @@ describe Senkyoshi do
       it "should create an assignment" do
         xml = get_fixture_xml "survey.xml"
         pre_data = {}
-        quiz_type = "survey"
+        quiz_type = "graded_survey"
         @survey = @survey.iterate_xml(xml.children.first, pre_data)
 
         assignment = @survey.create_assignment
