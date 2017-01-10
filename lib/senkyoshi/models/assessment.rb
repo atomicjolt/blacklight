@@ -5,7 +5,7 @@ require "senkyoshi/models/resource"
 
 ASSESSMENT_TYPE = {
   "Test" => "assignment",
-  "Survey" => "survey",
+  "Survey" => "graded_survey",
 }.freeze
 
 module Senkyoshi
