@@ -34,6 +34,7 @@ module Senkyoshi
       @id = pre_data[:assignment_id] || pre_data[:file_name]
       @title = data.at("assessment").attributes["title"].value
       @points_possible = data.at("qmd_absolutescore_max").text
+      set_assessment_details(pre_data)
 
       description = data.at("presentation_material").
         at("mat_formattedtext").text
@@ -46,6 +47,19 @@ module Senkyoshi
       @items = data.search("item").to_a
       @items += get_quiz_pool_items(data.search("selection_ordering"))
       self
+    end
+
+    def set_assessment_details(pre_data)
+      @time_limit = pre_data[:time_limit]
+      @allowed_attempts = pre_data[:allowed_attempts] || 0
+      @allowed_attempts = -1 if pre_data[:unlimited_attempts] == "true"
+      @cant_go_back = pre_data[:cant_go_back]
+      @show_correct_answers = pre_data[:show_correct_answers]
+      if pre_data[:one_question_at_a_time] == "QUESTION_BY_QUESTION"
+        @one_question_at_a_time = "true"
+      else
+        @one_question_at_a_time = "false"
+      end
     end
 
     def get_quiz_pool_items(selection_order)
@@ -65,6 +79,25 @@ module Senkyoshi
         end
         item
       end
+    end
+
+    def get_pre_data(xml, _)
+      {
+        original_file_name: xml.
+          xpath("/COURSEASSESSMENT/ASMTID/@value").first.text,
+        time_limit: xml.
+          xpath("/COURSEASSESSMENT/TIMELIMIT/@value").first.text,
+        allowed_attempts: xml.
+          xpath("/COURSEASSESSMENT/ATTEMPTCOUNT/@value").first.text,
+        unlimited_attempts: xml.xpath("/COURSEASSESSMENT/
+          FLAGS/ISUNLIMITEDATTEMPTS/@value").first.text,
+        cant_go_back: xml.xpath("/COURSEASSESSMENT/
+          FLAGS/ISBACKTRACKPROHIBITED/@value").first.text,
+        show_correct_answers: xml.
+          xpath("/COURSEASSESSMENT/FLAGS/SHOWCORRECTANSWER/@value").first.text,
+        one_question_at_a_time: xml.
+          xpath("/COURSEASSESSMENT/DELIVERYTYPE/@value").first.text,
+      }
     end
 
     def canvas_conversion(course, resources)
@@ -90,6 +123,11 @@ module Senkyoshi
       assessment.available = @available
       assessment.quiz_type = @quiz_type
       assessment.points_possible = @points_possible
+      assessment.time_limit = @time_limit
+      assessment.allowed_attempts = @allowed_attempts
+      assessment.cant_go_back = @cant_go_back
+      assessment.show_correct_answers = @show_correct_answers
+      assessment.one_question_at_a_time = @one_question_at_a_time
       assessment.assignment = assignment
       assessment
     end

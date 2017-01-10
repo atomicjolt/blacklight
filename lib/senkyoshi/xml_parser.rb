@@ -61,6 +61,7 @@ module Senkyoshi
   PRE_RESOURCE_TYPE = {
     content: "Content",
     gradebook: "Gradebook",
+    courseassessment: "QTI",
   }.freeze
 
   def self.parse_manifest(zip_file, manifest, resource_xids)
@@ -132,6 +133,9 @@ module Senkyoshi
         content[:points] = gradebook[:points] || ""
         content[:assignment_id] = gradebook[:assignment_id] || ""
       end
+      course_assessment = pre_data["courseassessment"].
+        detect { |ca| ca[:original_file_name] == content[:assignment_id] }
+      content.merge!(course_assessment) if course_assessment
     end
     pre_data["content"]
   end
