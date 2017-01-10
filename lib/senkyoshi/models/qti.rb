@@ -23,6 +23,7 @@ module Senkyoshi
       @description = ""
       @quiz_type = ""
       @points_possible = 0
+      @points_per_item = 1
       @items = []
       @group_name = ""
       @workflow_state = "published"
@@ -50,20 +51,20 @@ module Senkyoshi
 
     def get_quiz_pool_items(selection_order)
       selection_order.flat_map do |selection|
+        weight = selection.previous.at("qmd_weighting").text
         selection_number = selection.at("selection_number").text
+        item = {
+          weight: weight,
+          selection_number: selection_number,
+        }
         if selection.at("sourcebank_ref")
           sourcebank_ref = selection.at("sourcebank_ref").text
-          {
-            file_name: sourcebank_ref,
-            selection_number: selection_number,
-          }
+          item[:file_name] = sourcebank_ref
         elsif selection.at("or_selection")
           questions = selection.search("selection_metadata").map(&:text)
-          {
-            questions: questions,
-            selection_number: selection_number,
-          }
+          item[:questions] = questions
         end
+        item
       end
     end
 
@@ -135,7 +136,7 @@ module Senkyoshi
       question_group.selection_number = item[:selection_number]
       question_group.questions = canvas_questions || []
       question_group.sourcebank_ref = item[:file_name]
-      question_group.points_per_item = 1
+      question_group.points_per_item = item[:weight]
       question_group
     end
 
