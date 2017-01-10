@@ -65,7 +65,7 @@ describe Senkyoshi do
 
   describe "create_random_hex" do
     it "should return a random string" do
-      assert_equal Senkyoshi.create_random_hex.length, 32
+      assert_equal Senkyoshi.create_random_hex.length, 67
     end
   end
 
