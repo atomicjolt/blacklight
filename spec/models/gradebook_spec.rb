@@ -22,7 +22,7 @@ describe "Gradebook" do
       pre_data = {}
       count = xml.search("OUTCOMEDEFINITIONS").children.length
 
-      results = @gradebook.get_pre_data(xml, pre_data)
+      results = Gradebook.get_pre_data(xml, pre_data)
       assert_equal(results.length, count)
     end
   end
@@ -32,7 +32,7 @@ describe "Gradebook" do
       xml = get_fixture_xml "gradebook.xml"
       count = xml.at("CATEGORIES").children.length
 
-      categories = @gradebook.get_categories(xml)
+      categories = Gradebook.get_categories(xml)
       assert_equal(categories.length, count)
     end
   end
