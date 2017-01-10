@@ -125,7 +125,7 @@ describe Senkyoshi do
     describe "canvas_module?" do
       it "should return true" do
         question_group = CanvasCc::CanvasCC::Models::QuestionGroup.new
-        assert_equal @assessment.canvas_module?(questionGroup), true
+        assert_equal @assessment.canvas_module?(question_group), true
       end
 
       it "should return false" do
