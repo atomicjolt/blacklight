@@ -128,10 +128,7 @@ module Senkyoshi
     pre_data["content"].each do |content|
       gradebook = pre_data["gradebook"].first.
         detect { |g| g[:content_id] == content[:file_name] }
-      if gradebook
-        content[:points] = gradebook[:points] || ""
-        content[:assignment_id] = gradebook[:assignment_id] || ""
-      end
+      content.merge!(gradebook) if gradebook
     end
     pre_data["content"]
   end

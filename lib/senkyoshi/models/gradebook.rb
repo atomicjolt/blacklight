@@ -8,11 +8,13 @@ module Senkyoshi
         category_id = outcome.at("CATEGORYID").attributes["value"].value
         category = categories[category_id]
         points = outcome.at("POINTSPOSSIBLE").attributes["value"].value
+        due_at = outcome.at("DUE").attributes["value"].value
         {
           category: category,
           points: points,
           content_id: content_id,
           assignment_id: assignment_id,
+          due_at: due_at,
         }
       end
     end

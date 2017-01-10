@@ -34,6 +34,7 @@ module Senkyoshi
       @id = pre_data[:assignment_id] || pre_data[:file_name]
       @title = data.at("assessment").attributes["title"].value
       @points_possible = data.at("qmd_absolutescore_max").text
+      @due_at = pre_data[:due_at]
 
       description = data.at("presentation_material").
         at("mat_formattedtext").text
@@ -90,6 +91,9 @@ module Senkyoshi
       assessment.available = @available
       assessment.quiz_type = @quiz_type
       assessment.points_possible = @points_possible
+      if @due_at && !@due_at.empty?
+        assessment.due_at = Time.strptime(@due_at, "%Y-%m-%d %H:%M:%S %z")
+      end
       assessment.assignment = assignment
       assessment
     end
