@@ -81,9 +81,10 @@ module Senkyoshi
       self
     end
 
-    def canvas_conversion(assessment, resources)
+    def canvas_conversion(_, resources)
       @question.identifier = Senkyoshi.create_random_hex
       @question.title = @title
+      @question.original_identifier = @original_identifier
       @question.points_possible = @points_possible
       @question.material = fix_html(@material, resources)
       @question.general_feedback = fix_html(@general_feedback, resources)
@@ -97,8 +98,7 @@ module Senkyoshi
       @answers.each do |answer|
         @question = answer.canvas_conversion(@question, resources)
       end
-      assessment.items << @question
-      assessment
+      @question
     end
 
     def get_fraction(answer_text)

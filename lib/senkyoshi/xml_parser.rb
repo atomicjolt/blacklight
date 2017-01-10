@@ -16,9 +16,13 @@ require "senkyoshi/models/questions/quiz_bowl"
 require "senkyoshi/models/questions/short_response"
 require "senkyoshi/models/questions/true_false"
 
+require "senkyoshi/models/assessment"
+require "senkyoshi/models/question_bank"
+require "senkyoshi/models/survey"
+
 require "senkyoshi/models/announcement"
 require "senkyoshi/models/answer"
-require "senkyoshi/models/assessment"
+require "senkyoshi/models/qti"
 require "senkyoshi/models/assignment"
 require "senkyoshi/models/assignment_group"
 require "senkyoshi/models/blog"
@@ -49,7 +53,7 @@ module Senkyoshi
     announcement: "Announcement",
     forum: "Forum",
     course: "Course",
-    questestinterop: "Assessment",
+    questestinterop: "QTI",
     content: "Content",
     staffinfo: "StaffInfo",
   }.freeze
@@ -73,8 +77,12 @@ module Senkyoshi
       if RESOURCE_TYPE[type.to_sym]
         single_pre_data = get_single_pre_data(pre_data, file)
         res_class = Senkyoshi.const_get RESOURCE_TYPE[type.to_sym]
-        if type == "content"
+        case type
+        when "content"
           Content.from(xml_data, single_pre_data, resource_xids)
+        when "questestinterop"
+          single_pre_data ||= { file_name: file }
+          QTI.from(xml_data, single_pre_data)
         else
           resource = res_class.new
           resource.iterate_xml(xml_data, single_pre_data)

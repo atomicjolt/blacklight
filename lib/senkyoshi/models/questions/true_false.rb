@@ -8,7 +8,7 @@ module Senkyoshi
       set_answers(data.at("resprocessing"))
       answers_array.each do |answer_text|
         answer = Answer.new(answer_text)
-        answer.fraction = get_fraction(answer_text)
+        answer.fraction = get_fraction(answer_text.to_s)
         @answers.push(answer)
       end
       self

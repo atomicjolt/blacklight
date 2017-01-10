@@ -16,5 +16,17 @@ module Senkyoshi
       end
       self
     end
+
+    def get_fraction(answer_text)
+      if @correct_answers && answer_text == @correct_answers["name"]
+        if @correct_answers["fraction"].to_f == 0.0
+          1.0
+        else
+          @correct_answers["fraction"].to_f
+        end
+      else
+        @incorrect_answers["fraction"].to_f
+      end
+    end
   end
 end

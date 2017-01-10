@@ -15,7 +15,7 @@ describe Senkyoshi do
 
     describe "initialize" do
       it "should initialize question" do
-        assert_equal (@question.is_a? Object), true
+        assert_equal (@question.is_a? Senkyoshi::Question), true
       end
 
       it "should initialize with parameters" do
@@ -61,7 +61,7 @@ describe Senkyoshi do
 
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.items = []
-        @question.canvas_conversion(assessment, @resources)
+        assessment.items << @question.canvas_conversion(assessment, @resources)
         assert_equal assessment.items.count, 1
       end
 
@@ -72,7 +72,7 @@ describe Senkyoshi do
 
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.items = []
-        @question.canvas_conversion(assessment, @resources)
+        assessment.items << @question.canvas_conversion(assessment, @resources)
         assert_equal assessment.items.first.title, title
         assert_equal assessment.items.first.answers.count, 0
       end
@@ -85,7 +85,7 @@ describe Senkyoshi do
 
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.items = []
-        question.canvas_conversion(assessment, @resources)
+        assessment.items << question.canvas_conversion(assessment, @resources)
         assert_equal assessment.items.first.answers.count, 2
       end
     end

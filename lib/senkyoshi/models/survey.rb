@@ -1,9 +1,9 @@
 require "senkyoshi/models/qti"
 
 module Senkyoshi
-  class Assessment < QTI
+  class Survey < QTI
     def iterate_xml(data, pre_data)
-      @quiz_type = "assignment"
+      @quiz_type = "graded_survey"
       super
     end
   end
