@@ -16,9 +16,5 @@ module Senkyoshi
       id = xml.xpath("./@id").text
       OutcomeDefinition.new(id, content_id)
     end
-
-    def self.should_create_assignment?(xml)
-      xml.xpath("./OUTCOMEDEFINITION/CONTENTID/@value").first.text
-    end
   end
 end
