@@ -58,12 +58,11 @@ module Senkyoshi
             selection_number: selection_number,
           }
         elsif selection.at("or_selection")
-          items = selection.search("selection_metadata").to_a
-          items.sample(selection_number.to_i).flat_map do |metadata|
-            {
-              question_id: metadata.text,
-            }
-          end
+          questions = selection.search("selection_metadata").map(&:text)
+          {
+            questions: questions,
+            selection_number: selection_number,
+          }
         end
       end
     end
@@ -96,15 +95,7 @@ module Senkyoshi
     end
 
     def create_items(course, assessment, resources)
-      @items = @items - ["", nil]
-      question_ids = @items.map { |i| i[:question_id] } - [nil]
-      questions = @items.flat_map do |item|
-        if !item[:question_id] && !item[:file_name]
-          Question.from(item)
-        else
-          get_quiz_pool_questions(course, item, question_ids)
-        end
-      end
+      questions = get_questions(course)
       assessment.items = []
       questions.each do |item|
         if canvas_module?(item)
@@ -116,21 +107,36 @@ module Senkyoshi
       assessment
     end
 
+    def get_questions(course)
+      @items = @items - ["", nil]
+      @items.flat_map do |item|
+        if !item[:selection_number]
+          Question.from(item)
+        else
+          get_question_group(course, item)
+        end
+      end
+    end
+
     def canvas_module?(item)
       item.class.to_s.include?("CanvasCc::CanvasCC::Models")
     end
 
-    def get_quiz_pool_questions(course, item, question_ids)
-      if item[:file_name]
-        question_bank = course.question_banks.
-          detect { |qb| qb.identifier == item[:file_name] }
-        filtered_questions = question_bank.questions.
-          reject { |q| question_ids.include?(q.original_identifier) }
-        filtered_questions.sample(item[:selection_number].to_i)
-      elsif item[:question_id]
+    def get_question_group(course, item)
+      if item[:questions]
         questions = course.question_banks.flat_map(&:questions)
-        questions.detect { |q| q.original_identifier == item[:question_id] }
+        canvas_questions = item[:questions].flat_map do |question|
+          questions.detect { |q| q.original_identifier == question }
+        end
       end
+      question_group = CanvasCc::CanvasCC::Models::QuestionGroup.new
+      question_group.identifier = Senkyoshi.create_random_hex
+      question_group.title = "Question Group"
+      question_group.selection_number = item[:selection_number]
+      question_group.questions = canvas_questions || []
+      question_group.sourcebank_ref = item[:file_name]
+      question_group.points_per_item = 1
+      question_group
     end
 
     def create_assignment_group(course, resources)

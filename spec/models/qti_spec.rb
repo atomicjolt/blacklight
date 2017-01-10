@@ -52,9 +52,9 @@ describe Senkyoshi do
 
         selection_order = xml.search("selection_ordering")
         items = qti_pool.get_quiz_pool_items(selection_order)
-        assert_equal (items.map { |i| i[:question_id] } - [nil]).count, 2
+        assert_equal (items.map { |i| i[:questions] } - [nil]).count, 1
         assert_equal (items.map { |i| i[:file_name] } - [nil]).count, 1
-        assert_equal items.count, 3
+        assert_equal items.count, 2
       end
     end
 
@@ -118,7 +118,7 @@ describe Senkyoshi do
         qti_pool = QTI.from(pool_xml.children.first, pool_pre_data)
 
         assessment = qti_pool.create_items(course, assessment, @resources)
-        assert_equal assessment.items.count, 7
+        assert_equal assessment.items.count, 2
       end
     end
 
@@ -133,7 +133,7 @@ describe Senkyoshi do
       end
     end
 
-    describe "get_quiz_pool_questions" do
+    describe "get_question_group" do
       it "should return the array with the correct questions" do
         course = CanvasCc::CanvasCC::Models::Course.new
 
@@ -148,16 +148,41 @@ describe Senkyoshi do
 
         selection_order = pool_xml.search("selection_ordering")
         items = qti_pool.get_quiz_pool_items(selection_order)
-        question_ids = items.map { |i| i[:question_id] } - [nil]
 
-        item = items.detect { |i| i[:question_id] == "_46854312_1" }
+        item = items.detect { |i| i[:questions] != nil }
 
-        question = qti_pool.
-          get_quiz_pool_questions(course, item, question_ids)
+        question_group = qti_pool.
+          get_question_group(course, item)
 
-        assert_equal qti_pool.canvas_module?(question), true
-        assert_equal question.question_type, "calculated_question"
-        assert_equal question.title, "Question Liff"
+
+        assert_equal question_group.questions.count, 2
+        assert_equal question_group.selection_number.to_i, 2
+        assert_nil question_group.sourcebank_ref
+      end
+
+      it "should return the array with the correct questions" do
+        course = CanvasCc::CanvasCC::Models::Course.new
+
+        quiz_bank_xml = get_fixture_xml "question_bank.xml"
+        pre_data = { file_name: "res00039" }
+        quiz_bank = QTI.from(quiz_bank_xml.children.first, pre_data)
+        course = quiz_bank.canvas_conversion(course, @resources)
+
+        pool_xml = get_fixture_xml "qti_pool.xml"
+        pool_pre_data = {}
+        qti_pool = QTI.from(pool_xml.children.first, pool_pre_data)
+
+        selection_order = pool_xml.search("selection_ordering")
+        items = qti_pool.get_quiz_pool_items(selection_order)
+
+        item = items.detect { |i| i[:file_name] == "res00039" }
+
+        question_group = qti_pool.
+          get_question_group(course, item)
+
+        assert_equal question_group.questions.count, 0
+        assert_equal question_group.selection_number.to_i, 5
+        assert_equal question_group.sourcebank_ref, "res00039"
       end
     end
 
