@@ -149,11 +149,10 @@ describe Senkyoshi do
         selection_order = pool_xml.search("selection_ordering")
         items = qti_pool.get_quiz_pool_items(selection_order)
 
-        item = items.detect { |i| i[:questions] != nil }
+        item = items.detect { |i| i[:questions] }
 
         question_group = qti_pool.
           get_question_group(course, item)
-
 
         assert_equal question_group.questions.count, 2
         assert_equal question_group.selection_number.to_i, 2
