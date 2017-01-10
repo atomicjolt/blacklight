@@ -15,7 +15,7 @@ describe Senkyoshi do
 
     describe "initialize" do
       it "should initialize survey" do
-        assert_equal @survey.class.name, "Senkyoshi::Survey"
+        assert_equal (@survey.is_a? Senkyoshi::Survey), true
       end
     end
 

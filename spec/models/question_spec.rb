@@ -15,7 +15,7 @@ describe Senkyoshi do
 
     describe "initialize" do
       it "should initialize question" do
-        assert_equal (@question.is_a? Object), true
+        assert_equal (@question.is_a? Senkyoshi::Question), true
       end
 
       it "should initialize with parameters" do

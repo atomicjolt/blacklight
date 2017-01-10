@@ -23,10 +23,9 @@ module Senkyoshi
       @description = ""
       @quiz_type = ""
       @points_possible = 0
-      @points_per_item = 1
       @items = []
       @group_name = ""
-      @workflow_state = "published"
+      @workflow_state = "available"
       @available = true
     end
 
@@ -120,7 +119,7 @@ module Senkyoshi
     end
 
     def canvas_module?(item)
-      item.class.to_s.include?("CanvasCc::CanvasCC::Models")
+      item.is_a? CanvasCc::CanvasCC::Models::QuestionGroup
     end
 
     def get_question_group(course, item)
@@ -128,7 +127,7 @@ module Senkyoshi
         questions = course.question_banks.flat_map(&:questions)
         canvas_questions = item[:questions].flat_map do |question|
           questions.detect { |q| q.original_identifier == question }
-        end
+        end.compact
       end
       question_group = CanvasCc::CanvasCC::Models::QuestionGroup.new
       question_group.identifier = Senkyoshi.create_random_hex

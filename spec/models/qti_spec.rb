@@ -17,7 +17,7 @@ describe Senkyoshi do
 
     describe "initialize" do
       it "should initialize assessment" do
-        assert_equal @assessment.class.name, "Senkyoshi::Assessment"
+        assert_equal (@assessment.is_a? Senkyoshi::Assessment), true
       end
     end
 
@@ -124,8 +124,8 @@ describe Senkyoshi do
 
     describe "canvas_module?" do
       it "should return true" do
-        question = CanvasCc::CanvasCC::Models::Question.new
-        assert_equal @assessment.canvas_module?(question), true
+        questionGroup = CanvasCc::CanvasCC::Models::QuestionGroup.new
+        assert_equal @assessment.canvas_module?(questionGroup), true
       end
 
       it "should return false" do
