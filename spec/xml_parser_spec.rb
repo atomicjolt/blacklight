@@ -43,6 +43,35 @@ describe Senkyoshi do
     end
   end
 
+  describe "connect_content" do
+    it "should return a merged content object" do
+      file_name = "res00003"
+      parent_id = "res00002"
+      assignment_id = "res00015"
+      pre_data = {}
+      pre_data["content"] = [
+        { id: "res00028", parent_id: parent_id, file_name: file_name },
+        { id: "res00036", parent_id: "{unset id}", file_name: "res00004" },
+      ]
+
+      pre_data["gradebook"] = [[
+        {
+          category: "Test",
+          points: "60",
+          content_id: file_name,
+          assignment_id: assignment_id,
+          due_at: "",
+        },
+      ]]
+
+      results = Senkyoshi.connect_content(pre_data)
+      data = results.detect { |pd| pd[:content_id] == file_name }
+      assert_equal results.length, 2
+      assert_equal data[:assignment_id], assignment_id
+      assert_equal data[:parent_id], parent_id
+    end
+  end
+
   describe "iterate_files" do
     it "should return array of files" do
       mock_entries = [
