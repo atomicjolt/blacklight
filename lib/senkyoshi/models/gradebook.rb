@@ -8,7 +8,7 @@ module Senkyoshi
 
     def iterate_xml(xml_data, _)
       @categories = Gradebook.get_categories(xml_data)
-      @outcome_definitions = get_outcome_definitions(xml_data)
+      @outcome_definitions = get_outcome_definitions(xml_data).compact
       self
     end
 
@@ -41,9 +41,12 @@ module Senkyoshi
 
     def get_outcome_definitions(xml)
       xml.xpath("//OUTCOMEDEFINITION").map do |outcome_definition|
-        category_id = outcome_definition.xpath("CATEGORYID/@value").first.value
-        category = @categories[category_id]
-        OutcomeDefinition.from(outcome_definition, category)
+        user_created = outcome_definition.xpath("ISUSERCREATED/@value").first.value
+        if user_created == "true"
+          category_id = outcome_definition.xpath("CATEGORYID/@value").first.value
+          category = @categories[category_id]
+          OutcomeDefinition.from(outcome_definition, category)
+        end
       end
     end
 
