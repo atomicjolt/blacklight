@@ -51,10 +51,14 @@ module Senkyoshi
 
     def set_assessment_details(pre_data)
       @time_limit = pre_data[:time_limit]
-      @allowed_attempts = pre_data[:allowed_attempts] || 0
+      @allowed_attempts = pre_data[:allowed_attempts]
       @allowed_attempts = -1 if pre_data[:unlimited_attempts] == "true"
       @cant_go_back = pre_data[:cant_go_back]
       @show_correct_answers = pre_data[:show_correct_answers]
+      @ip_filter = pre_data[:ip_filter] if pre_data[:ip_filter] != "false"
+      if pre_data[:access_code] && !pre_data[:access_code].empty?
+        @access_code = pre_data[:access_code]
+      end
       if pre_data[:one_question_at_a_time] == "QUESTION_BY_QUESTION"
         @one_question_at_a_time = "true"
       else
@@ -83,20 +87,24 @@ module Senkyoshi
 
     def get_pre_data(xml, _)
       {
-        original_file_name: xml.
-          xpath("/COURSEASSESSMENT/ASMTID/@value").first.text,
-        time_limit: xml.
-          xpath("/COURSEASSESSMENT/TIMELIMIT/@value").first.text,
-        allowed_attempts: xml.
-          xpath("/COURSEASSESSMENT/ATTEMPTCOUNT/@value").first.text,
+        original_file_name: xml.xpath("/COURSEASSESSMENT/
+          ASMTID/@value").first.text,
+        one_question_at_a_time: xml.xpath("/COURSEASSESSMENT/
+          DELIVERYTYPE/@value").first.text,
+        time_limit: xml.xpath("/COURSEASSESSMENT/
+          TIMELIMIT/@value").first.text,
+        access_code: xml.xpath("/COURSEASSESSMENT/
+          PASSWORD/@value").first.text,
+        allowed_attempts: xml.xpath("/COURSEASSESSMENT/
+          ATTEMPTCOUNT/@value").first.text,
         unlimited_attempts: xml.xpath("/COURSEASSESSMENT/
           FLAGS/ISUNLIMITEDATTEMPTS/@value").first.text,
         cant_go_back: xml.xpath("/COURSEASSESSMENT/
           FLAGS/ISBACKTRACKPROHIBITED/@value").first.text,
-        show_correct_answers: xml.
-          xpath("/COURSEASSESSMENT/FLAGS/SHOWCORRECTANSWER/@value").first.text,
-        one_question_at_a_time: xml.
-          xpath("/COURSEASSESSMENT/DELIVERYTYPE/@value").first.text,
+        show_correct_answers: xml.xpath("/COURSEASSESSMENT/
+          FLAGS/SHOWCORRECTANSWER/@value").first.text,
+        ip_filter: xml.xpath("/COURSEASSESSMENT/
+          FLAGS/IP_FILTER/@value").first.text,
       }
     end
 
@@ -124,8 +132,10 @@ module Senkyoshi
       assessment.quiz_type = @quiz_type
       assessment.points_possible = @points_possible
       assessment.time_limit = @time_limit
+      assessment.access_code = @access_code
       assessment.allowed_attempts = @allowed_attempts
       assessment.cant_go_back = @cant_go_back
+      assessment.ip_filter = @ip_filter
       assessment.show_correct_answers = @show_correct_answers
       assessment.one_question_at_a_time = @one_question_at_a_time
       assessment.assignment = assignment
