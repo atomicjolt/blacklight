@@ -70,8 +70,13 @@ module Senkyoshi
     def canvas_conversion(course, resources)
       assessment = CanvasCc::CanvasCC::Models::Assessment.new
       assessment.identifier = @id
-      course = create_assignment_group(course, resources)
-      assignment = create_assignment
+      assignment_group = course.assignment_groups.
+        detect { |a| a.title == @group_name }
+      unless assignment_group
+        assignment_group = AssignmentGroup.create_assignment_group(@group_name)
+        course.assignment_groups << assignment_group
+      end
+      assignment = create_assignment(assignment_group.identifier)
       assignment.quiz_identifier_ref = assessment.identifier
       course.assignments << assignment
       assessment = setup_assessment(assessment, assignment, resources)
@@ -139,22 +144,10 @@ module Senkyoshi
       question_group
     end
 
-    def create_assignment_group(course, resources)
-      group = course.assignment_groups.detect { |a| a.title == @group_name }
-      if group
-        @group_id = group.identifier
-      else
-        @group_id = Senkyoshi.create_random_hex
-        assignment_group = AssignmentGroup.new(@group_name, @group_id)
-        course = assignment_group.canvas_conversion(course, resources)
-      end
-      course
-    end
-
-    def create_assignment
+    def create_assignment(group_id)
       assignment = CanvasCc::CanvasCC::Models::Assignment.new
       assignment.identifier = Senkyoshi.create_random_hex
-      assignment.assignment_group_identifier_ref = @group_id
+      assignment.assignment_group_identifier_ref = group_id
       assignment.title = @title
       assignment.position = 1
       assignment.submission_types << "online_quiz"
