@@ -26,13 +26,10 @@ describe Senkyoshi do
         title = "Just a test"
         points_possible = "120.0"
         group_name = "Pool"
-        quiz_type = ""
         description = "<p>Do this test with honor</p>"
         instructions = "<p>Don't forget your virtue</p>"
 
         assert_equal (@question_bank.instance_variable_get :@title), title
-        assert_equal (@question_bank.
-          instance_variable_get :@quiz_type), quiz_type
         assert_equal (@question_bank.
           instance_variable_get :@points_possible), points_possible
         assert_equal (@question_bank.

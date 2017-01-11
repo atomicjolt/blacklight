@@ -62,6 +62,7 @@ module Senkyoshi
   PRE_RESOURCE_TYPE = {
     content: "Content",
     gradebook: "Gradebook",
+    courseassessment: "QTI",
   }.freeze
 
   def self.parse_manifest(zip_file, manifest, resource_xids)
@@ -74,6 +75,7 @@ module Senkyoshi
 
   def self.iterate_xml(organizations, resources, zip_file, resource_xids)
     pre_data = pre_iterator(organizations, resources, zip_file)
+    staff_info = StaffInfo.new
     iterator_master(resources, zip_file) do |xml_data, type, file|
       if RESOURCE_TYPE[type.to_sym]
         single_pre_data = get_single_pre_data(pre_data, file)
@@ -84,6 +86,8 @@ module Senkyoshi
         when "questestinterop"
           single_pre_data ||= { file_name: file }
           QTI.from(xml_data, single_pre_data)
+        when "staffinfo"
+          staff_info.iterate_xml(xml_data, single_pre_data)
         else
           resource = res_class.new
           resource.iterate_xml(xml_data, single_pre_data)
@@ -128,10 +132,11 @@ module Senkyoshi
     pre_data["content"].each do |content|
       gradebook = pre_data["gradebook"].first.
         detect { |g| g[:content_id] == content[:file_name] }
-      if gradebook
-        content[:points] = gradebook[:points] || ""
-        content[:assignment_id] = gradebook[:assignment_id] || ""
-      end
+      content.merge!(gradebook) if gradebook
+
+      course_assessment = pre_data["courseassessment"].
+        detect { |ca| ca[:original_file_name] == content[:assignment_id] }
+      content.merge!(course_assessment) if course_assessment
     end
     pre_data["content"]
   end
