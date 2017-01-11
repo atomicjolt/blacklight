@@ -56,6 +56,7 @@ module Senkyoshi
     questestinterop: "QTI",
     content: "Content",
     staffinfo: "StaffInfo",
+    gradebook: "Gradebook",
   }.freeze
 
   PRE_RESOURCE_TYPE = {
@@ -115,9 +116,8 @@ module Senkyoshi
     iterator_master(resources, zip_file) do |xml_data, type, file|
       if PRE_RESOURCE_TYPE[type.to_sym]
         res_class = Senkyoshi.const_get PRE_RESOURCE_TYPE[type.to_sym]
-        resource_class = res_class.new
         pre_data[type] ||= []
-        pre_data[type].push(resource_class.get_pre_data(xml_data, file))
+        pre_data[type].push(res_class.get_pre_data(xml_data, file))
       end
     end
     pre_data = connect_content(pre_data)

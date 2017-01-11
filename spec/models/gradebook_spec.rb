@@ -22,7 +22,7 @@ describe "Gradebook" do
       pre_data = {}
       count = xml.search("OUTCOMEDEFINITIONS").children.length
 
-      results = @gradebook.get_pre_data(xml, pre_data)
+      results = Gradebook.get_pre_data(xml, pre_data)
       assert_equal(results.length, count)
     end
   end
@@ -32,8 +32,31 @@ describe "Gradebook" do
       xml = get_fixture_xml "gradebook.xml"
       count = xml.at("CATEGORIES").children.length
 
-      categories = @gradebook.get_categories(xml)
+      categories = Gradebook.get_categories(xml)
       assert_equal(categories.length, count)
     end
+  end
+
+  describe "get_outcome_definitions" do
+    it "should return all outcome definitions" do
+      xml = get_fixture_xml "gradebook.xml"
+      result = Gradebook.get_outcome_definitions xml
+
+      assert_equal(result.size, 4)
+      assert_equal(result.map(&:class).uniq, [Senkyoshi::OutcomeDefinition])
+    end
+  end
+
+  it "should implement canvas_conversion" do
+    not_quiz = OutcomeDefinition.new(1, "", nil, nil)
+    quiz = OutcomeDefinition.new(2, "res001", nil, nil)
+
+    subject = Gradebook.new
+    subject.outcome_definitions = [not_quiz, quiz]
+
+    course = CanvasCc::CanvasCC::Models::Course.new
+    subject.canvas_conversion(course)
+    refute(course.assignments.size, 0)
+    # TODO expect changes in course
   end
 end
