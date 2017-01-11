@@ -99,9 +99,9 @@ module Senkyoshi
     # location of temporary file
     ##
     def write_zip(export_name)
-      @@dir ||= Dir.mktmpdir
+      @dir ||= Dir.mktmpdir
       scorm_path = File.dirname @manifest.name
-      path = "#{@@dir}/#{export_name}"
+      path = "#{@dir}/#{export_name}"
       Zip::File.open path, Zip::File::CREATE do |zip|
         @entries.each do |entry|
           if entry.file?
@@ -119,9 +119,8 @@ module Senkyoshi
     ##
     # Removes all temp files if they exist
     ##
-    def self.cleanup
-      @@dir ||= nil
-      FileUtils.rm_r @@dir unless @@dir.nil?
+    def cleanup
+      FileUtils.rm_r @dir unless @dir.nil?
     end
   end
 end

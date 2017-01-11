@@ -1,5 +1,7 @@
 module Senkyoshi
   class Resource
+    def cleanup; end
+
     def fix_html(contents, resources)
       if contents && contents.respond_to?(:empty?) && !contents.empty?
         node_html = Nokogiri::HTML.fragment(contents)
