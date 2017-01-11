@@ -73,6 +73,7 @@ module Senkyoshi
 
   def self.iterate_xml(organizations, resources, zip_file, resource_xids)
     pre_data = pre_iterator(organizations, resources, zip_file)
+    staff_info = StaffInfo.new
     iterator_master(resources, zip_file) do |xml_data, type, file|
       if RESOURCE_TYPE[type.to_sym]
         single_pre_data = get_single_pre_data(pre_data, file)
@@ -83,6 +84,8 @@ module Senkyoshi
         when "questestinterop"
           single_pre_data ||= { file_name: file }
           QTI.from(xml_data, single_pre_data)
+        when "staffinfo"
+          staff_info.iterate_xml(xml_data, single_pre_data)
         else
           resource = res_class.new
           resource.iterate_xml(xml_data, single_pre_data)
