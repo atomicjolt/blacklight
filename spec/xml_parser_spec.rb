@@ -53,7 +53,6 @@ describe Senkyoshi do
         { id: "res00028", parent_id: parent_id, file_name: file_name },
         { id: "res00036", parent_id: "{unset id}", file_name: "res00004" },
       ]
-
       pre_data["gradebook"] = [[
         {
           category: "Test",
@@ -63,12 +62,27 @@ describe Senkyoshi do
           due_at: "",
         },
       ]]
+      time_limit = 10
+      true_value = "true"
+      false_value = "false"
+      pre_data["courseassessment"] = [
+        {
+          original_file_name: assignment_id,
+          time_limit: time_limit,
+          allowed_attempts: "",
+          unlimited_attempts: true_value,
+          cant_go_back: true_value,
+          show_correct_answers: false_value,
+          one_question_at_a_time: "QUESTION_BY_QUESTION",
+        },
+      ]
 
       results = Senkyoshi.connect_content(pre_data)
-      data = results.detect { |pd| pd[:content_id] == file_name }
+      data = results.detect { |pd| pd[:original_file_name] == assignment_id }
       assert_equal results.length, 2
       assert_equal data[:assignment_id], assignment_id
       assert_equal data[:parent_id], parent_id
+      assert_equal data[:time_limit], time_limit
     end
   end
 

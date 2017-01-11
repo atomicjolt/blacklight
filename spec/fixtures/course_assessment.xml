@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<COURSEASSESSMENT id="_65179_1"><ASMTID value="res00048"/><DELIVERYTYPE value="ALL_AT_ONCE"/><PASSWORD
+  value=""/><TIMELIMIT value="20"/><TIMERCOMPLETION value="CONTINUAL"/><ATTEMPTCOUNT value=""/><FEEDBACKSETTINGS
+   value="as:s,ua|ns:"/><FLAGS><ALLOWMULTIPLEATTEMPTS value="false"/><ISPASSWORDPROTECTED
+   value="false"/><LAUNCHINNEWWINDOW value="false"/><FORCECOMPLETION value="false"/><ISBACKTRACKPROHIBITED
+   value="true"/><RANDOMIZEQUESTIONS value="false"/><SHOWSCORE value="false"/><SHOWUSERANSWER
+   value="false"/><SHOWCORRECTANSWER value="false"/><SHOWFEEDBACK value="false"/><ISUNLIMITEDATTEMPTS
+   value="false"/><SHOWINSTINSTRUCTIONS value="true"/><SHOWINSTDESCRIPTION value="true"/><ALLOWLATESUBMISSION
+   value="false"/><IP_FILTER value="false"/></FLAGS></COURSEASSESSMENT>
