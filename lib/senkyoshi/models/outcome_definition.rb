@@ -10,8 +10,6 @@ module Senkyoshi
 
     def initialize(category)
       @category = category
-      @points_possible = 0
-      @workflow_state = "published"
     end
 
     def iterate_xml(xml)
@@ -29,11 +27,10 @@ module Senkyoshi
       assignment = CanvasCc::CanvasCC::Models::Assignment.new
       assignment.identifier = Senkyoshi.create_random_hex
       assignment.assignment_group_identifier_ref = @group_id
-      # assignment.submission_types << "online_quiz"
       assignment.title = @title
       assignment.position = 1
       assignment.points_possible = @points_possible
-      assignment.workflow_state = @workflow_state
+      assignment.workflow_state = "published"
       assignment.grading_type = "points"
 
       course.assignments << assignment
