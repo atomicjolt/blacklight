@@ -3,6 +3,11 @@ module Senkyoshi
   class OutcomeDefinition
     attr_reader :content_id
 
+    def self.from(xml, category)
+      outcome_definition = OutcomeDefinition.new(category)
+      outcome_definition.iterate_xml(xml)
+    end
+
     def initialize(category)
       @category = category
       @points_possible = 0
@@ -45,11 +50,6 @@ module Senkyoshi
         course = assignment_group.canvas_conversion(course, nil)
       end
       course
-    end
-
-    def self.from_xml(xml, category)
-      outcome_definition = OutcomeDefinition.new(category)
-      outcome_definition.iterate_xml(xml)
     end
   end
 end

@@ -43,7 +43,7 @@ module Senkyoshi
       xml.xpath("//OUTCOMEDEFINITION").map do |outcome_definition|
         category_id = outcome_definition.xpath("CATEGORYID/@value").first.value
         category = @categories[category_id]
-        OutcomeDefinition.from_xml(outcome_definition, category)
+        OutcomeDefinition.from(outcome_definition, category)
       end
     end
 
