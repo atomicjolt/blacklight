@@ -63,10 +63,14 @@ describe Senkyoshi do
       it "should set the values from the pre_data" do
         @assessment.set_assessment_details(@pre_data)
 
-        assert_equal (@assessment.instance_variable_get :@time_limit), @time_limit
-        assert_equal (@assessment.instance_variable_get :@cant_go_back), @true_value
-        assert_equal (@assessment.instance_variable_get :@show_correct_answers), @false_value
-        assert_equal (@assessment.instance_variable_get :@one_question_at_a_time), @true_value
+        assert_equal (@assessment.
+          instance_variable_get :@time_limit), @time_limit
+        assert_equal (@assessment.
+          instance_variable_get :@cant_go_back), @true_value
+        assert_equal (@assessment.
+          instance_variable_get :@show_correct_answers), @false_value
+        assert_equal (@assessment.
+          instance_variable_get :@one_question_at_a_time), @true_value
       end
 
       it "should set the values from the pre_data ip_filter false" do
@@ -87,19 +91,22 @@ describe Senkyoshi do
         @pre_data[:allowed_attempts] = allowed_attempts
         @pre_data[:unlimited_attempts] = @false_value
         @assessment.set_assessment_details(@pre_data)
-        assert_equal (@assessment.instance_variable_get :@allowed_attempts), allowed_attempts
+        assert_equal (@assessment.
+          instance_variable_get :@allowed_attempts), allowed_attempts
       end
 
       it "should set the values from the pre_data allowed_attempts infinite" do
         @assessment.set_assessment_details(@pre_data)
-        assert_equal (@assessment.instance_variable_get :@allowed_attempts), -1
+        assert_equal (@assessment.
+          instance_variable_get :@allowed_attempts), -1
       end
 
       it "should set the values from the pre_data access_code present" do
         access_code = "123456"
         @pre_data[:access_code] = access_code
         @assessment.set_assessment_details(@pre_data)
-        assert_equal (@assessment.instance_variable_get :@access_code), access_code
+        assert_equal (@assessment.
+          instance_variable_get :@access_code), access_code
       end
 
       it "should set the values from the pre_data access_code not present" do
@@ -112,13 +119,15 @@ describe Senkyoshi do
         one_question_at_a_time = "QUESTION_BY_QUESTION"
         @pre_data[:one_question_at_a_time] = one_question_at_a_time
         @assessment.set_assessment_details(@pre_data)
-        assert_equal (@assessment.instance_variable_get :@one_question_at_a_time), @true_value
+        assert_equal (@assessment.
+          instance_variable_get :@one_question_at_a_time), @true_value
       end
 
       it "should set pre_data one_question_at_a_time false" do
         @pre_data[:one_question_at_a_time] = ""
         @assessment.set_assessment_details(@pre_data)
-        assert_equal (@assessment.instance_variable_get :@one_question_at_a_time), @false_value
+        assert_equal (@assessment.
+          instance_variable_get :@one_question_at_a_time), @false_value
       end
     end
 
