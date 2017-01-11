@@ -1,4 +1,5 @@
 require "senkyoshi/models/resource"
+require "active_support/core_ext/string"
 
 module Senkyoshi
   class StaffInfo < Resource
@@ -58,6 +59,10 @@ module Senkyoshi
       body << str if var && !var.empty?
     end
 
+    def humanize(symbol)
+      symbol.to_s.humanize.titleize
+    end
+
     def construct_body(opts)
       body = "<div>"
       append_str body, "<img src=#{opts[:image]}/>", opts[:image]
@@ -65,23 +70,9 @@ module Senkyoshi
       append_str body, "<p>#{opts[:bio]}</p>", opts[:bio]
 
       body << "<ul>"
-      append_str body, "<li>Email: #{opts[:email]}</li>", opts[:email]
-      append_str body, "<li>Phone: #{opts[:phone]}</li>", opts[:phone]
-      append_str(
-        body,
-        "<li>Office Hours: #{opts[:office_hours]}</li>",
-        opts[:office_hours],
-      )
-      append_str(
-        body,
-        "<li>Office Address: #{opts[:office_address]}</li>",
-        opts[:office_address],
-      )
-      append_str(
-        body,
-        "<li>Home Page: #{opts[:home_page]}</li>",
-        opts[:home_page],
-      )
+      [:email, :phone, :office_hours, :office_address, :home_page].each do |key|
+        append_str body, "<li>#{humanize(key)}: #{opts[key]}</li>", opts[key]
+      end
       body << "</ul></div>"
       body
     end
