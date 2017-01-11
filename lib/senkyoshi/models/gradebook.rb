@@ -1,11 +1,14 @@
 require "byebug"
 require "senkyoshi/models/outcome_definition"
+require "senkyoshi/models/resource"
+
 module Senkyoshi
-  class Gradebook
+  class Gradebook < Resource
     attr_accessor(:outcome_definitions)
 
     def iterate_xml(xml_data, _)
-      @outcome_definitions = Gradebook.get_outcome_definitions(xml_data)
+      @categories = Gradebook.get_categories(xml_data)
+      @outcome_definitions = get_outcome_definitions(xml_data)
       self
     end
 
@@ -36,9 +39,12 @@ module Senkyoshi
       end
     end
 
-    def self.get_outcome_definitions(xml)
-      xml.xpath("//OUTCOMEDEFINITION").
-        map { |out| OutcomeDefinition.from_xml(out) }
+    def get_outcome_definitions(xml)
+      xml.xpath("//OUTCOMEDEFINITION").map do |outcome_definition|
+        category_id = outcome_definition.xpath("CATEGORYID/@value").first.value
+        category = @categories[category_id]
+        OutcomeDefinition.from_xml(outcome_definition, category)
+      end
     end
 
     def canvas_conversion(course, _ = nil)
