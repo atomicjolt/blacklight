@@ -46,4 +46,17 @@ describe "Gradebook" do
       assert_equal(result.map(&:class).uniq, [Senkyoshi::OutcomeDefinition])
     end
   end
+
+  it "should implement canvas_conversion" do
+    not_quiz = OutcomeDefinition.new(1, "", nil, nil)
+    quiz = OutcomeDefinition.new(2, "res001", nil, nil)
+
+    subject = Gradebook.new
+    subject.outcome_definitions = [not_quiz, quiz]
+
+    course = CanvasCc::CanvasCC::Models::Course.new
+    subject.canvas_conversion(course)
+    refute(course.assignments.size, 0)
+    # TODO expect changes in course
+  end
 end
