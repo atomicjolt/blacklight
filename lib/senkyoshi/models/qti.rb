@@ -55,7 +55,6 @@ module Senkyoshi
       @allowed_attempts = -1 if pre_data[:unlimited_attempts] == "true"
       @cant_go_back = pre_data[:cant_go_back]
       @show_correct_answers = pre_data[:show_correct_answers]
-      @ip_filter = pre_data[:ip_filter] if pre_data[:ip_filter] != "false"
       if pre_data[:access_code] && !pre_data[:access_code].empty?
         @access_code = pre_data[:access_code]
       end
@@ -103,8 +102,6 @@ module Senkyoshi
           FLAGS/ISBACKTRACKPROHIBITED/@value").first.text,
         show_correct_answers: xml.xpath("/COURSEASSESSMENT/
           FLAGS/SHOWCORRECTANSWER/@value").first.text,
-        ip_filter: xml.xpath("/COURSEASSESSMENT/
-          FLAGS/IP_FILTER/@value").first.text,
       }
     end
 
@@ -135,7 +132,6 @@ module Senkyoshi
       assessment.access_code = @access_code
       assessment.allowed_attempts = @allowed_attempts
       assessment.cant_go_back = @cant_go_back
-      assessment.ip_filter = @ip_filter
       assessment.show_correct_answers = @show_correct_answers
       assessment.one_question_at_a_time = @one_question_at_a_time
       assessment.assignment = assignment

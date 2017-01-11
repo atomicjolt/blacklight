@@ -73,19 +73,6 @@ describe Senkyoshi do
           instance_variable_get :@one_question_at_a_time), @true_value
       end
 
-      it "should set the values from the pre_data ip_filter false" do
-        @pre_data[:ip_filter] = @false_value
-        @assessment.set_assessment_details(@pre_data)
-        assert_nil (@assessment.instance_variable_get :@ip_filter)
-      end
-
-      it "should set the values from the pre_data ip_filter correct" do
-        ip_value = "123.123.123.123"
-        @pre_data[:ip_filter] = ip_value
-        @assessment.set_assessment_details(@pre_data)
-        assert_equal (@assessment.instance_variable_get :@ip_filter), ip_value
-      end
-
       it "should set the values from the pre_data allowed_attempts number" do
         allowed_attempts = "5"
         @pre_data[:allowed_attempts] = allowed_attempts
@@ -156,7 +143,6 @@ describe Senkyoshi do
         assert_equal results[:unlimited_attempts], "false"
         assert_equal results[:cant_go_back], "true"
         assert_equal results[:show_correct_answers], "false"
-        assert_equal results[:ip_filter], "false"
         assert_equal results[:access_code], ""
         assert_equal results[:one_question_at_a_time], "ALL_AT_ONCE"
       end
