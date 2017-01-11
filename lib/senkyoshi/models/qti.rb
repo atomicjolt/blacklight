@@ -30,7 +30,7 @@ module Senkyoshi
     end
 
     def iterate_xml(data, pre_data)
-      @group_name = data.at("bbmd_assessmenttype").text
+      @group_name = pre_data[:category] || data.at("bbmd_assessmenttype").text
       @id = pre_data[:assignment_id] || pre_data[:file_name]
       @title = data.at("assessment").attributes["title"].value
       @points_possible = data.at("qmd_absolutescore_max").text

@@ -42,6 +42,16 @@ describe Senkyoshi do
         assert_includes actual_description, description
         assert_includes actual_description, instructions
       end
+
+      it "should iterate through xml and has category pre_data" do
+        xml = get_fixture_xml "assessment.xml"
+        group_name = "Survey"
+        pre_data = { category: group_name }
+        @assessment = QTI.from(xml.children.first, pre_data)
+        @resources = Senkyoshi::Collection.new
+        assert_equal (@assessment.
+          instance_variable_get :@group_name), group_name
+      end
     end
 
     describe "set_assessment_details" do
