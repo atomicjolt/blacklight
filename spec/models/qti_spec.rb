@@ -44,6 +44,31 @@ describe Senkyoshi do
       end
     end
 
+    describe "set_assessment_details" do
+      it "should set the values from the pre_data" do
+        time_limit = 10
+        true_value = "true"
+        false_value = "false"
+        question_at_a_time = "QUESTION_BY_QUESTION"
+        pre_data = {
+          time_limit: time_limit,
+          allowed_attempts: "",
+          unlimited_attempts: true_value,
+          cant_go_back: true_value,
+          show_correct_answers: false_value,
+          one_question_at_a_time: question_at_a_time,
+        }
+        @assessment.set_assessment_details(pre_data)
+
+        assert_equal (@assessment.instance_variable_get :@time_limit), time_limit
+        assert_equal (@assessment.instance_variable_get :@allowed_attempts), -1
+        assert_equal (@assessment.instance_variable_get :@cant_go_back), true_value
+        assert_equal (@assessment.instance_variable_get :@show_correct_answers), false_value
+        assert_equal (@assessment.instance_variable_get :@one_question_at_a_time), true_value
+
+      end
+    end
+
     describe "get_quiz_pool_items" do
       it "should return an array of quiz items" do
         xml = get_fixture_xml "qti_pool.xml"
@@ -55,6 +80,21 @@ describe Senkyoshi do
         assert_equal (items.map { |i| i[:questions] } - [nil]).count, 1
         assert_equal (items.map { |i| i[:file_name] } - [nil]).count, 1
         assert_equal items.count, 2
+      end
+    end
+
+    describe "get_pre_data" do
+      it "should set the values in the pre_data" do
+        xml = get_fixture_xml "course_assessment.xml"
+        results = @assessment.get_pre_data(xml, {})
+
+        assert_equal results[:original_file_name], "res00048"
+        assert_equal results[:time_limit], "20"
+        assert_equal results[:allowed_attempts], ""
+        assert_equal results[:unlimited_attempts], "false"
+        assert_equal results[:cant_go_back], "true"
+        assert_equal results[:show_correct_answers], "false"
+        assert_equal results[:one_question_at_a_time], "ALL_AT_ONCE"
       end
     end
 
