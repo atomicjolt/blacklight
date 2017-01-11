@@ -8,6 +8,8 @@ module Senkyoshi
   # This class represents a canvas course for which we are uploading data to
   ##
   class CanvasCourse
+    attr_reader :scorm_packages
+
     ##
     # A new canvas course accepts the metadata for a course
     # and the pandarus course resourse

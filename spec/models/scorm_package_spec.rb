@@ -37,7 +37,7 @@ describe "ScormPackage" do
           )
         end
       ensure
-        Senkyoshi::ScormPackage.cleanup # Remove temp files
+        package.cleanup # Remove temp files
       end
     end
   end

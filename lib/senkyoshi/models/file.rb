@@ -4,7 +4,6 @@ require "senkyoshi/exceptions"
 module Senkyoshi
   class SenkyoshiFile < Resource
     attr_accessor(:xid, :location, :path)
-    @@dir = nil
 
     FILE_BLACKLIST = [
       "*.dat",
@@ -28,9 +27,9 @@ module Senkyoshi
     end
 
     def extract_file(entry)
-      @@dir ||= Dir.mktmpdir
+      @dir ||= Dir.mktmpdir
 
-      name = "#{@@dir}/#{entry.name}"
+      name = "#{@dir}/#{entry.name}"
       path = File.dirname(name)
       FileUtils.mkdir_p path unless Dir.exist? path
       entry.extract(name)
@@ -51,8 +50,8 @@ module Senkyoshi
     ##
     # Remove temporary files
     ##
-    def self.cleanup
-      FileUtils.rm_r @@dir unless @@dir.nil?
+    def cleanup
+      FileUtils.rm_r @dir unless @dir.nil?
     end
 
     ##
