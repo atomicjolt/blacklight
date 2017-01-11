@@ -25,6 +25,19 @@ describe "Gradebook" do
       results = @gradebook.get_pre_data(xml, pre_data)
       assert_equal(results.length, count)
     end
+
+    it "should get_pre_data and return an object" do
+      xml = get_fixture_xml "gradebook.xml"
+      pre_data = {}
+
+      results = @gradebook.get_pre_data(xml, pre_data).first
+
+      assert_equal results[:category], "Test"
+      assert_equal results[:points], "50.0"
+      assert_equal results[:content_id], "res00021"
+      assert_equal results[:assignment_id], "res00014"
+      assert_equal results[:due_at], ""
+    end
   end
 
   describe "get_categories" do
