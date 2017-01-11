@@ -26,7 +26,7 @@ module Senkyoshi
       resources.add(Senkyoshi.parse_manifest(file, manifest, resource_xids))
 
       course = create_canvas_course(resources, zip_path)
-      build_file(course, imscc_path)
+      build_file(course, imscc_path, resources)
     end
   end
 
@@ -36,20 +36,19 @@ module Senkyoshi
     raise Exceptions::MissingFileError
   end
 
-  def self.build_file(course, imscc_path)
+  def self.build_file(course, imscc_path, resources)
     folder = imscc_path.split("/").first
     file = CanvasCc::CanvasCC::CartridgeCreator.new(course).create(folder)
     File.rename(file, imscc_path)
-    cleanup
+    cleanup resources
     puts "Created a file #{imscc_path}"
   end
 
   ##
   # Perform any necessary cleanup from creating canvas cartridge
   ##
-  def self.cleanup
-    SenkyoshiFile.cleanup
-    ScormPackage.cleanup
+  def self.cleanup(resources)
+    resources.each(&:cleanup)
   end
 
   def self.create_canvas_course(resources, zip_name)
@@ -66,6 +65,7 @@ module Senkyoshi
     Zip::File.open(blackboard_file_path, "rb") do |bb_zip|
       course = Senkyoshi::CanvasCourse.from_metadata(metadata, bb_zip)
       course.upload_content(canvas_file_path)
+      cleanup course.scorm_packages
     end
   end
 
