@@ -30,7 +30,6 @@ describe Senkyoshi do
         instructions = "<p>Don't forget your virtue</p>"
 
         assert_equal (@question_bank.instance_variable_get :@title), title
-        assert_equal (@question_bank.instance_variable_get :@quiz_type), ""
         assert_equal (@question_bank.
           instance_variable_get :@points_possible), points_possible
         assert_equal (@question_bank.
