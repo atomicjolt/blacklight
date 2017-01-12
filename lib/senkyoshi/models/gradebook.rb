@@ -1,14 +1,13 @@
-require "byebug"
 require "senkyoshi/models/outcome_definition"
 require "senkyoshi/models/resource"
 
 module Senkyoshi
   class Gradebook < Resource
-    attr_accessor(:outcome_definitions, :categories)
+    attr_reader(:outcome_definitions, :categories)
 
-    def initialize
-      @categories = []
-      @outcome_definitions = []
+    def initialize(categories = [], outcome_definitions = [])
+      @categories = categories
+      @outcome_definitions = outcome_definitions
     end
 
     def iterate_xml(xml_data, _)

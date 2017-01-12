@@ -67,33 +67,36 @@ describe "Gradebook" do
     should_not_create_quiz = get_fixture_xml("outcome_definition.xml").
       xpath("./OUTCOMEDEFINITION").first
 
-    subject = Gradebook.new
-    subject.outcome_definitions = [
-      OutcomeDefinition.from(should_create_quiz, "Category One"),
-      OutcomeDefinition.from(should_not_create_quiz, "Category Two"),
-    ]
-
-    subject.categories = {
+    categories = {
       category_1: "Category One",
       category_2: "Category Two",
     }
 
+    outcome_definitions = [
+      OutcomeDefinition.from(should_create_quiz, "Category One"),
+      OutcomeDefinition.from(should_not_create_quiz, "Category Two"),
+    ]
+
+    subject = Gradebook.new(categories, outcome_definitions)
+
     course = CanvasCc::CanvasCC::Models::Course.new
     subject.canvas_conversion(course)
+    result = course.assignment_groups.map(&:title)
+
     assert_equal(course.assignments.size, 1)
     assert_equal(course.assignment_groups.size, 2)
-    result = course.assignment_groups.map(&:title)
     assert_equal(result, ["Category One", "Category Two"])
   end
 
   describe "convert_categories" do
     it "only creates assignment groups once" do
-      subject = Gradebook.new
-      subject.categories = {
+      categories = {
         category_1: "Category One",
         category_1: "Category One",
         category_2: "Category Two",
       }
+
+      subject = Gradebook.new(categories)
 
       course = CanvasCc::CanvasCC::Models::Course.new
       subject.canvas_conversion(course)
