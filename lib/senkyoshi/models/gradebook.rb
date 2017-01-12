@@ -37,20 +37,23 @@ module Senkyoshi
     end
 
     def get_outcome_definitions(xml)
-      xml.xpath("//OUTCOMEDEFINITION").map do |outcome_definition|
-        user_created = outcome_definition.xpath("ISUSERCREATED/@value").first.value
-        if user_created == "true"
-          category_id = outcome_definition.xpath("CATEGORYID/@value").first.value
-          category = @categories[category_id]
-          OutcomeDefinition.from(outcome_definition, category)
-        end
+      xml.xpath("//OUTCOMEDEFINITION").map do |outcome_def|
+        category_id = outcome_def.xpath("CATEGORYID/@value").first.value
+        OutcomeDefinition.from(outcome_def, @categories[category_id])
+      end
+    end
+
+    def convert_categories(course)
+      @categories.each do |category|
+        course.assignment_groups <<
+          AssignmentGroup.create_assignment_group(category.last)
       end
     end
 
     def canvas_conversion(course, _ = nil)
-      # Convert all outcome definitions to assignments
+      convert_categories(course)
       @outcome_definitions.
-        select { |outcome_def| outcome_def.content_id.empty? }.
+        select { |outcome_def| OutcomeDefinition.orphan? outcome_def }.
         each { |outcome_def| outcome_def.canvas_conversion course, _ }
       course
     end

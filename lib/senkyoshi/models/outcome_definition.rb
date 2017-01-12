@@ -1,8 +1,10 @@
+require "senkyoshi/models/resource"
 require "senkyoshi/models/assignment_group"
 
+require "byebug"
 module Senkyoshi
-  class OutcomeDefinition
-    attr_reader :content_id
+  class OutcomeDefinition < Resource
+    attr_reader :content_id, :asidataid
     def self.from(xml, category)
       outcome_definition = OutcomeDefinition.new(category)
       outcome_definition.iterate_xml(xml)
@@ -14,13 +16,23 @@ module Senkyoshi
 
     def iterate_xml(xml)
       @content_id = xml.xpath("./CONTENTID/@value").text
+      @asidataid = xml.xpath("./ASIDATAID/@value").text
       @id = xml.xpath("./@id").text
       @title = xml.xpath("./TITLE/@value").text
       @points_possible = xml.xpath("./POINTSPOSSIBLE/@value").text
       self
     end
 
+    ##
+    # Determine if an outcome definition is linked to any 'CONTENT' or
+    # assignments
+    ##
+    def self.orphan?(outcome_def)
+      outcome_def.content_id.empty? && outcome_def.asidataid.empty?
+    end
+
     def canvas_conversion(course, _)
+
       assignment_group = course.assignment_groups.
         detect { |a| a.title == @category }
       unless assignment_group
