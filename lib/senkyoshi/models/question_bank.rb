@@ -2,6 +2,12 @@ require "senkyoshi/models/qti"
 
 module Senkyoshi
   class QuestionBank < QTI
+    TAGS = {
+      "<p><span size=\"2\" style=\"font-size: small;\">.</span></p>" => "",
+      "<p>.</p>" => "",
+    }.freeze
+    TAGS_RE = Regexp.union(TAGS.keys)
+
     def canvas_conversion(course, resources)
       question_bank = CanvasCc::CanvasCC::Models::QuestionBank.new
       question_bank.identifier = @id
@@ -28,7 +34,7 @@ module Senkyoshi
       question_bank.questions = []
       questions.each do |item|
         question = item.canvas_conversion(question_bank, resources)
-        question.material = clean_up_material(question)
+        question.material = clean_up_material(question.material)
         question_bank.questions << question
       end
       question_bank
@@ -36,11 +42,12 @@ module Senkyoshi
 
     # This is to remove the random extra <p>.</p> included in the
     # description that is just randomly there
-    def clean_up_material(question)
-      tag = "<p><span size=\"2\" style=\"font-size: small;\">.</span></p>"
-      question.material.gsub!(tag, "")
-      question.material.gsub!("<p>.</p>", "")
-      question.material.strip!
+    def clean_up_material(material)
+      if material
+        material = material.gsub(TAGS_RE, TAGS)
+        material = material.strip
+      end
+      material
     end
   end
 end

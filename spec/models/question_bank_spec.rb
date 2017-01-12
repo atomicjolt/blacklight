@@ -68,5 +68,25 @@ describe Senkyoshi do
         assert_equal question_bank.questions.count, 12
       end
     end
+
+    describe "clean_up_material" do
+      it "should return a nil because there is not material set" do
+        question = CanvasCc::CanvasCC::Models::Question.
+          create("matching_question")
+        material = @question_bank.clean_up_material(question.material)
+        assert_nil material
+      end
+
+      it "should return a string without a random period" do
+        question_text = "<p>Where is the moon?</p>"
+        tag = "<p><span size=\"2\" style=\"font-size: small;\">.</span></p>"
+        material_text = tag + question_text
+        question = CanvasCc::CanvasCC::Models::Question.
+          create("matching_question")
+        question.material = material_text
+        material = @question_bank.clean_up_material(question.material)
+        assert_equal material, question_text
+      end
+    end
   end
 end
