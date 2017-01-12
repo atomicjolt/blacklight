@@ -82,11 +82,24 @@ describe "Gradebook" do
     subject.canvas_conversion(course)
     assert_equal(course.assignments.size, 1)
     assert_equal(course.assignment_groups.size, 2)
-    assert(
-      course.assignment_groups.detect { |g| g.title == "Category One" },
-    )
-    assert(
-      course.assignment_groups.detect { |g| g.title == "Category Two" },
-    )
+    result = course.assignment_groups.map(&:title)
+    assert_equal(result, ["Category One", "Category Two"])
+  end
+
+  describe "convert_categories" do
+    it "only creates assignment groups once" do
+      subject = Gradebook.new
+      subject.categories = {
+        category_1: "Category One",
+        category_1: "Category One",
+        category_2: "Category Two",
+      }
+
+      course = CanvasCc::CanvasCC::Models::Course.new
+      subject.canvas_conversion(course)
+
+      result = course.assignment_groups.map(&:title)
+      assert_equal(result, ["Category One", "Category Two"])
+    end
   end
 end

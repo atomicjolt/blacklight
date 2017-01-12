@@ -6,6 +6,11 @@ module Senkyoshi
   class Gradebook < Resource
     attr_accessor(:outcome_definitions, :categories)
 
+    def initialize
+      @categories = []
+      @outcome_definitions = []
+    end
+
     def iterate_xml(xml_data, _)
       @categories = Gradebook.get_categories(xml_data)
       @outcome_definitions = get_outcome_definitions(xml_data).compact
@@ -45,8 +50,10 @@ module Senkyoshi
 
     def convert_categories(course)
       @categories.each do |category|
-        course.assignment_groups <<
-          AssignmentGroup.create_assignment_group(category.last)
+        if AssignmentGroup.find_group(course, category.last).nil?
+          course.assignment_groups <<
+            AssignmentGroup.create_assignment_group(category.last)
+        end
       end
     end
 

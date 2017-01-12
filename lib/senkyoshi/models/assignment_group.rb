@@ -25,9 +25,13 @@ module Senkyoshi
       group.canvas_conversion
     end
 
-    def self.find_or_create(course, category)
-      assignment_group = course.assignment_groups.
+    def self.find_group(course, category)
+      course.assignment_groups.
         detect { |a| a.title == category }
+    end
+
+    def self.find_or_create(course, category)
+      assignment_group = find_group(course, category)
       unless assignment_group
         assignment_group = AssignmentGroup.create_assignment_group(category)
         course.assignment_groups << assignment_group
