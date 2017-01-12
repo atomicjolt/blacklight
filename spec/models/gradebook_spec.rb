@@ -62,16 +62,31 @@ describe "Gradebook" do
   end
 
   it "should implement canvas_conversion" do
-    # not_quiz = OutcomeDefinition.new("")
-    # quiz = OutcomeDefinition.new("res001")
-    #
-    # subject = Gradebook.new
-    # subject.outcome_definitions = [not_quiz, quiz]
-    # subject.categories = {asdf:"Category Name"}
-    #
-    # course = CanvasCc::CanvasCC::Models::Course.new
-    # subject.canvas_conversion(course)
-    # refute(course.assignments.size, 0)
-    # TODO expect changes in course
+    should_create_quiz = get_fixture_xml("user_created_outcome_definition.xml").
+      xpath("./OUTCOMEDEFINITION").first
+    should_not_create_quiz = get_fixture_xml("outcome_definition.xml").
+      xpath("./OUTCOMEDEFINITION").first
+
+    subject = Gradebook.new
+    subject.outcome_definitions = [
+      OutcomeDefinition.from(should_create_quiz, "Category One"),
+      OutcomeDefinition.from(should_not_create_quiz, "Category Two"),
+    ]
+
+    subject.categories = {
+      category_1: "Category One",
+      category_2: "Category Two",
+    }
+
+    course = CanvasCc::CanvasCC::Models::Course.new
+    subject.canvas_conversion(course)
+    assert_equal(course.assignments.size, 1)
+    assert_equal(course.assignment_groups.size, 2)
+    assert(
+      course.assignment_groups.detect { |g| g.title == "Category One" },
+    )
+    assert(
+      course.assignment_groups.detect { |g| g.title == "Category Two" },
+    )
   end
 end

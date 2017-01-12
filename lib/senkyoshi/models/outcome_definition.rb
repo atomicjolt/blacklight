@@ -34,9 +34,8 @@ module Senkyoshi
         outcome_def.is_user_created
     end
 
-    def canvas_conversion(course, _)
+    def canvas_conversion(course, _ = nil)
       assignment_group = AssignmentGroup.find_or_create(course, @category)
-
       # Create an assignment
       assignment = CanvasCc::CanvasCC::Models::Assignment.new
       assignment.identifier = Senkyoshi.create_random_hex
