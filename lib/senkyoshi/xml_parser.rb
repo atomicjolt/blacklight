@@ -121,7 +121,8 @@ module Senkyoshi
       if PRE_RESOURCE_TYPE[type.to_sym]
         res_class = Senkyoshi.const_get PRE_RESOURCE_TYPE[type.to_sym]
         pre_data[type] ||= []
-        pre_data[type].push(res_class.get_pre_data(xml_data, file))
+        data = res_class.get_pre_data(xml_data, file)
+        pre_data[type].push(data) if data
       end
     end
     pre_data = connect_content(pre_data)
