@@ -109,12 +109,7 @@ module Senkyoshi
     def canvas_conversion(course, resources)
       assessment = CanvasCc::CanvasCC::Models::Assessment.new
       assessment.identifier = @id
-      assignment_group = course.assignment_groups.
-        detect { |a| a.title == @group_name }
-      unless assignment_group
-        assignment_group = AssignmentGroup.create_assignment_group(@group_name)
-        course.assignment_groups << assignment_group
-      end
+      assignment_group = AssignmentGroup.find_or_create(course, @group_name)
       assignment = create_assignment(assignment_group.identifier)
       assignment.quiz_identifier_ref = assessment.identifier
       course.assignments << assignment
