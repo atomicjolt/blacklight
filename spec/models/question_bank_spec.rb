@@ -73,8 +73,8 @@ describe Senkyoshi do
       it "should return a nil because there is not material set" do
         question = CanvasCc::CanvasCC::Models::Question.
           create("matching_question")
-        @question_bank.clean_up_material(question)
-        assert_nil question.material
+        material = @question_bank.clean_up_material(question.material)
+        assert_nil material
       end
 
       it "should return a string without a random period" do
@@ -84,8 +84,8 @@ describe Senkyoshi do
         question = CanvasCc::CanvasCC::Models::Question.
           create("matching_question")
         question.material = material_text
-        @question_bank.clean_up_material(question)
-        assert_equal question.material, question_text
+        material = @question_bank.clean_up_material(question.material)
+        assert_equal material, question_text
       end
     end
   end

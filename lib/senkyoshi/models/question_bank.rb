@@ -28,7 +28,7 @@ module Senkyoshi
       question_bank.questions = []
       questions.each do |item|
         question = item.canvas_conversion(question_bank, resources)
-        clean_up_material(question)
+        question.material = clean_up_material(question.material)
         question_bank.questions << question
       end
       question_bank
@@ -36,13 +36,14 @@ module Senkyoshi
 
     # This is to remove the random extra <p>.</p> included in the
     # description that is just randomly there
-    def clean_up_material(question)
-      if question.material
+    def clean_up_material(material)
+      if material
         tag = "<p><span size=\"2\" style=\"font-size: small;\">.</span></p>"
-        question.material.gsub!(tag, "")
-        question.material.gsub!("<p>.</p>", "")
-        question.material.strip!
+        material.gsub!(tag, "")
+        material.gsub!("<p>.</p>", "")
+        material.strip!
       end
+      material
     end
   end
 end
