@@ -26,10 +26,15 @@ module Senkyoshi
       canvas_file.file_path.split("/").last
     end
 
-    def canvas_conversion(canvas_file = nil)
-      path = canvas_file ? canvas_file.file_path : @linkname
+    def canvas_conversion(resources, canvas_file = nil)
+      path = if canvas_file
+               canvas_file.file_path
+             else
+               resource = resources.detect_xid(@name)
+               resource.path if resource
+             end
       query = "?canvas_download=1&amp;canvas_qs_wrap=1"
-      href = "$IMS_CC_FILEBASE$/#{path}#{query}"
+      href = "#{BASE}/#{path}#{query}"
       %{
         <a
           class="instructure_scribd_file instructure_file_link"
