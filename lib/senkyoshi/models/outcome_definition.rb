@@ -4,7 +4,7 @@ require "senkyoshi/models/assignment_group"
 require "byebug"
 module Senkyoshi
   class OutcomeDefinition < Resource
-    attr_reader :content_id, :asidataid
+    attr_reader :content_id, :asidataid, :is_user_created
     def self.from(xml, category)
       outcome_definition = OutcomeDefinition.new(category)
       outcome_definition.iterate_xml(xml)
@@ -20,6 +20,7 @@ module Senkyoshi
       @id = xml.xpath("./@id").text
       @title = xml.xpath("./TITLE/@value").text
       @points_possible = xml.xpath("./POINTSPOSSIBLE/@value").text
+      @is_user_created = xml.xpath("./ISUSERCREATED/@value").text == "true"
       self
     end
 
@@ -28,11 +29,12 @@ module Senkyoshi
     # assignments
     ##
     def self.orphan?(outcome_def)
-      outcome_def.content_id.empty? && outcome_def.asidataid.empty?
+      outcome_def.content_id.empty? &&
+        outcome_def.asidataid.empty? &&
+        outcome_def.is_user_created
     end
 
     def canvas_conversion(course, _)
-
       assignment_group = course.assignment_groups.
         detect { |a| a.title == @category }
       unless assignment_group
