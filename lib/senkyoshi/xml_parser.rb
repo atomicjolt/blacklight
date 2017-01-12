@@ -130,13 +130,16 @@ module Senkyoshi
 
   def self.connect_content(pre_data)
     pre_data["content"].each do |content|
-      gradebook = pre_data["gradebook"].first.
-        detect { |g| g[:content_id] == content[:file_name] }
-      content.merge!(gradebook) if gradebook
-
-      course_assessment = pre_data["courseassessment"].
-        detect { |ca| ca[:original_file_name] == content[:assignment_id] }
-      content.merge!(course_assessment) if course_assessment
+      if pre_data["gradebook"]
+        gradebook = pre_data["gradebook"].first.
+          detect { |g| g[:content_id] == content[:file_name] }
+        content.merge!(gradebook) if gradebook
+      end
+      if pre_data["courseassessment"]
+        course_assessment = pre_data["courseassessment"].
+          detect { |ca| ca[:original_file_name] == content[:assignment_id] }
+        content.merge!(course_assessment) if course_assessment
+      end
     end
     pre_data["content"]
   end
