@@ -11,6 +11,7 @@ describe Senkyoshi do
     before do
       @survey = Survey.new
       @resources = Senkyoshi::Collection.new
+      @assignment_group_id = 5
     end
 
     describe "initialize" do
@@ -70,7 +71,7 @@ describe Senkyoshi do
         description = "<p>Do this test with honor</p>"
         instructions = "<p>Don't forget your virtue</p>"
 
-        assignment = @survey.create_assignment
+        assignment = @survey.create_assignment(@assignment_group_id)
         assessment =
           @survey.setup_assessment(assessment, assignment, @resources)
         assert_equal assessment.title, title
@@ -93,14 +94,14 @@ describe Senkyoshi do
     end
 
     describe "create_assignment_group" do
-      it "should create assignment groups in course" do
+      it "should create assignment group" do
         xml = get_fixture_xml "survey.xml"
         pre_data = {}
+        group_name = "fake_group"
         @survey = @survey.iterate_xml(xml.children.first, pre_data)
-        course = CanvasCc::CanvasCC::Models::Course.new
 
-        course = @survey.create_assignment_group(course, @resources)
-        assert_equal course.assignment_groups.count, 1
+        result = AssignmentGroup.create_assignment_group(group_name)
+        assert_equal(result.class, CanvasCc::CanvasCC::Models::AssignmentGroup)
       end
     end
 
@@ -111,13 +112,13 @@ describe Senkyoshi do
         quiz_type = "graded_survey"
         @survey = @survey.iterate_xml(xml.children.first, pre_data)
 
-        assignment = @survey.create_assignment
+        assignment = @survey.create_assignment(@assignment_group_id)
         assert_equal assignment.title,
                      (@survey.instance_variable_get :@title)
         assert_equal quiz_type,
                      (@survey.instance_variable_get :@quiz_type)
         assert_equal assignment.assignment_group_identifier_ref,
-                     (@survey.instance_variable_get :@group_id)
+                     @assignment_group_id
         assert_equal assignment.workflow_state,
                      (@survey.instance_variable_get :@workflow_state)
         assert_equal assignment.points_possible,

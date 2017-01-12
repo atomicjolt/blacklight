@@ -4,7 +4,7 @@ require "senkyoshi/models/resource"
 
 module Senkyoshi
   class Gradebook < Resource
-    attr_accessor(:outcome_definitions)
+    attr_accessor(:outcome_definitions, :categories)
 
     def iterate_xml(xml_data, _)
       @categories = Gradebook.get_categories(xml_data)

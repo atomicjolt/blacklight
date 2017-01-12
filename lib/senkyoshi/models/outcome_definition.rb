@@ -4,7 +4,7 @@ require "senkyoshi/models/assignment_group"
 require "byebug"
 module Senkyoshi
   class OutcomeDefinition < Resource
-    attr_reader :content_id, :asidataid, :is_user_created
+    attr_reader :id, :content_id, :asidataid, :is_user_created
     def self.from(xml, category)
       outcome_definition = OutcomeDefinition.new(category)
       outcome_definition.iterate_xml(xml)
