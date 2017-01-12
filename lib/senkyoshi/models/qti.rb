@@ -85,7 +85,7 @@ module Senkyoshi
       end
     end
 
-    def get_pre_data(xml, _)
+    def self.get_pre_data(xml, _)
       {
         original_file_name: xml.xpath("/COURSEASSESSMENT/
           ASMTID/@value").first.text,
