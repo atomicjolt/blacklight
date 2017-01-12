@@ -1,7 +1,6 @@
 require "senkyoshi/models/resource"
 require "senkyoshi/models/assignment_group"
 
-require "byebug"
 module Senkyoshi
   class OutcomeDefinition < Resource
     attr_reader :id, :content_id, :asidataid, :is_user_created
@@ -25,8 +24,8 @@ module Senkyoshi
     end
 
     ##
-    # Determine if an outcome definition is linked to any 'CONTENT' or
-    # assignments
+    # Determine if an outcome definition is user created and linked to any
+    # other 'CONTENT' or assignments
     ##
     def self.orphan?(outcome_def)
       outcome_def.content_id.empty? &&
@@ -36,7 +35,6 @@ module Senkyoshi
 
     def canvas_conversion(course, _ = nil)
       assignment_group = AssignmentGroup.find_or_create(course, @category)
-      # Create an assignment
       assignment = CanvasCc::CanvasCC::Models::Assignment.new
       assignment.identifier = Senkyoshi.create_random_hex
       assignment.assignment_group_identifier_ref = assignment_group.identifier

@@ -146,7 +146,7 @@ describe Senkyoshi do
     describe "get_pre_data" do
       it "should set the values in the pre_data" do
         xml = get_fixture_xml "course_assessment.xml"
-        results = @assessment.class.get_pre_data(xml, {})
+        results = QTI.get_pre_data(xml, {})
 
         assert_equal results[:original_file_name], "res00048"
         assert_equal results[:time_limit], "20"
@@ -288,7 +288,7 @@ describe Senkyoshi do
 
     describe "create_assignment_group" do
       it "should create assignment group" do
-        result = AssignmentGroup.create_assignment_group("fake_group_name")
+        result = AssignmentGroup.create_assignment_group(@assignment_group_id)
         assert_equal result.class, CanvasCc::CanvasCC::Models::AssignmentGroup
       end
     end
@@ -303,6 +303,8 @@ describe Senkyoshi do
         assert_equal (@assessment.instance_variable_get :@quiz_type), quiz_type
         assert_equal assignment.workflow_state,
                      (@assessment.instance_variable_get :@workflow_state)
+        assert_equal assignment.assignment_group_identifier_ref,
+                     @assignment_group_id
         assert_equal assignment.points_possible,
                      (@assessment.instance_variable_get :@points_possible)
         assert_equal assignment.position, 1

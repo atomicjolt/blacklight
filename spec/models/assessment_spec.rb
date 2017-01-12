@@ -98,7 +98,7 @@ describe Senkyoshi do
         pre_data = {}
         @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
 
-        result = AssignmentGroup.create_assignment_group("fake_group_name_123")
+        result = AssignmentGroup.create_assignment_group(@assignment_group_id)
         assert_equal result.class, CanvasCc::CanvasCC::Models::AssignmentGroup
       end
     end
