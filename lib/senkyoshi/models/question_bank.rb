@@ -2,6 +2,12 @@ require "senkyoshi/models/qti"
 
 module Senkyoshi
   class QuestionBank < QTI
+    TAGS = {
+      "<p><span size=\"2\" style=\"font-size: small;\">.</span></p>" => "",
+      "<p>.</p>" => "",
+    }.freeze
+    TAGS_RE = Regexp.union(TAGS.keys)
+
     def canvas_conversion(course, resources)
       question_bank = CanvasCc::CanvasCC::Models::QuestionBank.new
       question_bank.identifier = @id
@@ -38,10 +44,8 @@ module Senkyoshi
     # description that is just randomly there
     def clean_up_material(material)
       if material
-        tag = "<p><span size=\"2\" style=\"font-size: small;\">.</span></p>"
-        material.gsub!(tag, "")
-        material.gsub!("<p>.</p>", "")
-        material.strip!
+        material = material.gsub(TAGS_RE, TAGS)
+        material = material.strip
       end
       material
     end
