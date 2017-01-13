@@ -13,6 +13,7 @@ describe Senkyoshi do
       pre_data = {}
       @assessment = QTI.from(xml.children.first, pre_data)
       @resources = Senkyoshi::Collection.new
+      @assignment_group_id = "fake_assn_id"
     end
 
     describe "initialize" do
@@ -145,7 +146,7 @@ describe Senkyoshi do
     describe "get_pre_data" do
       it "should set the values in the pre_data" do
         xml = get_fixture_xml "course_assessment.xml"
-        results = @assessment.get_pre_data(xml, {})
+        results = QTI.get_pre_data(xml, {})
 
         assert_equal results[:original_file_name], "res00048"
         assert_equal results[:time_limit], "20"
@@ -174,7 +175,7 @@ describe Senkyoshi do
         description = "<p>Do this test with honor</p>"
         instructions = "<p>Don't forget your virtue</p>"
 
-        assignment = @assessment.create_assignment
+        assignment = @assessment.create_assignment(@assignment_group_id)
         assessment =
           @assessment.setup_assessment(assessment, assignment, @resources)
         assert_equal assessment.title, title
@@ -188,7 +189,7 @@ describe Senkyoshi do
         empty_quiz = QTI.from(xml.children.first, pre_data)
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
 
-        assignment = empty_quiz.create_assignment
+        assignment = empty_quiz.create_assignment(@assignment_group_id)
         assessment =
           empty_quiz.setup_assessment(assessment, assignment, @resources)
         assert_equal (empty_quiz.instance_variable_get :@items).count, 0
@@ -286,11 +287,9 @@ describe Senkyoshi do
     end
 
     describe "create_assignment_group" do
-      it "should create assignment groups in course" do
-        course = CanvasCc::CanvasCC::Models::Course.new
-
-        course = @assessment.create_assignment_group(course, @resources)
-        assert_equal course.assignment_groups.count, 1
+      it "should create assignment group" do
+        result = AssignmentGroup.create_assignment_group(@assignment_group_id)
+        assert_equal result.class, CanvasCc::CanvasCC::Models::AssignmentGroup
       end
     end
 
@@ -298,14 +297,14 @@ describe Senkyoshi do
       it "should create an assignment" do
         quiz_type = "assignment"
 
-        assignment = @assessment.create_assignment
+        assignment = @assessment.create_assignment(@assignment_group_id)
         assert_equal assignment.title,
                      (@assessment.instance_variable_get :@title)
         assert_equal (@assessment.instance_variable_get :@quiz_type), quiz_type
-        assert_equal assignment.assignment_group_identifier_ref,
-                     (@assessment.instance_variable_get :@group_id)
         assert_equal assignment.workflow_state,
                      (@assessment.instance_variable_get :@workflow_state)
+        assert_equal assignment.assignment_group_identifier_ref,
+                     @assignment_group_id
         assert_equal assignment.points_possible,
                      (@assessment.instance_variable_get :@points_possible)
         assert_equal assignment.position, 1

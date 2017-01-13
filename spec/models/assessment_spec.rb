@@ -11,6 +11,7 @@ describe Senkyoshi do
     before do
       @assessment = Assessment.new
       @resources = Senkyoshi::Collection.new
+      @assignment_group_id = "fake_assn_id_123"
     end
 
     describe "initialize" do
@@ -69,7 +70,7 @@ describe Senkyoshi do
         description = "<p>Do this test with honor</p>"
         instructions = "<p>Don't forget your virtue</p>"
 
-        assignment = @assessment.create_assignment
+        assignment = @assessment.create_assignment(@assignment_group_id)
         assessment =
           @assessment.setup_assessment(assessment, assignment, @resources)
         assert_equal assessment.title, title
@@ -96,10 +97,9 @@ describe Senkyoshi do
         xml = get_fixture_xml "assessment.xml"
         pre_data = {}
         @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
-        course = CanvasCc::CanvasCC::Models::Course.new
 
-        course = @assessment.create_assignment_group(course, @resources)
-        assert_equal course.assignment_groups.count, 1
+        result = AssignmentGroup.create_assignment_group(@assignment_group_id)
+        assert_equal result.class, CanvasCc::CanvasCC::Models::AssignmentGroup
       end
     end
 
@@ -110,12 +110,10 @@ describe Senkyoshi do
         quiz_type = "assignment"
         @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
 
-        assignment = @assessment.create_assignment
+        assignment = @assessment.create_assignment(@assignment_group_id)
         assert_equal assignment.title,
                      (@assessment.instance_variable_get :@title)
         assert_equal (@assessment.instance_variable_get :@quiz_type), quiz_type
-        assert_equal assignment.assignment_group_identifier_ref,
-                     (@assessment.instance_variable_get :@group_id)
         assert_equal assignment.workflow_state,
                      (@assessment.instance_variable_get :@workflow_state)
         assert_equal assignment.points_possible,

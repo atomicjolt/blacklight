@@ -80,7 +80,7 @@ module Senkyoshi
       module_item.canvas_conversion
     end
 
-    def get_pre_data(xml, file_name)
+    def self.get_pre_data(xml, file_name)
       id = xml.xpath("/CONTENT/@id").first.text
       parent_id = xml.xpath("/CONTENT/PARENTID/@value").first.text
       {
