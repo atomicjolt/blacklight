@@ -56,11 +56,11 @@ module Senkyoshi
       end
     end
 
-    def canvas_conversion(course, _ = nil)
+    def canvas_conversion(course, resources = nil)
       convert_categories(course)
       @outcome_definitions.
         select { |outcome_def| OutcomeDefinition.orphan? outcome_def }.
-        each { |outcome_def| outcome_def.canvas_conversion course, _ }
+        each { |outcome_def| outcome_def.canvas_conversion course, resources }
       course
     end
   end

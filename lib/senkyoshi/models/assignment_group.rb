@@ -32,7 +32,7 @@ module Senkyoshi
 
     def self.find_or_create(course, category)
       assignment_group = find_group(course, category)
-      unless assignment_group
+      if !assignment_group
         assignment_group = AssignmentGroup.create_assignment_group(category)
         course.assignment_groups << assignment_group
       end

@@ -3,6 +3,7 @@ require "senkyoshi/models/assignment_group"
 
 module Senkyoshi
   class OutcomeDefinition < Resource
+    include Senkyoshi
     attr_reader :id, :content_id, :asidataid, :is_user_created
     def self.from(xml, category)
       outcome_definition = OutcomeDefinition.new(category)
@@ -19,7 +20,7 @@ module Senkyoshi
       @id = xml.xpath("./@id").text
       @title = xml.xpath("./TITLE/@value").text
       @points_possible = xml.xpath("./POINTSPOSSIBLE/@value").text
-      @is_user_created = xml.xpath("./ISUSERCREATED/@value").text == "true"
+      @is_user_created = true? xml.xpath("./ISUSERCREATED/@value").text
       self
     end
 
