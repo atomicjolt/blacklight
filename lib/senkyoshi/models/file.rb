@@ -32,11 +32,12 @@ module Senkyoshi
       name = "#{@dir}/#{entry.name}"
       path = File.dirname(name)
       FileUtils.mkdir_p path unless Dir.exist? path
+
       begin
         entry.extract(name)
         name
       rescue
-        @dir
+        ""
       end
     end
 

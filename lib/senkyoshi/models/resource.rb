@@ -22,9 +22,11 @@ module Senkyoshi
     def _search_and_replace(resources, node_html, tag, attr)
       node_html.search(tag).each do |element|
         original_src = element[attr]
+
         if original_src
           xid = original_src.split("/").last
           file_resource = resources.detect_xid(xid)
+
           if file_resource
             base = File.file?(file_resource.location) ? FILE_BASE : DIR_BASE
             element[attr] = "#{base}/#{file_resource.path}"
