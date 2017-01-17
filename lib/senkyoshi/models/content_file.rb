@@ -34,7 +34,7 @@ module Senkyoshi
                resource.path if resource
              end
       query = "?canvas_download=1&amp;canvas_qs_wrap=1"
-      href = "#{BASE}/#{path}#{query}"
+      href = "#{FILE_BASE}/#{path}#{query}"
       %{
         <a
           class="instructure_scribd_file instructure_file_link"

@@ -26,7 +26,7 @@ module Senkyoshi
           xid = original_src.split("/").last
           file_resource = resources.detect_xid(xid)
           if file_resource
-            element[attr] = "#{BASE}/#{file_resource.path}"
+            element[attr] = "#{FILE_BASE}/#{file_resource.path}"
           end
         end
       end
