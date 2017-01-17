@@ -21,10 +21,10 @@ module Senkyoshi
       self
     end
 
-    def canvas_conversion(course, _resources = nil)
+    def canvas_conversion(course, resources)
       announcement = CanvasCc::CanvasCC::Models::Announcement.new
       announcement.title = @title
-      announcement.text = @text
+      announcement.text = fix_html(@text, resources)
       announcement.delayed_post = @delayed_post
       announcement.posted_at = @posted_at
       announcement.identifier = @identifier
