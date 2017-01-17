@@ -32,8 +32,12 @@ module Senkyoshi
       name = "#{@dir}/#{entry.name}"
       path = File.dirname(name)
       FileUtils.mkdir_p path unless Dir.exist? path
-      entry.extract(name)
-      name
+      begin
+        entry.extract(name)
+        name
+      rescue
+        @dir
+      end
     end
 
     def canvas_conversion(course, _resources = nil)
