@@ -34,5 +34,7 @@ module Senkyoshi
         end
       end
     end
+
+    def self.get_pre_data(_xml, _file_name); end
   end
 end

@@ -26,16 +26,16 @@ describe Senkyoshi do
 
     describe "canvas_conversion" do
       it "should create a canvas assignment_group" do
-        course = CanvasCc::CanvasCC::Models::Course.new
-        @assignment_group.canvas_conversion(course)
-        assert_equal course.assignment_groups.count, 1
+        result = @assignment_group.canvas_conversion
+        assert_equal(
+          result.class, CanvasCc::CanvasCC::Models::AssignmentGroup
+        )
       end
 
       it "should create a canvas assignment_group with correct details" do
-        course = CanvasCc::CanvasCC::Models::Course.new
-        @assignment_group.canvas_conversion(course)
-        assert_equal course.assignment_groups.first.title, @title
-        assert_equal course.assignment_groups.first.identifier, @group_id
+        result = @assignment_group.canvas_conversion
+        assert_equal result.title, @title
+        assert_equal result.identifier, @group_id
       end
     end
   end
