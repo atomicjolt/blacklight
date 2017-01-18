@@ -38,8 +38,7 @@ describe "Content" do
     it "should return an object with values" do
       xml = get_fixture_xml "content.xml"
       file_name = "res00023"
-      content = Content.new
-      result = content.get_pre_data(xml, file_name)
+      result = Content.get_pre_data(xml, file_name)
 
       id = xml.xpath("/CONTENT/@id").first.text
       parent_id = xml.xpath("/CONTENT/PARENTID/@value").first.text

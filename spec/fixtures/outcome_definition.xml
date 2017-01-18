@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OUTCOMEDEFINITION id="_3006852_1">
+  <CATEGORYID value="_2855033_1" />
+  <SCALEID value="_1631360_1" />
+  <SECONDARY_SCALEID value="" />
+  <CONTENTID value="res00021" />
+  <GRADING_PERIODID value="" />
+  <ASIDATAID value="res00014" />
+  <DATES>
+    <CREATED value="2016-12-01 15:17:10 EST" />
+    <UPDATED value="2016-12-01 15:17:10 EST" />
+    <DUE value="" />
+  </DATES>
+  <TITLE value="All the things" />
+  <DISPLAY_TITLE value="" />
+  <POSITION value="3" />
+  <VERSION value="549875116" />
+  <DELETED value="false" />
+  <EXTERNALREF value="" />
+  <HANDLERURL value="" />
+  <ANALYSISURL value="" />
+  <WEIGHT value="0" />
+  <POINTSPOSSIBLE value="50.0" />
+  <ISVISIBLE value="true" />
+  <VISIBLE_BOOK value="true" />
+  <VISIBLE_ALL_TERMS value="false" />
+  <SHOW_STATS_TO_STUDENT value="false" />
+  <HIDEATTEMPT value="false" />
+  <AGGREGATIONMODEL value="Last" />
+  <SCORE_PROVIDER_HANDLE value="resource/x-bb-assessment" />
+  <SINGLE_ATTEMPT value="false" />
+  <CALCULATIONTYPE value="NON_CALCULATED" />
+  <ISCALCULATED value="false" />
+  <ISSCORABLE value="true" />
+  <ISUSERCREATED value="false" />
+  <MULTIPLEATTEMPTS value="1" />
+  <ACTIVITY_COUNT_COL_DEFS />
+</OUTCOMEDEFINITION>
