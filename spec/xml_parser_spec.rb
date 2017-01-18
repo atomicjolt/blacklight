@@ -149,11 +149,12 @@ describe Senkyoshi do
         MockZip::MockEntry.new("csfiles/home_dir/test__xid-13_1.jpg"),
         MockZip::MockEntry.new("res/abc/123/test__xid-14_1.jpg"),
         MockZip::MockEntry.new("res/abc/123/test__xid-14_1.jpg.xml"),
+        MockZip::MockEntry.new("res/abc/123/test__xid-15_1.jpg"),
         MockZip::MockEntry.new("test.dat"),
       ]
 
       result = Senkyoshi.iterate_files(MockZip.new(mock_entries))
-      assert_equal(result.size, 3)
+      assert_equal(result.size, 7)# 4 files + 3 directories = 6
       assert_equal(result.first.xid, "xid-12_1")
       assert_includes(
         result.first.location,

@@ -18,6 +18,8 @@ describe Senkyoshi do
     end
 
     describe "fix_html" do
+      # will set to directory base because files don't actually exist
+      base = "%24CANVAS_COURSE_REFERENCE%24/files/folder"
       before do
         path = "fake/path/to/image123__xid-123_1.jpg"
         entry = MockZip::MockEntry.new(path)
@@ -43,7 +45,7 @@ describe Senkyoshi do
 
         results = @resource.fix_html(@contents, @resources)
 
-        expected_results = "%24IMS-CC-FILEBASE%24/fake/path/to/image123.jpg"
+        expected_results = "#{base}/fake/path/to/image123.jpg"
         assert_includes(results, expected_results)
       end
 
@@ -51,8 +53,8 @@ describe Senkyoshi do
         @resources.add([@file1, @file2])
 
         results = @resource.fix_html(@contents, @resources)
-        correct_result_one = "%24IMS-CC-FILEBASE%24/fake/path/to/image123.jpg"
-        correct_result_two = "%24IMS-CC-FILEBASE%24/fake/path/to/image456.jpg"
+        correct_result_one = "#{base}/fake/path/to/image123.jpg"
+        correct_result_two = "#{base}/fake/path/to/image456.jpg"
 
         assert_includes(results, correct_result_one)
         assert_includes(results, correct_result_two)
@@ -77,8 +79,8 @@ describe Senkyoshi do
 
         results = @resource.fix_html(@contents, @resources)
 
-        href = "%24IMS-CC-FILEBASE%24/fake/path/to/pdf789.pdf"
-        src = "%24IMS-CC-FILEBASE%24/fake/path/to/image987.jpg"
+        href = "#{base}/fake/path/to/pdf789.pdf"
+        src = "#{base}/fake/path/to/image987.jpg"
 
         assert_includes(results, href)
         assert_includes(results, src)
