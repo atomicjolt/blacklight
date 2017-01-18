@@ -18,10 +18,6 @@ module Senkyoshi
         Senkyoshi.create_random_hex
     end
 
-    def strip_xid(name)
-      name.gsub(/__xid-[0-9]+_[0-9]+/, "")
-    end
-
     def matches_xid?(xid)
       @xid == xid
     end

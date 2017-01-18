@@ -598,6 +598,11 @@ Performance/StringReplacement:
   Reference: 'https://github.com/JuanitoFatas/fast-ruby#stringgsub-vs-stringtr-code'
   Enabled: false
 
+Style/SafeNavigation:
+  Description: 'This cop transforms usages of a method call safeguarded by a non `nil` check for the variable whose method is being called to safe navigation (`&.`).'
+  StyleGuide: 'http://www.rubydoc.info/gems/rubocop/0.43.0/RuboCop/Cop/Style/SafeNavigation'
+  Enabled: false
+
 # Rails
 
 Rails/ActionFilter:
