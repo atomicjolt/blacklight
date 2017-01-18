@@ -154,7 +154,7 @@ describe Senkyoshi do
       ]
 
       result = Senkyoshi.iterate_files(MockZip.new(mock_entries))
-      assert_equal(result.size, 7)# 4 files + 3 directories = 6
+      assert_equal(result.size, 7)# 4 files + 3 directories = 7
       assert_equal(result.first.xid, "xid-12_1")
       assert_includes(
         result.first.location,

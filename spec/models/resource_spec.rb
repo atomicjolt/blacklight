@@ -37,6 +37,15 @@ describe Senkyoshi do
         entry = MockZip::MockEntry.new(path)
         @file4 = Senkyoshi::SenkyoshiFile.new(entry)
 
+        path = "fake/path/to/directory__xid-345_1"
+        entry = MockZip::MockEntry.new(path)
+        @file5 = Senkyoshi::SenkyoshiFile.new(entry)
+
+        path = "file1__xid-567_1.txt"
+        #path = "file1__xid-567_1.txt"
+        entry = MockZip::MockEntry.new(path)
+        @file6 = Senkyoshi::SenkyoshiFile.new(entry)
+
         @resources = Senkyoshi::Collection.new
       end
 
@@ -84,6 +93,30 @@ describe Senkyoshi do
 
         assert_includes(results, href)
         assert_includes(results, src)
+      end
+
+      it "fixes the src attribute for directory links" do
+        @contents = get_fixture("embedded_links.txt") do |file|
+          CGI.unescapeHTML(file.read)
+        end
+        @resources.add([@file5])
+
+        results = @resource.fix_html(@contents, @resources)
+
+        expected_results = "#{base}/fake/path/to/directory"
+        assert_includes(results, expected_results)
+      end
+
+      it "fixes the src attribute for link to actual file" do
+        @contents = get_fixture("embedded_links.txt") do |file|
+          CGI.unescapeHTML(file.read)
+        end
+        @resources.add([@file6])
+        @resources.resources.first.location = "#{Dir.pwd}/spec/fixtures/file1__xid-567_1.txt"
+        results = @resource.fix_html(@contents, @resources)
+
+        expected_results = "%24IMS-CC-FILEBASE%24/file1.txt"
+        assert_includes(results, expected_results)
       end
     end
 
