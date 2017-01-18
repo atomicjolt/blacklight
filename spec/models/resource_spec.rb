@@ -42,7 +42,6 @@ describe Senkyoshi do
         @file5 = Senkyoshi::SenkyoshiFile.new(entry)
 
         path = "file1__xid-567_1.txt"
-        #path = "file1__xid-567_1.txt"
         entry = MockZip::MockEntry.new(path)
         @file6 = Senkyoshi::SenkyoshiFile.new(entry)
 
@@ -112,7 +111,8 @@ describe Senkyoshi do
           CGI.unescapeHTML(file.read)
         end
         @resources.add([@file6])
-        @resources.resources.first.location = "#{Dir.pwd}/spec/fixtures/file1__xid-567_1.txt"
+        dir = "#{Dir.pwd}/spec/fixtures/file1__xid-567_1.txt"
+        @resources.resources.first.location = dir
         results = @resource.fix_html(@contents, @resources)
 
         expected_results = "%24IMS-CC-FILEBASE%24/file1.txt"
