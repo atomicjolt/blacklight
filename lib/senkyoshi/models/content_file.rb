@@ -27,12 +27,12 @@ module Senkyoshi
     end
 
     def canvas_conversion(resources, canvas_file = nil)
-      path = if canvas_file
-               canvas_file.file_path
-             else
-               resource = resources.detect_xid(@name)
-               resource.path if resource
-             end
+      if canvas_file
+        path = canvas_file.file_path
+      else
+        resource = resources.detect_xid(@name)
+        path = resource.path if resource
+      end
       query = "?canvas_download=1&amp;canvas_qs_wrap=1"
       href = "#{FILE_BASE}/#{path}#{query}"
       %{

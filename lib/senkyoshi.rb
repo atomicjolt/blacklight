@@ -56,7 +56,7 @@ module Senkyoshi
     course = CanvasCc::CanvasCC::Models::Course.new
     course.course_code = zip_name
     resources.each do |resource|
-      # Skips resources that are files.
+      # Skips resources that are directories.
       next if resource.respond_to?(:location) && !File.file?(resource.location)
 
       course = resource.canvas_conversion(course, resources)
