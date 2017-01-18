@@ -14,8 +14,8 @@ describe "Rule" do
     assert_equal result.title, "Rule 1"
     assert_equal result.content_id, "res00223"
     assert_equal result.criteria_list.size, 2
-    assert_equal result.criteria_list.first.class.name, "GradeCompletedCriteria"
-    assert_equal result.criteria_list[1].class.name, "ContentReviewedCriteria"
+    assert_equal result.criteria_list.first.class, GradeCompletedCriteria
+    assert_equal result.criteria_list[1].class, ContentReviewedCriteria
   end
 
 
