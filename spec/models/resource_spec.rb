@@ -35,7 +35,7 @@ describe Senkyoshi do
         entry = MockZip::MockEntry.new(path)
         @file4 = Senkyoshi::SenkyoshiFile.new(entry)
 
-        path = "csfiles/fake/path/to/directory__xid-789_1/fake_file__xid-001_1.bleh"
+        path = "csfiles/fake/path/to/directory__xid-789_1/file__xid-001_1.bleh"
         entry = MockZip::MockEntry.new(path)
         @file5 = Senkyoshi::SenkyoshiFile.new(entry)
 
