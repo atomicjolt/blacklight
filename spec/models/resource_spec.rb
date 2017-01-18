@@ -35,6 +35,10 @@ describe Senkyoshi do
         entry = MockZip::MockEntry.new(path)
         @file4 = Senkyoshi::SenkyoshiFile.new(entry)
 
+        path = "csfiles/fake/path/to/directory__xid-789_1/fake_file__xid-001_1.bleh"
+        entry = MockZip::MockEntry.new(path)
+        @file5 = Senkyoshi::SenkyoshiFile.new(entry)
+
         @resources = Senkyoshi::Collection.new
       end
 
@@ -82,6 +86,20 @@ describe Senkyoshi do
 
         assert_includes(results, href)
         assert_includes(results, src)
+      end
+
+      it "fixes href for links to directories" do
+        @contents = get_fixture("embedded_directory_link.txt") do |file|
+          CGI.unescapeHTML(file.read)
+        end
+
+        @resources.add([@file5])
+
+        results = @resource.fix_html(@contents, @resources)
+
+        base = "%24CANVAS_COURSE_REFERENCE%24/files/folder/"
+        href = "#{base}csfiles/fake/path/to/directory"
+        assert_includes(results, href)
       end
     end
 
