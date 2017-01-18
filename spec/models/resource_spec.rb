@@ -18,6 +18,8 @@ describe Senkyoshi do
     end
 
     describe "fix_html" do
+      # will set to directory base because files don't actually exist
+      base = "%24CANVAS_COURSE_REFERENCE%24/files/folder"
       before do
         path = "fake/path/to/image123__xid-123_1.jpg"
         entry = MockZip::MockEntry.new(path)
@@ -35,6 +37,14 @@ describe Senkyoshi do
         entry = MockZip::MockEntry.new(path)
         @file4 = Senkyoshi::SenkyoshiFile.new(entry)
 
+        path = "fake/path/to/directory__xid-345_1"
+        entry = MockZip::MockEntry.new(path)
+        @file5 = Senkyoshi::SenkyoshiFile.new(entry)
+
+        path = "file1__xid-567_1.txt"
+        entry = MockZip::MockEntry.new(path)
+        @file6 = Senkyoshi::SenkyoshiFile.new(entry)
+
         @resources = Senkyoshi::Collection.new
       end
 
@@ -43,7 +53,7 @@ describe Senkyoshi do
 
         results = @resource.fix_html(@contents, @resources)
 
-        expected_results = "%24IMS-CC-FILEBASE%24/fake/path/to/image123.jpg"
+        expected_results = "#{base}/fake/path/to/image123.jpg"
         assert_includes(results, expected_results)
       end
 
@@ -51,8 +61,8 @@ describe Senkyoshi do
         @resources.add([@file1, @file2])
 
         results = @resource.fix_html(@contents, @resources)
-        correct_result_one = "%24IMS-CC-FILEBASE%24/fake/path/to/image123.jpg"
-        correct_result_two = "%24IMS-CC-FILEBASE%24/fake/path/to/image456.jpg"
+        correct_result_one = "#{base}/fake/path/to/image123.jpg"
+        correct_result_two = "#{base}/fake/path/to/image456.jpg"
 
         assert_includes(results, correct_result_one)
         assert_includes(results, correct_result_two)
@@ -77,11 +87,36 @@ describe Senkyoshi do
 
         results = @resource.fix_html(@contents, @resources)
 
-        href = "%24IMS-CC-FILEBASE%24/fake/path/to/pdf789.pdf"
-        src = "%24IMS-CC-FILEBASE%24/fake/path/to/image987.jpg"
+        href = "#{base}/fake/path/to/pdf789.pdf"
+        src = "#{base}/fake/path/to/image987.jpg"
 
         assert_includes(results, href)
         assert_includes(results, src)
+      end
+
+      it "fixes the src attribute for directory links" do
+        @contents = get_fixture("embedded_links.txt") do |file|
+          CGI.unescapeHTML(file.read)
+        end
+        @resources.add([@file5])
+
+        results = @resource.fix_html(@contents, @resources)
+
+        expected_results = "#{base}/fake/path/to/directory"
+        assert_includes(results, expected_results)
+      end
+
+      it "fixes the src attribute for link to actual file" do
+        @contents = get_fixture("embedded_links.txt") do |file|
+          CGI.unescapeHTML(file.read)
+        end
+        @resources.add([@file6])
+        dir = "#{Dir.pwd}/spec/fixtures/file1__xid-567_1.txt"
+        @resources.resources.first.location = dir
+        results = @resource.fix_html(@contents, @resources)
+
+        expected_results = "%24IMS-CC-FILEBASE%24/file1.txt"
+        assert_includes(results, expected_results)
       end
     end
 

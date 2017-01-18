@@ -12,7 +12,8 @@ require "zip"
 require "senkyoshi/exceptions"
 
 module Senkyoshi
-  BASE = "$IMS-CC-FILEBASE$".freeze
+  FILE_BASE = "$IMS-CC-FILEBASE$".freeze
+  DIR_BASE = "$CANVAS_COURSE_REFERENCE$/files/folder".freeze
 
   def self.parse(zip_path, imscc_path)
     Zip::File.open(zip_path) do |file|
@@ -55,6 +56,9 @@ module Senkyoshi
     course = CanvasCc::CanvasCC::Models::Course.new
     course.course_code = zip_name
     resources.each do |resource|
+      # Skips resources that are directories.
+      next if resource.respond_to?(:location) && !File.file?(resource.location)
+
       course = resource.canvas_conversion(course, resources)
     end
     course

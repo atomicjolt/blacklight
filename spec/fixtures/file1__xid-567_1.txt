@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONTENT id="_10768084_1"><TITLE value="FileDirectoryLink"/><TITLECOLOR
+   value="#000000"/><BODY><TEXT>&lt;p&gt;&lt;a alt="" target="_blank" href="/bbcswebdav/xid-345_1"&gt;Link to directory&lt;/a&gt; &lt;/p&gt;&#xd;
+&lt;br /&gt;</TEXT>

@@ -184,10 +184,18 @@ module Senkyoshi
 
     scorm_paths = ScormPackage.find_scorm_paths(zipfile)
 
-    files.select do |file|
+    resources = files.select do |file|
       SenkyoshiFile.valid_file?(entry_names, scorm_paths, file)
     end.
       map { |file| SenkyoshiFile.new(file) }
+
+    resources += dir_names.map do |dir_name|
+      zip = Zip::Entry.new
+      zip.name = dir_name
+      SenkyoshiFile.new(zip)
+    end
+
+    resources
   end
 
   ##
