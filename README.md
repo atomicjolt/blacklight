@@ -63,7 +63,7 @@ This will take all your files in your source folder and convert them to your out
 
 Run converting files in parallel:
 ```sh
-rake senkyoshi:imscc -m
+time rake senkyoshi:imscc -m
 ```
 
 Delete entire outputs folder:
