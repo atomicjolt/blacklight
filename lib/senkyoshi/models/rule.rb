@@ -2,6 +2,7 @@ require "senkyoshi/models/grade_completed_criteria"
 require "senkyoshi/models/content_reviewed_criteria"
 require "senkyoshi/models/date_range_criteria"
 require "senkyoshi/models/grade_range_criteria"
+require "senkyoshi/models/grade_range_percent_criteria"
 require "senkyoshi/models/resource"
 
 module Senkyoshi
@@ -13,6 +14,7 @@ module Senkyoshi
       content_reviewed_criteria: ContentReviewedCriteria,
       date_range_criteria: DateRangeCriteria,
       grade_range_criteria: GradeRangeCriteria,
+      grade_range_percent_criteria: GradeRangePercentCriteria,
     }.freeze
 
     def initialize
