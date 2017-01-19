@@ -20,7 +20,7 @@ module Senkyoshi
       @id = xml.xpath("./@id").text
       @title = xml.xpath("./TITLE/@value").text
       @points_possible = xml.xpath("./POINTSPOSSIBLE/@value").text
-      @is_user_created = true? xml.xpath("./ISUSERCREATED/@value").text
+      @is_user_created = Senkyoshi.true? xml.xpath("./ISUSERCREATED/@value").text
       self
     end
 

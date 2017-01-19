@@ -24,7 +24,6 @@ module Senkyoshi
         map(&:xid).
         select { |r| r.include?("xid-") }
       resources.add(Senkyoshi.parse_manifest(file, manifest, resource_xids))
-
       course = create_canvas_course(resources, zip_path)
       build_file(course, imscc_path, resources)
     end
@@ -69,7 +68,7 @@ module Senkyoshi
     end
   end
 
-  def true?(obj)
+  def self.true?(obj)
     obj.to_s == "true"
   end
 end

@@ -63,10 +63,10 @@ module Senkyoshi
     end
 
     def _component_label(node)
-      visible = true?(node.search("vislableToStudents/@value").to_s)
+      visible = Senkyoshi.true?(node.search("vislableToStudents/@value").to_s)
       if visible
         component_label = node.search("componentLabel/@value").to_s
-        overridden = true?(node.search("labelOverridden/@value").to_s)
+        overridden = Senkyoshi.true?(node.search("labelOverridden/@value").to_s)
         if overridden
           component_label
         else
