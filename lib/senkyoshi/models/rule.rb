@@ -2,9 +2,10 @@ require "senkyoshi/models/grade_completed_criteria"
 require "senkyoshi/models/content_reviewed_criteria"
 require "senkyoshi/models/date_range_criteria"
 require "senkyoshi/models/grade_range_criteria"
+require "senkyoshi/models/resource"
 
 module Senkyoshi
-  class Rule
+  class Rule < Resource
     attr_reader(:title, :content_id, :criteria_list, :id)
 
     CRITERIA_MAP = {
