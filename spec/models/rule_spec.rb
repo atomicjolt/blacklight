@@ -18,6 +18,8 @@ describe "Rule" do
     assert_equal result.criteria_list[1].class, ContentReviewedCriteria
   end
 
+  it "implements canvas_conversion" do
+  end
 
   # it "should add module prerequisites" do
   # end
