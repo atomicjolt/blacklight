@@ -1,5 +1,8 @@
+require "senkyoshi"
+
 module Senkyoshi
   class RuleCriteria
+    include Senkyoshi
     attr_reader(:id, :negated)
 
     def initialize(id, negated)

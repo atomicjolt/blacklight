@@ -11,9 +11,13 @@ module Senkyoshi
 
     def self.from_xml(xml)
       id = RuleCriteria.get_id xml
-      negated = true? RuleCriteria.get_negated xml
+      negated = Senkyoshi.true? RuleCriteria.get_negated(xml)
       outcome_def_id = xml.xpath("./REVIEWED_CONTENT_ID/@value").text
       ContentReviewedCriteria.new(id, outcome_def_id, negated)
+    end
+
+    def canvas_conversion(course, _resources = nil)
+      course
     end
   end
 end

@@ -1,6 +1,7 @@
-require "byebug"
 require "senkyoshi/models/grade_completed_criteria"
 require "senkyoshi/models/content_reviewed_criteria"
+require "senkyoshi/models/date_range_criteria"
+require "senkyoshi/models/grade_range_criteria"
 
 module Senkyoshi
   class Rule
@@ -9,6 +10,8 @@ module Senkyoshi
     CRITERIA_MAP = {
       grade_completed_criteria: GradeCompletedCriteria,
       content_reviewed_criteria: ContentReviewedCriteria,
+      date_range_criteria: DateRangeCriteria,
+      grade_range_criteria: GradeRangeCriteria,
     }.freeze
 
     def initialize
@@ -30,7 +33,7 @@ module Senkyoshi
       self
     end
 
-    def canvas_conversion(course, resources)
+    def canvas_conversion(course, _resources)
       course
     end
   end
