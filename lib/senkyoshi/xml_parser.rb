@@ -29,6 +29,7 @@ require "senkyoshi/models/blog"
 require "senkyoshi/models/content"
 require "senkyoshi/models/content_file"
 require "senkyoshi/models/course"
+require "senkyoshi/models/course_toc"
 require "senkyoshi/models/file"
 require "senkyoshi/models/forum"
 require "senkyoshi/models/gradebook"
@@ -60,25 +61,16 @@ module Senkyoshi
   }.freeze
 
   PRE_RESOURCE_TYPE = {
-    content: "Content",
+    coursetoc: "CourseToc",
     gradebook: "Gradebook",
     courseassessment: "QTI",
   }.freeze
 
-  def self.parse_manifest(zip_file, manifest, resource_xids)
-    doc = Nokogiri::XML.parse(manifest)
-    resources = doc.at("resources")
-    organizations = doc.at("organizations")
-    iterate_xml(organizations, resources, zip_file, resource_xids).
-      flatten - ["", nil]
-  end
-
-  def self.iterate_xml(organizations, resources, zip_file, resource_xids)
-    pre_data = pre_iterator(organizations, resources, zip_file)
+  def self.iterate_xml(resources, zip_file, resource_xids, pre_data)
     staff_info = StaffInfo.new
     iterator_master(resources, zip_file) do |xml_data, type, file|
       if RESOURCE_TYPE[type.to_sym]
-        single_pre_data = get_single_pre_data(pre_data, file)
+        single_pre_data = get_single_pre_data(pre_data, file) || {}
         res_class = Senkyoshi.const_get RESOURCE_TYPE[type.to_sym]
         case type
         when "content"
@@ -93,7 +85,7 @@ module Senkyoshi
           resource.iterate_xml(xml_data, single_pre_data)
         end
       end
-    end
+    end.flatten - ["", nil]
   end
 
   def self.get_single_pre_data(pre_data, file)
@@ -125,8 +117,8 @@ module Senkyoshi
         pre_data[type].push(data) if data
       end
     end
+    pre_data["content"] = build_heirarchy(organizations, resources, pre_data["coursetoc"]) - ["", nil]
     pre_data = connect_content(pre_data)
-    build_heirarchy(organizations, pre_data)
   end
 
   def self.connect_content(pre_data)
@@ -145,30 +137,69 @@ module Senkyoshi
     pre_data["content"]
   end
 
-  def self.build_heirarchy(organizations, pre_data)
-    unset_id = "{unset id}"
-    parents = pre_data.
-      select { |p| p[:parent_id] == unset_id }
-    parents_ids = parents.map { |u| u[:id] }
-    pre_data.each do |content|
-      parent_id = content[:parent_id]
-      parent = pre_data.detect { |p| p[:id] == parent_id }
-      if parent_id == unset_id
-        content[:title] = get_title(organizations, content)
-      elsif parent[:parent_id] == unset_id
-        content[:parent_title] = parent[:title]
-      end
-      next if parents_ids.include?(content[:id])
-      next if parents_ids.include?(parent_id)
-      parents_ids << parent_id
-      parent[:parent_id] = parent[:id]
-      parent[:parent_title] = nil
+  def self.build_heirarchy(organizations, resources, course_toc)
+    discussion_boards = resources.search("resource[type=\"resource/x-bb-discussionboard\"]")
+    organizations.at("organization").children.flat_map do |item|
+      item_iterator(item, course_toc, discussion_boards)
     end
   end
 
-  def self.get_title(organizations, content)
-    item = organizations.at("item[@identifierref=#{content[:file_name]}]")
-    item.parent.at("title").text
+  def self.item_iterator(item, course_toc, discussion_boards)
+    if item.search("item").count.zero?
+      toc_item = setup_item(item, nil, course_toc)
+      toc_item[:indent] = 0
+      set_discussion_boards(discussion_boards, toc_item)
+    else
+      item.search("item").flat_map do |internal_item|
+        toc_item = setup_item(internal_item, item, course_toc)
+        toc_item[:indent] = get_indent(internal_item, 0) - 1
+        puts toc_item[:indent]
+        toc_item = set_discussion_boards(discussion_boards, toc_item)
+        toc_item
+      end
+    end
+  end
+
+  def self.get_indent(item, indent)
+    return indent if item.parent.name == "organization"
+    indent += 1
+    get_indent(item.parent, indent)
+  end
+
+  def self.set_discussion_boards(discussion_boards, toc_item)
+    if toc_item[:internal_handle] == "discussion_board_entry"
+      resource = discussion_boards.select { |db| db.attributes["title"].value == toc_item[:title] }
+      if resource.count == 1
+        toc_item[:file_name] = resource[0].attributes["file"].value.gsub(".dat", "")
+      end
+    end
+    toc_item
+  end
+
+  def self.setup_item(item, parent_item, course_toc)
+    if item.attributes["identifierref"]
+      title = item.at("title").text
+      if title == "--TOP--"
+        file_name = item.parent.attributes["identifierref"].value
+        title = item.parent.at("title").text
+        subheader_ids = course_toc.select {|ct| ct[:target_type] == "SUBHEADER" }.
+          map{ |sh| sh[:original_file].gsub("res", "") }
+        item_id = item.parent.attributes["identifierref"].value.gsub("res", "")
+        parent_id = "res" + subheader_ids.
+          reject { |x| x.to_i > item_id.to_i }.
+          min_by { |x| (x.to_i - item_id.to_i).abs }
+      else
+        file_name = item.attributes["identifierref"].value
+        if parent_item && parent_item.attributes["identifierref"]
+          parent_id = parent_item.attributes["identifierref"].value
+        end
+      end
+      toc_item = course_toc.detect { |ct| ct[:original_file] == file_name } || {}
+      toc_item[:file_name] = file_name
+      toc_item[:title] = title
+      toc_item[:parent_id] = parent_id
+      toc_item
+    end
   end
 
   ##

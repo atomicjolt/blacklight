@@ -14,7 +14,7 @@ module Senkyoshi
       self
     end
 
-    def canvas_conversion(course, _resource)
+    def canvas_conversion(course, _)
       create_module(course)
     end
   end

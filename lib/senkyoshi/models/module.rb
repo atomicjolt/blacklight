@@ -18,5 +18,44 @@ module Senkyoshi
         cc_module.module_items = @module_items
       end
     end
+
+    def self.set_modules(course, pre_data)
+      master_module = course.canvas_modules.
+        detect { |a| a.title == 'master_module' }
+      pre_data.each do |data|
+        if data[:target_type] == "SUBHEADER"
+          canvas_module = Module.new(data[:title], data[:file_name])
+          course.canvas_modules << canvas_module.canvas_conversion
+        elsif data[:target_type] == "CONTENT"
+          module_item = ModuleItem.new(data[:title], 'ContextModuleSubHeader',
+            data[:file_name], nil, data[:indent], data[:file_name])
+          parent_module = course.canvas_modules.
+            detect { |a| a.identifier == data[:parent_id] }
+          parent_module.module_items << module_item.canvas_conversion
+        elsif data[:target_type] == nil
+          parent_module = get_canvas_module(course.canvas_modules, data)
+          if parent_module
+            item = master_module.module_items.
+              detect { |item| item.identifier == data[:file_name] }
+            parent_module.module_items << item
+          end
+        end
+      end
+      course.canvas_modules.delete(master_module)
+      course
+    end
+
+    def self.get_canvas_module(modules, data)
+      parent_module = nil
+      modules.reject { |a| a.title == 'master_module' }.each do |cc_module|
+        if cc_module.module_items.count > 0
+          items = cc_module.module_items.flatten
+          item = items.
+            detect { |item| item.identifier == data[:parent_id] }
+          parent_module = cc_module if item
+        end
+      end
+      parent_module
+    end
   end
 end
