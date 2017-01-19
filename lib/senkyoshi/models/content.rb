@@ -93,7 +93,7 @@ module Senkyoshi
       if cc_module
         cc_module.module_items << @module_item
       else
-        cc_module = Module.new('master_module', @parent_id)
+        cc_module = Module.new('master_module', "master_module")
         cc_module = cc_module.canvas_conversion
         cc_module.module_items << @module_item
         course.canvas_modules << cc_module

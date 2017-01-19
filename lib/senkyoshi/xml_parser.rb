@@ -146,14 +146,13 @@ module Senkyoshi
 
   def self.item_iterator(item, course_toc, discussion_boards)
     if item.search("item").count.zero?
-      toc_item = setup_item(item, nil, course_toc)
+      toc_item = setup_item(item, item.parent, course_toc)
       toc_item[:indent] = 0
       set_discussion_boards(discussion_boards, toc_item)
     else
       item.search("item").flat_map do |internal_item|
         toc_item = setup_item(internal_item, item, course_toc)
         toc_item[:indent] = get_indent(internal_item, 0) - 1
-        puts toc_item[:indent]
         toc_item = set_discussion_boards(discussion_boards, toc_item)
         toc_item
       end
@@ -182,17 +181,16 @@ module Senkyoshi
       if title == "--TOP--"
         file_name = item.parent.attributes["identifierref"].value
         title = item.parent.at("title").text
-        subheader_ids = course_toc.select {|ct| ct[:target_type] == "SUBHEADER" }.
-          map{ |sh| sh[:original_file].gsub("res", "") }
         item_id = item.parent.attributes["identifierref"].value.gsub("res", "")
-        parent_id = "res" + subheader_ids.
-          reject { |x| x.to_i > item_id.to_i }.
-          min_by { |x| (x.to_i - item_id.to_i).abs }
+        parent_id = get_parent_id(course_toc, item, item_id)
       else
         file_name = item.attributes["identifierref"].value
-        if parent_item && parent_item.attributes["identifierref"]
-          parent_id = parent_item.attributes["identifierref"].value
+        if parent_item.attributes["identifierref"]
+          item_id = parent_item.attributes["identifierref"].value.gsub("res", "")
+        else
+          item_id = item.attributes["identifierref"].value.gsub("res", "")
         end
+        parent_id = get_parent_id(course_toc, item, item_id)
       end
       toc_item = course_toc.detect { |ct| ct[:original_file] == file_name } || {}
       toc_item[:file_name] = file_name
@@ -200,6 +198,16 @@ module Senkyoshi
       toc_item[:parent_id] = parent_id
       toc_item
     end
+  end
+
+  def self.get_parent_id(course_toc, item, item_id)
+    subheader_ids = course_toc.select {|ct| ct[:target_type] == "SUBHEADER" }.
+      map{ |sh| sh[:original_file].gsub("res", "") }
+    subheader_id = subheader_ids.
+      reject { |x| x.to_i > item_id.to_i }.
+      min_by { |x| (x.to_i - item_id.to_i).abs }
+
+    subheader_id ? "res" + subheader_id : nil
   end
 
   ##
