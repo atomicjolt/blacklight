@@ -10,13 +10,13 @@ module Senkyoshi
     end
 
     def strip_select_html(text)
-      text.gsub(/<\/?p[^>]*>/i, "").    # <p> tags
-        gsub(/<\/?b[^>]*>/i, "").       # <b> tags
-        gsub(/<\/?strong[^>]*>/i, "").  # <strong> tags
-        gsub(/<\/?em[^>]*>/i, "").      # <em> tags
-        gsub(/<\/?span[^>]*>/i, "").    # <span> tags
-        gsub(/<\/?i(?!mg)[^>]*>/i, ""). # <i> tags, ignores <img> tags
-        gsub(/style="[^"]*"/i, "")      # inline styles
+      text.gsub(/<\/?p[^>]*>/i, "").          # <p> tags
+        gsub(/<\/?b[^>]*>/i, "").             # <b> tags
+        gsub(/<\/?strong[^>]*>/i, "").        # <strong> tags
+        gsub(/<\/?em[^>]*>/i, "").            # <em> tags
+        gsub(/<\/?span[^>]*>/i, "").          # <span> tags
+        gsub(/<\/?i(?!mg)[^>]*>/i, "").       # <i> tags, ignores <img> tags
+        gsub(/ style=("|')[^"']*("|')/i, "")  # inline styles
     end
 
     def iterate_xml(data)
@@ -56,6 +56,7 @@ module Senkyoshi
     def canvas_conversion(assessment, resources)
       @matches.each do |match|
         match[:question_text] = fix_html(match[:question_text], resources)
+        match[:answer_text] = fix_html(match[:answer_text], resources)
       end
 
       @question.matches = @matches
