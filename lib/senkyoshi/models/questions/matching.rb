@@ -2,13 +2,15 @@ require "senkyoshi/models/question"
 
 module Senkyoshi
   class Matching < Question
-    TAGS_PATTERN = Regexp.union(/<\/?p[^>]*>/i,             # <p> tags
-                                /<\/?b[^>]*>/i,             # <b> tags
-                                /<\/?strong[^>]*>/i,        # <strong> tags
-                                /<\/?em[^>]*>/i,            # <em> tags
-                                /<\/?span[^>]*>/i,          # <span> tags
-                                /<\/?i(?!mg)[^>]*>/i,       # <i> tags, no <img>
-                                / style=("|')[^"']*("|')/i) # inline styles
+    TAGS_PATTERN = Regexp.union(
+      /<\/?p[^>]*>/i,             # <p> tags
+      /<\/?b[^>]*>/i,             # <b> tags
+      /<\/?strong[^>]*>/i,        # <strong> tags
+      /<\/?em[^>]*>/i,            # <em> tags
+      /<\/?span[^>]*>/i,          # <span> tags
+      /<\/?i(?!mg)[^>]*>/i,       # <i> tags, no <img>
+      / style=("|')[^"']*("|')/i, # inline styles
+    )
 
     def initialize
       super
