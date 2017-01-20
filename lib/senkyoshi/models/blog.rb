@@ -1,8 +1,9 @@
-require "senkyoshi/models/resource"
+require "senkyoshi/models/root_resource"
 
 module Senkyoshi
-  class Blog < Resource
-    def initialize
+  class Blog < RootResource
+    def initialize(resource_id)
+      super(resource_id)
       @title = ""
       @description = ""
       @is_public = true

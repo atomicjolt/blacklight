@@ -1,8 +1,8 @@
-require "senkyoshi/models/resource"
+require "senkyoshi/models/root_resource"
 require "senkyoshi/models/content_file"
 
 module Senkyoshi
-  class Content < Resource
+  class Content < RootResource
     CONTENT_TYPES = {
       "x-bb-asmt-test-link" => "Quiz",
       "x-bb-asmt-survey-link" => "Quiz",
@@ -36,6 +36,7 @@ module Senkyoshi
     def self.from(xml, pre_data, resource_xids)
       type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
       type.slice! "resource/"
+
       xml.xpath("//FILES/FILE").each do |file|
         file_name = ContentFile.clean_xid file.at("NAME").text
         is_attachment = CONTENT_TYPES[type] == "Attachment"
@@ -44,10 +45,10 @@ module Senkyoshi
           break
         end
       end
+
       if content_type = CONTENT_TYPES[type]
         content_class = Senkyoshi.const_get content_type
-        content = content_class.new
-        content.iterate_xml(xml, pre_data)
+        content_class.new(pre_data[:file_name]).iterate_xml(xml, pre_data)
       end
     end
 
@@ -64,10 +65,12 @@ module Senkyoshi
       @type = xml.xpath("/CONTENT/RENDERTYPE/@value").first.text
       @parent_id = pre_data[:parent_id]
       @module_type = MODULE_TYPES[self.class.name]
-      @id = xml.xpath("/CONTENT/@id").first.text
+
+      ## TODO why is this happening? How necessary is it?
       if pre_data[:assignment_id] && !pre_data[:assignment_id].empty?
         @id = pre_data[:assignment_id]
       end
+
       @files = xml.xpath("//FILES/FILE").map do |file|
         ContentFile.new(file)
       end
