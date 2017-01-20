@@ -117,7 +117,8 @@ module Senkyoshi
         pre_data[type].push(data) if data
       end
     end
-    pre_data["content"] = build_heirarchy(organizations, resources, pre_data["coursetoc"]) - ["", nil]
+    pre_data["content"] = build_heirarchy(organizations, resources,
+                                          pre_data["coursetoc"]) - ["", nil]
     pre_data = connect_content(pre_data)
   end
 
@@ -138,7 +139,8 @@ module Senkyoshi
   end
 
   def self.build_heirarchy(organizations, resources, course_toc)
-    discussion_boards = resources.search("resource[type=\"resource/x-bb-discussionboard\"]")
+    discussion_boards = resources.
+      search("resource[type=\"resource/x-bb-discussionboard\"]")
     organizations.at("organization").children.flat_map do |item|
       item_iterator(item, course_toc, discussion_boards)
     end
@@ -152,7 +154,7 @@ module Senkyoshi
     else
       item.search("item").flat_map do |internal_item|
         toc_item = setup_item(internal_item, item, course_toc)
-        toc_item[:indent] = get_indent(internal_item, 0) - 1
+        toc_item[:indent] = get_indent(internal_item, 0) - 2
         toc_item = set_discussion_boards(discussion_boards, toc_item)
         toc_item
       end
@@ -167,9 +169,11 @@ module Senkyoshi
 
   def self.set_discussion_boards(discussion_boards, toc_item)
     if toc_item[:internal_handle] == "discussion_board_entry"
-      resource = discussion_boards.select { |db| db.attributes["title"].value == toc_item[:title] }
+      resource = discussion_boards.
+        select { |db| db.attributes["title"].value == toc_item[:title] }
       if resource.count == 1
-        toc_item[:file_name] = resource[0].attributes["file"].value.gsub(".dat", "")
+        toc_item[:file_name] = resource[0].
+          attributes["file"].value.gsub(".dat", "")
       end
     end
     toc_item
@@ -182,17 +186,18 @@ module Senkyoshi
         file_name = item.parent.attributes["identifierref"].value
         title = item.parent.at("title").text
         item_id = item.parent.attributes["identifierref"].value.gsub("res", "")
-        parent_id = get_parent_id(course_toc, item, item_id)
       else
         file_name = item.attributes["identifierref"].value
         if parent_item.attributes["identifierref"]
-          item_id = parent_item.attributes["identifierref"].value.gsub("res", "")
+          item_id = parent_item.attributes["identifierref"].
+            value.gsub("res", "")
         else
           item_id = item.attributes["identifierref"].value.gsub("res", "")
         end
-        parent_id = get_parent_id(course_toc, item, item_id)
       end
-      toc_item = course_toc.detect { |ct| ct[:original_file] == file_name } || {}
+      parent_id = get_parent_id(course_toc, item_id)
+      toc_item = course_toc.
+        detect { |ct| ct[:original_file] == file_name } || {}
       toc_item[:file_name] = file_name
       toc_item[:title] = title
       toc_item[:parent_id] = parent_id
@@ -200,14 +205,19 @@ module Senkyoshi
     end
   end
 
-  def self.get_parent_id(course_toc, item, item_id)
-    subheader_ids = course_toc.select {|ct| ct[:target_type] == "SUBHEADER" }.
-      map{ |sh| sh[:original_file].gsub("res", "") }
-    subheader_id = subheader_ids.
+  def self.get_parent_id(course_toc, item_id)
+    header_ids = course_toc.select { |ct| ct[:target_type] == "SUBHEADER" }.
+      map { |sh| sh[:original_file].gsub("res", "") }
+    if header_ids.empty?
+      header_ids = course_toc.select { |ct| ct[:target_type] == "CONTENT" }.
+        map { |sh| sh[:original_file].gsub("res", "") }
+    end
+
+    header_id = header_ids.
       reject { |x| x.to_i > item_id.to_i }.
       min_by { |x| (x.to_i - item_id.to_i).abs }
 
-    subheader_id ? "res" + subheader_id : nil
+    header_id ? "res" + header_id : nil
   end
 
   ##

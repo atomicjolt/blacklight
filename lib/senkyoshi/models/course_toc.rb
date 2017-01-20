@@ -8,7 +8,8 @@ module Senkyoshi
       if target_type != "MODULE" || target_type != "DIVIDER"
         id = xml.xpath("/COURSETOC/@id").first.text
         title = xml.xpath("/COURSETOC/LABEL/@value").first.text
-        internal_handle = xml.xpath("/COURSETOC/INTERNALHANDLE/@value").first.text
+        internal_handle = xml.xpath("/COURSETOC/INTERNALHANDLE/@value").
+          first.text
         {
           id: id,
           title: title,

@@ -78,8 +78,14 @@ module Senkyoshi
     end
 
     def set_module
-      module_item = ModuleItem.new(@title, @module_type, @id, @url, @indent, @file_name)
-      module_item.canvas_conversion
+      ModuleItem.new(
+        @title,
+        @module_type,
+        @id,
+        @url,
+        @indent,
+        @file_name,
+      ).canvas_conversion
     end
 
     def canvas_conversion(course, _resources = nil)
@@ -89,11 +95,11 @@ module Senkyoshi
     def create_module(course)
       course.canvas_modules ||= []
       cc_module = course.canvas_modules.
-        detect { |a| a.title == 'master_module' }
+        detect { |a| a.title == "master_module" }
       if cc_module
         cc_module.module_items << @module_item
       else
-        cc_module = Module.new('master_module', "master_module")
+        cc_module = Module.new("master_module", "master_module")
         cc_module = cc_module.canvas_conversion
         cc_module.module_items << @module_item
         course.canvas_modules << cc_module
