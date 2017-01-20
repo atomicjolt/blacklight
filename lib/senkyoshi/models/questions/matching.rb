@@ -9,6 +9,16 @@ module Senkyoshi
       @distractors = []
     end
 
+    def strip_select_html(text)
+      text.gsub(/<\/?p[^>]*>/i, "").    # <p> tags
+        gsub(/<\/?b[^>]*>/i, "").       # <b> tags
+        gsub(/<\/?strong[^>]*>/i, "").  # <strong> tags
+        gsub(/<\/?em[^>]*>/i, "").      # <em> tags
+        gsub(/<\/?span[^>]*>/i, "").    # <span> tags
+        gsub(/<\/?i(?!mg)[^>]*>/i, ""). # <i> tags, ignores <img> tags
+        gsub(/style="[^"]*"/i, "")      # inline styles
+    end
+
     def iterate_xml(data)
       super
       resprocessing = data.at("resprocessing")
@@ -18,20 +28,23 @@ module Senkyoshi
       if match_block = data.at("flow[@class=RIGHT_MATCH_BLOCK]")
         matches_array = match_block.
           search("flow[@class=FORMATTED_TEXT_BLOCK]").
-          map(&:text)
+          map { |match| strip_select_html(match.text) }
       end
+
       if response_block = data.at("flow[@class=RESPONSE_BLOCK]")
         response_block.children.each do |response|
           id = response.at("response_lid").attributes["ident"].value
           question = response.at("mat_formattedtext").text
           answer_id = @matching_answers[id]
           answer = ""
+
           flow_label = response.at("flow_label")
           flow_label.children.each_with_index do |label, index|
             if label.attributes["ident"].value == answer_id
               answer = matches_array[index]
             end
           end
+
           answers << answer
           @matches << { id: id, question_text: question, answer_text: answer }
         end
@@ -40,7 +53,11 @@ module Senkyoshi
       self
     end
 
-    def canvas_conversion(assessment, _resources = nil)
+    def canvas_conversion(assessment, resources)
+      @matches.each do |match|
+        match[:question_text] = fix_html(match[:question_text], resources)
+      end
+
       @question.matches = @matches
       @question.distractors = @distractors
       super
