@@ -10,13 +10,15 @@ module Senkyoshi
     end
 
     def strip_select_html(text)
-      text.gsub(/<\/?p[^>]*>/i, "").          # <p> tags
-        gsub(/<\/?b[^>]*>/i, "").             # <b> tags
-        gsub(/<\/?strong[^>]*>/i, "").        # <strong> tags
-        gsub(/<\/?em[^>]*>/i, "").            # <em> tags
-        gsub(/<\/?span[^>]*>/i, "").          # <span> tags
-        gsub(/<\/?i(?!mg)[^>]*>/i, "").       # <i> tags, ignores <img> tags
-        gsub(/ style=("|')[^"']*("|')/i, "")  # inline styles
+      tag_patterns = [/<\/?p[^>]*>/i,             # <p> tags
+                      /<\/?b[^>]*>/i,             # <b> tags
+                      /<\/?strong[^>]*>/i,        # <strong> tags
+                      /<\/?em[^>]*>/i,            # <em> tags
+                      /<\/?span[^>]*>/i,          # <span> tags
+                      /<\/?i(?!mg)[^>]*>/i,       # <i> tags, ignores <img> tags
+                      / style=("|')[^"']*("|')/i] # inline styles
+
+      text.gsub(Regexp.union(tag_patterns), "")
     end
 
     def iterate_xml(data)
