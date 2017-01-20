@@ -1,0 +1,128 @@
+<resources><resource
+   bb:file="res00001.dat" bb:title="The Course of all Courses" identifier="res00001" type="course/x-bb-coursesetting"
+   xml:base="res00001"/><resource bb:file="res00002.dat" bb:title="Learning Standard Sub Document Associations"
+   identifier="res00002" type="course/x-bb-subdocassociation" xml:base="res00002"/><resource bb:file="res00003.dat"
+   bb:title="Course Application Settings" identifier="res00003" type="course/x-bb-courseappsetting"
+   xml:base="res00003"/><resource bb:file="res00004.dat" bb:title="Course Navigation Settings" identifier="res00004"
+   type="course/x-bb-coursenavsetting" xml:base="res00004"/><resource bb:file="res00005.dat" bb:title="Home Page"
+   identifier="res00005" type="course/x-bb-coursetoc" xml:base="res00005"/><resource bb:file="res00006.dat"
+   bb:title="Information" identifier="res00006" type="course/x-bb-coursetoc" xml:base="res00006"/><resource
+   bb:file="res00007.dat" bb:title="Content" identifier="res00007" type="course/x-bb-coursetoc"
+   xml:base="res00007"/><resource bb:file="res00008.dat" bb:title="Discussions" identifier="res00008"
+   type="course/x-bb-coursetoc" xml:base="res00008"/><resource bb:file="res00009.dat" bb:title="Groups"
+   identifier="res00009" type="course/x-bb-coursetoc" xml:base="res00009"/><resource bb:file="res00010.dat"
+   bb:title="Tools" identifier="res00010" type="course/x-bb-coursetoc" xml:base="res00010"/><resource
+   bb:file="res00011.dat" bb:title="Help" identifier="res00011" type="course/x-bb-coursetoc"
+   xml:base="res00011"/><resource bb:file="res00012.dat" bb:title="Content Handler Data" identifier="res00012"
+   type="course/x-bb-contenthandler" xml:base="res00012"/><resource bb:file="res00013.dat" bb:title="Categories"
+   identifier="res00013" type="course/x-bb-category" xml:base="res00013"/><resource bb:file="res00014.dat"
+   bb:title="All the things" identifier="res00014" type="assessment/x-bb-qti-test" xml:base="res00014"/><resource
+   bb:file="res00015.dat" bb:title="Find the problem" identifier="res00015" type="assessment/x-bb-qti-test"
+   xml:base="res00015"/><resource bb:file="res00016.dat" bb:title="A new test" identifier="res00016"
+   type="assessment/x-bb-qti-test" xml:base="res00016"/><resource bb:file="res00017.dat" bb:title="hey"
+   identifier="res00017" type="assessment/x-bb-qti-test" xml:base="res00017"/><resource bb:file="res00018.dat"
+   bb:title="This is a test...this is only a test" identifier="res00018" type="assessment/x-bb-qti-test"
+   xml:base="res00018"/><resource bb:file="res00019.dat" bb:title="Survey Says" identifier="res00019"
+   type="assessment/x-bb-qti-survey" xml:base="res00019"/><resource bb:file="res00020.dat" bb:title="Item Categories"
+   identifier="res00020" type="course/x-bb-itemcategory" xml:base="res00020"/><resource bb:file="res00021.dat"
+   bb:title="Assessment Creation Settings" identifier="res00021" type="course/x-bb-courseassessmentcreationsettings"
+   xml:base="res00021"/><resource bb:file="res00022.dat" bb:title="Conferences" identifier="res00022"
+   type="resource/x-bb-conference" xml:base="res00022"/><resource bb:file="res00023.dat" bb:title="--TOP--"
+   identifier="res00023" type="resource/x-bb-document" xml:base="res00023"/><resource bb:file="res00024.dat"
+   bb:title="--TOP--" identifier="res00024" type="resource/x-bb-document" xml:base="res00024"/><resource
+   bb:file="res00025.dat" bb:title="Find the problem" identifier="res00025" type="resource/x-bb-document"
+   xml:base="res00025"/><resource bb:file="res00026.dat" bb:title="All the things" identifier="res00026"
+   type="resource/x-bb-document" xml:base="res00026"/><resource bb:file="res00027.dat" bb:title="This is a Page"
+   identifier="res00027" type="resource/x-bb-document" xml:base="res00027"/><resource bb:file="res00028.dat"
+   bb:title="This is an Assessment Assignment" identifier="res00028" type="resource/x-bb-document"
+   xml:base="res00028"/><resource bb:file="res00029.dat" bb:title="Page image" identifier="res00029"
+   type="resource/x-bb-document" xml:base="res00029"/><resource bb:file="res00030.dat" bb:title="Survey Says"
+   identifier="res00030" type="resource/x-bb-document" xml:base="res00030"/><resource bb:file="res00031.dat"
+   bb:title="Pierre to pierre" identifier="res00031" type="resource/x-bb-document" xml:base="res00031"><file
+   href="assessment.ast"/></resource><resource bb:file="res00032.dat" bb:title="This is an image" identifier="res00032"
+   type="resource/x-bb-document" xml:base="res00032"/><resource bb:file="res00033.dat" bb:title="Audio Smadio"
+   identifier="res00033" type="resource/x-bb-document" xml:base="res00033"/><resource bb:file="res00034.dat"
+   bb:title="Imagees" identifier="res00034" type="resource/x-bb-document" xml:base="res00034"/><resource
+   bb:file="res00035.dat" bb:title="Video dude" identifier="res00035" type="resource/x-bb-document"
+   xml:base="res00035"/><resource bb:file="res00036.dat" bb:title="Weirdo music" identifier="res00036"
+   type="resource/x-bb-document" xml:base="res00036"/><resource bb:file="res00037.dat"
+   bb:title="This is a learning module" identifier="res00037" type="resource/x-bb-document"
+   xml:base="res00037"/><resource bb:file="res00038.dat" bb:title="My Lesson Plan" identifier="res00038"
+   type="resource/x-bb-document" xml:base="res00038"/><resource bb:file="res00039.dat" bb:title="Survey Says"
+   identifier="res00039" type="resource/x-bb-document" xml:base="res00039"/><resource bb:file="res00040.dat"
+   bb:title="Content Folder of things" identifier="res00040" type="resource/x-bb-document"
+   xml:base="res00040"/><resource bb:file="res00041.dat" bb:title="New Page" identifier="res00041"
+   type="resource/x-bb-document" xml:base="res00041"/><resource bb:file="res00042.dat" bb:title="Four Squares of Life"
+   identifier="res00042" type="resource/x-bb-document" xml:base="res00042"/><resource bb:file="res00043.dat"
+   bb:title="Golf Explained - CP Single SCO" identifier="res00043" type="resource/x-bb-document"
+    xml:base="res00043"><file href="adlcp_rootv1p2.xsd"/><file href="Etiquette/Course.html"/><file
+    href="Etiquette/course.jpg"/><file href="Etiquette/Distracting.html"/><file href="Etiquette/distracting.jpg"/><file
+    href="Etiquette/Play.html"/><file href="Etiquette/play.jpg"/><file href="Etiquette/questions.js"/><file
+    href="Handicapping/calchandi.jpg"/><file href="Handicapping/calcscore.jpg"/><file
+    href="Handicapping/CalculatingHandicap.html"/><file href="Handicapping/CalculatingScore.html"/><file
+    href="Handicapping/Example.html"/><file href="Handicapping/example.jpg"/><file
+    href="Handicapping/Overview.html"/><file href="Handicapping/overview.jpg"/><file
+    href="Handicapping/questions.js"/><file href="HavingFun/friends.jpg"/><file href="HavingFun/fun.jpg"/><file
+    href="HavingFun/HowToHaveFun.html"/><file href="HavingFun/MakeFriends.html"/><file
+    href="HavingFun/questions.js"/><file href="ims_xml.xsd"/><file href="imscp_rootv1p1p2.xsd"/><file
+    href="imsmanifest.xml"/><file href="imsmd_rootv1p2p1.xsd"/><file href="Playing/otherscoreing.jpg"/><file
+    href="Playing/OtherScoring.html"/><file href="Playing/Par.html"/><file href="Playing/par.jpg"/><file
+    href="Playing/Playing.html"/><file href="Playing/playing.jpg"/><file href="Playing/questions.js"/><file
+    href="Playing/rules.jpg"/><file href="Playing/RulesOfGolf.html"/><file href="Playing/Scoring.html"/><file
+    href="Playing/scoring.jpg"/><file href="shared/assessmenttemplate.html"/><file href="shared/background.jpg"/><file
+    href="shared/cclicense.png"/><file href="shared/contentfunctions.js"/><file href="shared/launchpage.html"/><file
+    href="shared/scormfunctions.js"/><file href="shared/style.css"/></resource><resource bb:file="res00044.dat"
+   bb:title="Testing this thug out" identifier="res00044" type="resource/x-bb-document" xml:base="res00044"/><resource
+   bb:file="res00045.dat" bb:title="I heart modules" identifier="res00045" type="resource/x-bb-document"
+   xml:base="res00045"/><resource bb:file="res00046.dat" bb:title="How now brown cow" identifier="res00046"
+   type="resource/x-bb-document" xml:base="res00046"/><resource bb:file="res00047.dat"
+   bb:title="Just a thing of life -- folder" identifier="res00047" type="resource/x-bb-document"
+   xml:base="res00047"/><resource bb:file="res00048.dat" bb:title="Imagees" identifier="res00048"
+   type="resource/x-bb-document" xml:base="res00048"/><resource bb:file="res00049.dat" bb:title="I'm a Silla Bus"
+   identifier="res00049" type="resource/x-bb-document" xml:base="res00049"><file
+   href="syllabus.xml"/></resource><resource bb:file="res00050.dat" bb:title="Chicken image" identifier="res00050"
+   type="resource/x-bb-document" xml:base="res00050"/><resource bb:file="res00051.dat" bb:title="Course Module Pages"
+   identifier="res00051" type="course/x-bb-coursemodulepages" xml:base="res00051"/><resource bb:file="res00052.dat"
+   bb:title="LearnRubrics" identifier="res00052" type="course/x-bb-rubrics" xml:base="res00052"/><resource
+   bb:file="res00053.dat" bb:title="Gradebook" identifier="res00053" type="course/x-bb-gradebook"
+   xml:base="res00053"/><resource bb:file="res00054.dat" bb:title="Course Assessment" identifier="res00054"
+   type="course/x-bb-courseassessment" xml:base="res00054"/><resource bb:file="res00055.dat"
+   bb:title="Course Assessment" identifier="res00055" type="course/x-bb-courseassessment" xml:base="res00055"/><resource
+   bb:file="res00056.dat" bb:title="Course Assessment" identifier="res00056" type="course/x-bb-courseassessment"
+   xml:base="res00056"/><resource bb:file="res00057.dat" bb:title="Home Page" identifier="res00057"
+   type="resource/x-bb-link" xml:base="res00057"/><resource bb:file="res00058.dat" bb:title="All the things"
+   identifier="res00058" type="resource/x-bb-link" xml:base="res00058"/><resource bb:file="res00059.dat"
+   bb:title="Find the problem" identifier="res00059" type="resource/x-bb-link" xml:base="res00059"/><resource
+   bb:file="res00060.dat" bb:title="Survey Says" identifier="res00060" type="resource/x-bb-link"
+   xml:base="res00060"/><resource bb:file="res00061.dat" bb:title="/Content/Survey Says" identifier="res00061"
+   type="resource/x-bb-link" xml:base="res00061"/><resource bb:file="res00062.dat" bb:title="" identifier="res00062"
+   type="resource/x-bb-link" xml:base="res00062"/><resource bb:file="res00063.dat" bb:title="CSResourceLinks"
+   identifier="res00063" type="course/x-bb-csresourcelinks" xml:base="res00063"/><resource bb:file="res00064.dat"
+   bb:title="CourseRubricAssociation" identifier="res00064" type="course/x-bb-crsrubricassocation"
+   xml:base="res00064"/><resource bb:file="res00065.dat" bb:title="collab" identifier="res00065"
+   type="resource/x-x-wimba" xml:base="res00065"><file href="wimba_va.txt"/></resource><resource bb:file="res00066.dat"
+   bb:title="coursey" identifier="res00066" type="resource/x-mhhe-course-cx" xml:base="res00066"/><resource
+   bb:file="res00067.dat" bb:title="BB_EWS_RULE_" identifier="res00067" type="resource/x-bb-retention"
+   xml:base="res00067"/><resource bb:file="res00068.dat" bb:title="collab" identifier="res00068"
+   type="resource/x-x-vpresentation-wimba" xml:base="res00068"><file href="wimba_vp.txt"/></resource><resource
+   bb:file="res00069.dat" bb:title="_10622326_1" identifier="res00069" type="resource/x-plugin-scormengine"
+    xml:base="res00069"><file href="adlcp_rootv1p2.xsd"/><file href="Etiquette/Course.html"/><file
+    href="Etiquette/course.jpg"/><file href="Etiquette/Distracting.html"/><file href="Etiquette/distracting.jpg"/><file
+    href="Etiquette/Play.html"/><file href="Etiquette/play.jpg"/><file href="Etiquette/questions.js"/><file
+    href="Handicapping/calchandi.jpg"/><file href="Handicapping/calcscore.jpg"/><file
+    href="Handicapping/CalculatingHandicap.html"/><file href="Handicapping/CalculatingScore.html"/><file
+    href="Handicapping/Example.html"/><file href="Handicapping/example.jpg"/><file
+    href="Handicapping/Overview.html"/><file href="Handicapping/overview.jpg"/><file
+    href="Handicapping/questions.js"/><file href="HavingFun/friends.jpg"/><file href="HavingFun/fun.jpg"/><file
+    href="HavingFun/HowToHaveFun.html"/><file href="HavingFun/MakeFriends.html"/><file
+    href="HavingFun/questions.js"/><file href="ims_xml.xsd"/><file href="imscp_rootv1p1p2.xsd"/><file
+    href="imsmanifest.xml"/><file href="imsmd_rootv1p2p1.xsd"/><file href="Playing/otherscoreing.jpg"/><file
+    href="Playing/OtherScoring.html"/><file href="Playing/Par.html"/><file href="Playing/par.jpg"/><file
+    href="Playing/Playing.html"/><file href="Playing/playing.jpg"/><file href="Playing/questions.js"/><file
+    href="Playing/rules.jpg"/><file href="Playing/RulesOfGolf.html"/><file href="Playing/Scoring.html"/><file
+    href="Playing/scoring.jpg"/><file href="shared/assessmenttemplate.html"/><file href="shared/background.jpg"/><file
+    href="shared/cclicense.png"/><file href="shared/contentfunctions.js"/><file href="shared/launchpage.html"/><file
+    href="shared/scormfunctions.js"/><file href="shared/style.css"/></resource><resource bb:file="res00070.dat"
+   bb:title="collab" identifier="res00070" type="resource/x-x-vboard-wimba" xml:base="res00070"><file
+   href="wimba_vb.txt"/></resource><resource bb:file="res00071.dat" bb:title="collab" identifier="res00071"
+   type="resource/x-x-podcaster-wimba" xml:base="res00071"><file href="wimba_pc.txt"/></resource></resources>

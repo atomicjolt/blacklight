@@ -16,7 +16,7 @@ describe "ExternalUrl" do
     assert_equal(result.canvas_modules.size, 1)
     c_module = result.canvas_modules.first
 
-    assert_equal(c_module.title, "External Url")
+    assert_equal(c_module.title, "master_module")
     assert_equal(c_module.module_items.first.url, "http://example.com")
   end
 end

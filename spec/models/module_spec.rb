@@ -11,6 +11,8 @@ describe "Module" do
     @identifier = Senkyoshi.create_random_hex
     @module = Senkyoshi::Module.new(@title, @identifier)
     @url = "fake/url"
+    @indent = 0
+    @id = "res00004"
   end
 
   describe "initialize" do
@@ -30,8 +32,14 @@ describe "Module" do
   end
 
   it "should convert to canvas wiki page" do
-    module_item = Senkyoshi::ModuleItem.new(@title, @content_type,
-                                            @identifierref, @url)
+    module_item = Senkyoshi::ModuleItem.new(
+      @title,
+      @content_type,
+      @identifierref,
+      @url,
+      @indent,
+      @id,
+    )
 
     @module.module_items << module_item
     result = @module.canvas_conversion
