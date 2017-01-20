@@ -20,12 +20,13 @@ describe "ContentFile" do
     xml = get_fixture_xml "file.xml"
     file = Senkyoshi::ContentFile.new(xml.xpath("//FILE"))
     mock_entry = MockZip::MockEntry.new("ADV &amp;amp; DisAdv.pdf")
+    resources = Senkyoshi::Collection.new
     assert_includes(
-      file.canvas_conversion(mock_entry),
-      "href=\"$IMS_CC_FILEBASE$/ADV",
+      file.canvas_conversion(resources, mock_entry),
+      "href=\"$IMS-CC-FILEBASE$/ADV",
     )
     assert_includes(
-      file.canvas_conversion(mock_entry),
+      file.canvas_conversion(resources, mock_entry),
       "ADV &amp;amp; DisAdv.pdf",
     )
   end

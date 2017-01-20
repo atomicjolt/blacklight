@@ -1,6 +1,6 @@
 # Senkyoshi Converter [![Build Status](https://travis-ci.org/atomicjolt/senkyoshi.svg?branch=master)](https://travis-ci.org/atomicjolt/senkyoshi)
 
-TODO: Describe the gem
+Senkyoshi converts exported Blackboard packages into Canvas .imscc packages. It also allows you to upload those converted packages to a Canvas instance.
 
 ## Installation
 
@@ -21,13 +21,13 @@ Or install it yourself as:
 $ gem install senkyoshi
 ```
 
-Create a `Rakefile` and add
+Create a `Rakefile` and add:
 ```ruby
 require "senkyoshi/tasks"
 Senkyoshi::Tasks.install_tasks
 ```
 
-Create a `senkyoshi.yml` and add credentials
+Create a `senkyoshi.yml` and add credentials:
 ```yaml
 # Generally looks like https://< mycanvas_instance >/api
 :canvas_url: <canvas instance api url>
@@ -55,23 +55,23 @@ Create a `senkyoshi.yml` and add credentials
 
 ## Usage
 
-Run the rake task to convert from .zip to .imscc
+Run the rake task to convert from .zip to .imscc:
 ```sh
 rake senkyoshi:imscc
 ```
-This will take all your files in your source folder and convert them to your outputs folder
+This will take all your files in your source folder and convert them to your outputs folder.
 
-Run converting files in parallel
+Run converting files in parallel:
 ```sh
 time rake senkyoshi:imscc -m
 ```
 
-Delete entire outputs folder
+Delete entire outputs folder:
 ```sh
 rake clean
 ```
 
-Upload to canvas to process
+Upload to Canvas to process:
 ```sh
 rake senkyoshi:upload
 ```
@@ -84,7 +84,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/senkyoshi. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/atomicjolt/senkyoshi. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 
 ## License
@@ -92,6 +92,5 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/[USERN
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
 
-### Things not quite implemented
-People Group Sets
-Blogs
+### Things Not Quite Implemented
+People, Groups, Sets, Blogs
