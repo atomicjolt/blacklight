@@ -2,6 +2,14 @@ require "senkyoshi/models/question"
 
 module Senkyoshi
   class Matching < Question
+    TAGS_PATTERN = Regexp.union(/<\/?p[^>]*>/i,             # <p> tags
+                                /<\/?b[^>]*>/i,             # <b> tags
+                                /<\/?strong[^>]*>/i,        # <strong> tags
+                                /<\/?em[^>]*>/i,            # <em> tags
+                                /<\/?span[^>]*>/i,          # <span> tags
+                                /<\/?i(?!mg)[^>]*>/i,       # <i> tags, no <img>
+                                / style=("|')[^"']*("|')/i) # inline styles
+
     def initialize
       super
       @matches = []
@@ -10,15 +18,7 @@ module Senkyoshi
     end
 
     def strip_select_html(text)
-      tag_patterns = [/<\/?p[^>]*>/i,             # <p> tags
-                      /<\/?b[^>]*>/i,             # <b> tags
-                      /<\/?strong[^>]*>/i,        # <strong> tags
-                      /<\/?em[^>]*>/i,            # <em> tags
-                      /<\/?span[^>]*>/i,          # <span> tags
-                      /<\/?i(?!mg)[^>]*>/i,       # <i> tags, ignores <img> tags
-                      / style=("|')[^"']*("|')/i] # inline styles
-
-      text.gsub(Regexp.union(tag_patterns), "")
+      text.gsub(TAGS_PATTERN, "")
     end
 
     def iterate_xml(data)
