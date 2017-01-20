@@ -154,7 +154,7 @@ module Senkyoshi
     else
       item.search("item").flat_map do |internal_item|
         toc_item = setup_item(internal_item, item, course_toc)
-        toc_item[:indent] = get_indent(internal_item, 0) - 2
+        toc_item[:indent] = get_indent(internal_item, -1)
         toc_item = set_discussion_boards(discussion_boards, toc_item)
         toc_item
       end
@@ -195,12 +195,11 @@ module Senkyoshi
           item_id = item.attributes["identifierref"].value.gsub("res", "")
         end
       end
-      parent_id = get_parent_id(course_toc, item_id)
       toc_item = course_toc.
         detect { |ct| ct[:original_file] == file_name } || {}
       toc_item[:file_name] = file_name
       toc_item[:title] = title
-      toc_item[:parent_id] = parent_id
+      toc_item[:parent_id] = get_parent_id(course_toc, item_id)
       toc_item
     end
   end
@@ -212,7 +211,6 @@ module Senkyoshi
       header_ids = course_toc.select { |ct| ct[:target_type] == "CONTENT" }.
         map { |sh| sh[:original_file].gsub("res", "") }
     end
-
     header_id = header_ids.
       reject { |x| x.to_i > item_id.to_i }.
       min_by { |x| (x.to_i - item_id.to_i).abs }

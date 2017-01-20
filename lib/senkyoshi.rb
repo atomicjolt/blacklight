@@ -1,6 +1,6 @@
 require "senkyoshi/version"
 require "senkyoshi/xml_parser"
-require "senkyoshi/models/module"
+require "senkyoshi/models/module_converter"
 require "senkyoshi/canvas_course"
 require "senkyoshi/collection"
 
@@ -66,7 +66,7 @@ module Senkyoshi
     resources.each do |resource|
       course = resource.canvas_conversion(course, resources)
     end
-    course = Module.set_modules(course, pre_data)
+    course = ModuleConverter.set_modules(course, pre_data)
     course
   end
 
