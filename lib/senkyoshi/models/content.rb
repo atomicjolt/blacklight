@@ -88,9 +88,10 @@ module Senkyoshi
     end
 
     def self.get_pre_data(xml, file_name)
+      id = xml.xpath("/CONTENT/@id").first.text
       parent_id = xml.xpath("/CONTENT/PARENTID/@value").first.text
       {
-        id: file_name,
+        id: id,
         parent_id: parent_id,
         file_name: file_name,
       }

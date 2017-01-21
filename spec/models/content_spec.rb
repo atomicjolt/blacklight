@@ -41,8 +41,9 @@ describe "Content" do
       result = Content.get_pre_data(@xml, @id)
 
       parent_id = @xml.xpath("/CONTENT/PARENTID/@value").first.text
+      id = @xml.xpath("/CONTENT/@id").first.text
 
-      assert_equal(result[:id], @id)
+      assert_equal(result[:id], id)
       assert_equal(result[:parent_id], parent_id)
       assert_equal(result[:file_name], @id)
     end
