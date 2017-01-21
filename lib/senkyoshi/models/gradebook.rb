@@ -5,7 +5,7 @@ module Senkyoshi
   class Gradebook < RootResource
     attr_reader(:outcome_definitions, :categories)
 
-    def initialize(resource_id, categories = [], outcome_definitions = [])
+    def initialize(resource_id = nil, categories = [], outcome_definitions = [])
       super(resource_id)
       @categories = categories
       @outcome_definitions = outcome_definitions

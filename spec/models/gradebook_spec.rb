@@ -7,6 +7,7 @@ require_relative "../../lib/senkyoshi/models/gradebook"
 
 describe "Gradebook" do
   before do
+    @id = 1
     @gradebook = Senkyoshi::Gradebook.new
   end
 
@@ -77,7 +78,7 @@ describe "Gradebook" do
       OutcomeDefinition.from(should_not_create_quiz, "Category Two"),
     ]
 
-    subject = Gradebook.new(categories, outcome_definitions)
+    subject = Gradebook.new(@id, categories, outcome_definitions)
 
     course = CanvasCc::CanvasCC::Models::Course.new
     subject.canvas_conversion(course)
@@ -90,13 +91,14 @@ describe "Gradebook" do
 
   describe "convert_categories" do
     it "only creates assignment groups once" do
+
       categories = {
         category_1: "Category One",
         category_1: "Category One",
         category_2: "Category Two",
       }
 
-      subject = Gradebook.new(categories)
+      subject = Gradebook.new(@id, categories)
 
       course = CanvasCc::CanvasCC::Models::Course.new
       subject.canvas_conversion(course)

@@ -30,8 +30,12 @@ module Senkyoshi
       "Senkyoshi::Quiz" => "Quizzes::Quiz",
     }.freeze
 
-    attr_accessor(:title, :body, :id, :files, :url)
+    attr_accessor(:title, :body, :files, :url)
     attr_reader(:extendeddata)
+
+    def initialize(resource_id = nil)
+      super(resource_id)
+    end
 
     def self.from(xml, pre_data, resource_xids)
       type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
@@ -84,10 +88,9 @@ module Senkyoshi
     end
 
     def self.get_pre_data(xml, file_name)
-      id = xml.xpath("/CONTENT/@id").first.text
       parent_id = xml.xpath("/CONTENT/PARENTID/@value").first.text
       {
-        id: id,
+        id: file_name,
         parent_id: parent_id,
         file_name: file_name,
       }

@@ -6,7 +6,7 @@ module Senkyoshi
     # This class represents a reader for one zip file, and allows the usage of
     # individual files within zip file
     ##
-    def initialize(resource_id)
+    def initialize(resource_id = nil)
       super(resource_id)
       @course_code = ""
       @title = ""
