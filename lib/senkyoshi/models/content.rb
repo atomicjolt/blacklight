@@ -70,7 +70,6 @@ module Senkyoshi
       @parent_id = pre_data[:parent_id]
       @module_type = MODULE_TYPES[self.class.name]
 
-      ## TODO why is this happening? How necessary is it?
       if pre_data[:assignment_id] && !pre_data[:assignment_id].empty?
         @id = pre_data[:assignment_id]
       end

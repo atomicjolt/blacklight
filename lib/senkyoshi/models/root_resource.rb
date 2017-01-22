@@ -1,6 +1,9 @@
 require "senkyoshi/models/resource"
 
 module Senkyoshi
+  ##
+  # Class to represent a resource constructed from a single 'dat' file.
+  ##
   class RootResource < Resource
     attr_reader(:id)
 
