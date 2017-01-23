@@ -33,10 +33,6 @@ module Senkyoshi
     attr_accessor(:title, :body, :files, :url)
     attr_reader(:extendeddata)
 
-    def initialize(resource_id = nil)
-      super(resource_id)
-    end
-
     def self.from(xml, pre_data, resource_xids)
       type = xml.xpath("/CONTENT/CONTENTHANDLER/@value").first.text
       type.slice! "resource/"

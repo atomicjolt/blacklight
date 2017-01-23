@@ -11,7 +11,7 @@ module Senkyoshi
       @id = id
     end
 
-    def self.from(xml = nil, pre_data = nil, _resource_xids = nil)
+    def self.from(xml, pre_data, _resource_xids = nil)
       resource = new(pre_data[:file_name])
       resource.iterate_xml(xml, pre_data)
     end
