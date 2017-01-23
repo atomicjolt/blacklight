@@ -37,6 +37,9 @@ module Senkyoshi
     end
 
     def canvas_conversion(course, _resources)
+      @criteria_list.each do |criteria|
+        criteria.canvas_conversion(course, @content_id, _resources)
+      end
       course
     end
   end

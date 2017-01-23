@@ -12,13 +12,14 @@ describe "Rule" do
     result = Senkyoshi::Rule.new.iterate_xml xml
 
     assert_equal result.title, "Rule 1"
-    assert_equal result.content_id, "res00223"
+    assert_equal result.content_id, "res002"
     assert_equal result.criteria_list.size, 2
     assert_equal result.criteria_list.first.class, GradeCompletedCriteria
     assert_equal result.criteria_list[1].class, ContentReviewedCriteria
   end
 
   it "implements canvas_conversion" do
+    
   end
 
   # it "should add module prerequisites" do

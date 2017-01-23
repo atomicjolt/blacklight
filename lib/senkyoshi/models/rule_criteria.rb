@@ -30,18 +30,19 @@ module Senkyoshi
     def self.in_same_module?(modules, content_id, resource_id)
       content_module = Module.find_module_from_item_id(modules, content_id)
       resource_module = Module.find_module_from_item_id(modules, resource_id)
+      return nil if content_module.nil? || resource_module.nil?
       !content_module.nil? && content_module == resource_module
     end
 
     def self.module_prerequisite?(modules, content_id, resource_id)
-      !in_same_module? modules, content_id, resource_id
+      in_same_module?(modules, content_id, resource_id) == false
     end
 
     def self.module_completion_requirement?(modules, content_id, resource_id)
-      in_same_module? modules, content_id, resource_id
+      in_same_module?(modules, content_id, resource_id) == true
     end
 
-    def canvas_conversion(course, _resources)
+    def canvas_conversion(course, _content_id, _resources)
       course
     end
   end
