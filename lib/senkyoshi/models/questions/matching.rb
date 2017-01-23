@@ -8,6 +8,7 @@ module Senkyoshi
       /<\/?strong[^>]*>/i,        # <strong> tags
       /<\/?em[^>]*>/i,            # <em> tags
       /<\/?span[^>]*>/i,          # <span> tags
+      /<\/?font[^>]*>/i,          # <font> tags
       /<\/?i(?!mg)[^>]*>/i,       # <i> tags, no <img>
       / style=("|')[^"']*("|')/i, # inline styles
     )
