@@ -1,11 +1,11 @@
-require "senkyoshi/models/resource"
+require "senkyoshi/models/file_resource"
 
 module Senkyoshi
-  class Forum < Resource
-    def initialize
+  class Forum < FileResource
+    def initialize(resource_id)
+      super(resource_id)
       @title = ""
       @text = ""
-      @identifier = Senkyoshi.create_random_hex
       @discussion_type = "threaded"
     end
 
@@ -19,7 +19,7 @@ module Senkyoshi
       discussion = CanvasCc::CanvasCC::Models::Discussion.new
       discussion.title = @title
       discussion.text = @text
-      discussion.identifier = @identifier
+      discussion.identifier = @id
       discussion.discussion_type = @discussion_type
       course.discussions << discussion
       course

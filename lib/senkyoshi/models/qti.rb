@@ -1,7 +1,7 @@
 require "senkyoshi/models/assignment_group"
 require "senkyoshi/models/assignment"
 require "senkyoshi/models/question"
-require "senkyoshi/models/resource"
+require "senkyoshi/models/file_resource"
 
 QTI_TYPE = {
   "Test" => "Assessment",
@@ -10,15 +10,16 @@ QTI_TYPE = {
 }.freeze
 
 module Senkyoshi
-  class QTI < Resource
-    def self.from(data, pre_data)
+  class QTI < FileResource
+    def self.from(data, pre_data, _resource_xids = nil)
       type = data.at("bbmd_assessmenttype").text
       qti_class = Senkyoshi.const_get QTI_TYPE[type]
-      qti = qti_class.new
+      qti = qti_class.new(pre_data[:file_name])
       qti.iterate_xml(data, pre_data)
     end
 
-    def initialize
+    def initialize(resource_id = nil)
+      super(resource_id)
       @title = ""
       @description = ""
       @quiz_type = ""

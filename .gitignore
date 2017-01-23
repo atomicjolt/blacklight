@@ -12,6 +12,7 @@
 /pkg/
 /doc/
 .byebug_history
+.tag*
 
 /canvas/
 /sources/

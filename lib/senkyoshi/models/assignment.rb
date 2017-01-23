@@ -16,7 +16,9 @@ module Senkyoshi
         assignment.submission_types << "online_upload"
         assignment.grading_type = "points"
 
-        @files.each { |f| assignment.body << f.canvas_conversion }
+        @files.each do |file|
+          assignment.body << file.canvas_conversion(resources)
+        end
         course = create_module(course)
         course.assignments << assignment
       end

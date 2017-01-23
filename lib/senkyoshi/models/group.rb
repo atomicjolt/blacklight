@@ -1,8 +1,9 @@
-require "senkyoshi/models/resource"
+require "senkyoshi/models/file_resource"
 
 module Senkyoshi
-  class Group < Resource
-    def initialize
+  class Group < FileResource
+    def initialize(resource_id)
+      super(resource_id)
       @name = ""
       @description = ""
       @is_public = true

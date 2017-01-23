@@ -2,6 +2,7 @@ require "senkyoshi/version"
 require "senkyoshi/xml_parser"
 require "senkyoshi/canvas_course"
 require "senkyoshi/collection"
+require "senkyoshi/configuration"
 
 require "canvas_cc"
 require "optparse"
@@ -12,7 +13,24 @@ require "zip"
 require "senkyoshi/exceptions"
 
 module Senkyoshi
-  BASE = "$IMS-CC-FILEBASE$".freeze
+  FILE_BASE = "$IMS-CC-FILEBASE$".freeze
+  DIR_BASE = "$CANVAS_COURSE_REFERENCE$/files/folder".freeze
+
+  class << self
+    attr_writer :configuration
+  end
+
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
+  def self.reset
+    @configuration = Configuration.new
+  end
+
+  def self.configure
+    yield configuration
+  end
 
   def self.parse(zip_path, imscc_path)
     Zip::File.open(zip_path) do |file|
@@ -29,6 +47,10 @@ module Senkyoshi
     end
   end
 
+  def self.parse_and_process_single(zip_path, imscc_path)
+    Senkyoshi.parse(zip_path, imscc_path)
+  end
+
   def self.read_file(zip_file, file_name)
     zip_file.find_entry(file_name).get_input_stream.read
   rescue NoMethodError
@@ -36,7 +58,7 @@ module Senkyoshi
   end
 
   def self.build_file(course, imscc_path, resources)
-    folder = imscc_path.split("/").first
+    folder = File.dirname(imscc_path)
     file = CanvasCc::CanvasCC::CartridgeCreator.new(course).create(folder)
     File.rename(file, imscc_path)
     cleanup resources
