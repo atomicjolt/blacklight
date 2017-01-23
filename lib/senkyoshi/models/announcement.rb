@@ -1,13 +1,13 @@
-require "senkyoshi/models/resource"
+require "senkyoshi/models/file_resource"
 
 module Senkyoshi
-  class Announcement < Resource
-    def initialize
+  class Announcement < FileResource
+    def initialize(resource_id)
+      super(resource_id)
       @title = ""
       @text = ""
       @delayed_post = ""
       @posted_at = ""
-      @identifier = Senkyoshi.create_random_hex
       @dependency = Senkyoshi.create_random_hex
       @type = "announcement"
     end
@@ -27,7 +27,7 @@ module Senkyoshi
       announcement.text = fix_html(@text, resources)
       announcement.delayed_post = @delayed_post
       announcement.posted_at = @posted_at
-      announcement.identifier = @identifier
+      announcement.identifier = @id
       announcement.dependency = @dependency
       course.announcements << announcement
       course

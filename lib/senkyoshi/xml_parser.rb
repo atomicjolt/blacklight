@@ -81,16 +81,10 @@ module Senkyoshi
         single_pre_data = get_single_pre_data(pre_data, file)
         res_class = Senkyoshi.const_get RESOURCE_TYPE[type.to_sym]
         case type
-        when "content"
-          Content.from(xml_data, single_pre_data, resource_xids)
-        when "questestinterop"
-          single_pre_data ||= { file_name: file }
-          QTI.from(xml_data, single_pre_data)
         when "staffinfo"
           staff_info.iterate_xml(xml_data, single_pre_data)
         else
-          resource = res_class.new
-          resource.iterate_xml(xml_data, single_pre_data)
+          res_class.from(xml_data, single_pre_data, resource_xids)
         end
       end
     end
@@ -99,7 +93,7 @@ module Senkyoshi
   def self.get_single_pre_data(pre_data, file)
     pre_data.detect do |d|
       d[:file_name] == file || d[:assignment_id] == file
-    end
+    end || { file_name: file }
   end
 
   def self.iterator_master(resources, zip_file)
