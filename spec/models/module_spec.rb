@@ -49,10 +49,18 @@ describe "Module" do
   describe "find_module_from_item_id" do
     it "should return module that module item belongs to" do
       result = Senkyoshi::Module.find_module_from_item_id(
-        @canvas_modules, @canvas_module_items.first.identifier
+        @canvas_modules, @canvas_module_items.first.identifierref
       )
 
       assert_equal result.identifier, @module_ids.first
+    end
+
+    it "should return nil when item is not found" do
+      result = Senkyoshi::Module.find_module_from_item_id(
+        @canvas_modules, "bad id"
+      )
+
+      refute result
     end
   end
 
