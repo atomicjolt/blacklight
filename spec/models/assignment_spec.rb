@@ -8,7 +8,7 @@ require_relative "../../lib/senkyoshi/models/assignment"
 describe "Assignment" do
   before do
     @id = "res001"
-    @pre_data = {file_name: @id}
+    @pre_data = { file_name: @id }
     @xml = get_fixture_xml "content.xml"
   end
 

@@ -91,7 +91,6 @@ describe "Gradebook" do
 
   describe "convert_categories" do
     it "only creates assignment groups once" do
-
       categories = {
         category_1: "Category One",
         category_1: "Category One",

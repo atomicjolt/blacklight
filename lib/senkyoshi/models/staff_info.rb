@@ -3,10 +3,7 @@ require "active_support/core_ext/string"
 
 module Senkyoshi
   class StaffInfo < RootResource
-    attr_reader(
-      :title,
-      :entries,
-    )
+    attr_reader(:title, :entries)
 
     def initialize(resource_id = nil)
       super(resource_id)

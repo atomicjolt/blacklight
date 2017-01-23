@@ -81,16 +81,10 @@ module Senkyoshi
         single_pre_data = get_single_pre_data(pre_data, file)
         res_class = Senkyoshi.const_get RESOURCE_TYPE[type.to_sym]
         case type
-        # when "content"
-        #   Content.from(xml_data, single_pre_data, resource_xids)
-        # when "questestinterop"
-        #   QTI.from(xml_data, single_pre_data)
         when "staffinfo"
           staff_info.iterate_xml(xml_data, single_pre_data)
         else
           res_class.from(xml_data, single_pre_data, resource_xids)
-          # resource = res_class.new(single_pre_data[:file_name])
-          # resource.iterate_xml(xml_data, single_pre_data)
         end
       end
     end
