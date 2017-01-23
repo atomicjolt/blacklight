@@ -41,14 +41,16 @@ describe Senkyoshi do
         assert_equal matches.first[:question_text], "<p>To be or not to be</p>"
       end
 
-      it "should iterate through xml and empty answer text" do
+      it "should iterate through xml, empty answer text and strip some HTML" do
         xml = get_fixture_xml "matching.xml"
         @matching = @matching.iterate_xml(xml.children.first)
         matches = @matching.instance_variable_get :@matches
 
+        # Original HTML: <p>that <em>is</em> not <a style='color: green>a</a>
+        #               question. I <span>dislike</span> it.</p>
         assert_equal(
           matches.first[:answer_text],
-          "<p>that is not a question</p>",
+          "that is not <a>a</a> question. I dislike it.",
         )
       end
 
