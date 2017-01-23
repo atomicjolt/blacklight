@@ -154,7 +154,8 @@ module Senkyoshi
     else
       item.search("item").flat_map do |internal_item|
         toc_item = setup_item(internal_item, item, course_toc)
-        toc_item[:indent] = get_indent(internal_item, -1)
+        negative_indent = -2
+        toc_item[:indent] = get_indent(internal_item, negative_indent)
         toc_item = set_discussion_boards(discussion_boards, toc_item)
         toc_item
       end
