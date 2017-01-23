@@ -4,7 +4,7 @@ module Senkyoshi
   ##
   # Class to represent a resource constructed from a single 'dat' file.
   ##
-  class RootResource < Resource
+  class FileResource < Resource
     attr_reader(:id)
 
     def initialize(id = nil)

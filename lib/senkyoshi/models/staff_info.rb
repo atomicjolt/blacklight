@@ -1,8 +1,8 @@
-require "senkyoshi/models/root_resource"
+require "senkyoshi/models/file_resource"
 require "active_support/core_ext/string"
 
 module Senkyoshi
-  class StaffInfo < RootResource
+  class StaffInfo < FileResource
     attr_reader(:title, :entries)
 
     def initialize(resource_id = nil)

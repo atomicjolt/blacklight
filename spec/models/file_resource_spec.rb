@@ -1,4 +1,4 @@
-describe "RootResource" do
+describe "FileResource" do
   before do
     @xml = get_fixture_xml "content.xml"
     @id = "res001"
@@ -6,7 +6,7 @@ describe "RootResource" do
   end
 
   it "should implement from method" do
-    result = RootResource.from(@xml, @pre_data)
+    result = FileResource.from(@xml, @pre_data)
 
     assert_equal(result.id, @id)
   end

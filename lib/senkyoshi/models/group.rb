@@ -1,7 +1,7 @@
-require "senkyoshi/models/root_resource"
+require "senkyoshi/models/file_resource"
 
 module Senkyoshi
-  class Group < RootResource
+  class Group < FileResource
     def initialize(resource_id)
       super(resource_id)
       @name = ""

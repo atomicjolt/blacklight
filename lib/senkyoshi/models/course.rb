@@ -1,7 +1,7 @@
-require "senkyoshi/models/root_resource"
+require "senkyoshi/models/file_resource"
 
 module Senkyoshi
-  class Course < RootResource
+  class Course < FileResource
     ##
     # This class represents a reader for one zip file, and allows the usage of
     # individual files within zip file

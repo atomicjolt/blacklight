@@ -1,8 +1,8 @@
-require "senkyoshi/models/root_resource"
+require "senkyoshi/models/file_resource"
 require "senkyoshi/models/content_file"
 
 module Senkyoshi
-  class Content < RootResource
+  class Content < FileResource
     CONTENT_TYPES = {
       "x-bb-asmt-test-link" => "Quiz",
       "x-bb-asmt-survey-link" => "Quiz",

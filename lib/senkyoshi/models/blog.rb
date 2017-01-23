@@ -1,7 +1,7 @@
-require "senkyoshi/models/root_resource"
+require "senkyoshi/models/file_resource"
 
 module Senkyoshi
-  class Blog < RootResource
+  class Blog < FileResource
     def initialize(resource_id)
       super(resource_id)
       @title = ""

@@ -91,11 +91,9 @@ module Senkyoshi
   end
 
   def self.get_single_pre_data(pre_data, file)
-    found = pre_data.detect do |d|
+    pre_data.detect do |d|
       d[:file_name] == file || d[:assignment_id] == file
-    end
-
-    found || { file_name: file }
+    end || { file_name: file }
   end
 
   def self.iterator_master(resources, zip_file)

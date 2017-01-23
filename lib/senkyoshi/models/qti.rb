@@ -1,7 +1,7 @@
 require "senkyoshi/models/assignment_group"
 require "senkyoshi/models/assignment"
 require "senkyoshi/models/question"
-require "senkyoshi/models/root_resource"
+require "senkyoshi/models/file_resource"
 
 QTI_TYPE = {
   "Test" => "Assessment",
@@ -10,7 +10,7 @@ QTI_TYPE = {
 }.freeze
 
 module Senkyoshi
-  class QTI < RootResource
+  class QTI < FileResource
     def self.from(data, pre_data, _ = nil)
       type = data.at("bbmd_assessmenttype").text
       qti_class = Senkyoshi.const_get QTI_TYPE[type]
