@@ -5,6 +5,13 @@ module Senkyoshi
     include Senkyoshi
     attr_reader(:id, :negated)
 
+    COMPLETION_TYPES = {
+      must_view: "must_view",
+      must_submit: "must_submit",
+      min_score: "min_score",
+      must_contribute: "must_contribute",
+    }.freeze
+
     def initialize(id, negated)
       @id = id
       @negated = negated
