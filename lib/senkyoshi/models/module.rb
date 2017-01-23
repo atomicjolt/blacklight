@@ -12,7 +12,7 @@ module Senkyoshi
 
     def self.find_module_from_item_id(modules, id)
       modules.detect do |mod|
-        mod.module_items.detect { |item| item.identifier == id }
+        mod.module_items.detect { |item| item.identifierref == id }
       end
     end
 
