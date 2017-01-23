@@ -62,6 +62,7 @@ Metrics/ModuleLength:
 Metrics/BlockLength:
   Exclude:
     - "**/*_spec.rb"
+    - "**/**/tasks.rb"
 
 Style/ClassVars:
   Description: 'Avoid the use of class variables.'
