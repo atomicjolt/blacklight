@@ -47,10 +47,10 @@ describe "ModuleConverter" do
         original_file: "res00006",
         internal_handle: "discussion_board_entry",
         file_name: "res00006",
-        parent_id: 'res00001',
+        parent_id: "res00001",
         indent: 0,
       }
-      subheaders = [{name: "subheader"}]
+      subheaders = [{ name: "subheader" }]
       result = ModuleConverter.check_module_header(data, subheaders)
       assert_equal result, false
     end
@@ -59,8 +59,32 @@ describe "ModuleConverter" do
   describe "get_subheaders" do
     it "should return no subheaders" do
       pre_data = [
-        { title: "Test Home", target_type: "CONTENT", original_file: "res00005", internal_handle: "content", file_name: "res00005", parent_id: "res00005", indent: -1 },
-        { file_name: "res00082", title: "Test Test Version A", parent_id: "res00005", indent: 0, category: "Test", points: "78.0", content_id: "res00082", assignment_id: "res00019", due_at: "", original_file_name: "res00019", one_question_at_a_time: "ALL_AT_ONCE", time_limit: "", access_code: "Test17Amax", allowed_attempts: "", unlimited_attempts: "false", cant_go_back: "false", show_correct_answers: "false" },
+        {
+          title: "Test Home",
+          target_type: "CONTENT",
+          original_file: "res00005",
+          internal_handle: "content",
+          file_name: "res00005",
+          parent_id: "res00005",
+          indent: -1,
+        },
+        { file_name: "res00082",
+          title: "Test Test Version A",
+          parent_id: "res00005",
+          indent: 0,
+          category: "Test",
+          points: "78.0",
+          content_id: "res00082",
+          assignment_id: "res00019",
+          due_at: "",
+          original_file_name: "res00019",
+          one_question_at_a_time: "ALL_AT_ONCE",
+          time_limit: "",
+          access_code: "Test17Amax",
+          allowed_attempts: "",
+          unlimited_attempts: "false",
+          cant_go_back: "false",
+          show_correct_answers: "false" },
       ]
       results = ModuleConverter.get_subheaders(pre_data)
       assert_equal results.length, 0
@@ -68,8 +92,32 @@ describe "ModuleConverter" do
 
     it "should return subheaders" do
       pre_data = [
-        { title: "Test Home", target_type: "SUBHEADER", original_file: "res00005", internal_handle: "content", file_name: "res00005", parent_id: "res00005", indent: -1 },
-        { file_name: "res00082", title: "Test Test Version A", parent_id: "res00005", indent: 0, category: "Test", points: "78.0", content_id: "res00082", assignment_id: "res00019", due_at: "", original_file_name: "res00019", one_question_at_a_time: "ALL_AT_ONCE", time_limit: "", access_code: "Test17Amax", allowed_attempts: "", unlimited_attempts: "false", cant_go_back: "false", show_correct_answers: "false" },
+        {
+          title: "Test Home",
+          target_type: "SUBHEADER",
+          original_file: "res00005",
+          internal_handle: "content",
+          file_name: "res00005",
+          parent_id: "res00005",
+          indent: -1,
+        },
+        { file_name: "res00082",
+          title: "Test Test Version A",
+          parent_id: "res00005",
+          indent: 0,
+          category: "Test",
+          points: "78.0",
+          content_id: "res00082",
+          assignment_id: "res00019",
+          due_at: "",
+          original_file_name: "res00019",
+          one_question_at_a_time: "ALL_AT_ONCE",
+          time_limit: "",
+          access_code: "Test17Amax",
+          allowed_attempts: "",
+          unlimited_attempts: "false",
+          cant_go_back: "false",
+          show_correct_answers: "false" },
       ]
       results = ModuleConverter.get_subheaders(pre_data)
       assert_equal results.length, 1
@@ -83,7 +131,15 @@ describe "ModuleConverter" do
       file = "res00020"
       parent = "res00019"
       indent = -1
-      data = { title: title, target_type: type, original_file: file, internal_handle: "content", file_name: file, parent_id: parent, indent: indent }
+      data = {
+        title: title,
+        target_type: type,
+        original_file: file,
+        internal_handle: "content",
+        file_name: file,
+        parent_id: parent,
+        indent: indent,
+      }
       item = ModuleConverter.create_module_subheader(data)
 
       assert_equal title, item.title
@@ -98,14 +154,23 @@ describe "ModuleConverter" do
       file = "res00020"
       parent = "res00019"
       indent = -1
-      data = { title: title, target_type: type, original_file: file, internal_handle: "content", file_name: file, parent_id: parent, indent: indent }
+      data = {
+        title: title,
+        target_type: type,
+        original_file: file,
+        internal_handle: "content",
+        file_name: file,
+        parent_id: parent,
+        indent: indent,
+      }
       item = ModuleConverter.create_module_subheader(data)
       course = CanvasCc::CanvasCC::Models::Course.new
       canvas_course = ModuleConverter.add_canvas_module_item(course, item, data)
 
       assert_equal canvas_course.canvas_modules.count, 1
       assert_equal canvas_course.canvas_modules.first.module_items.count, 1
-      assert_equal canvas_course.canvas_modules.first.module_items.first.title, title
+      assert_equal canvas_course.canvas_modules.
+        first.module_items.first.title, title
     end
   end
 
@@ -118,7 +183,15 @@ describe "ModuleConverter" do
       parent = nil
       indent = -1
       identifier = "aj_main_module"
-      data = { title: title, target_type: type, original_file: file, internal_handle: "content", file_name: file, parent_id: parent, indent: indent }
+      data = {
+        title: title,
+        target_type: type,
+        original_file: file,
+        internal_handle: "content",
+        file_name: file,
+        parent_id: parent,
+        indent: indent,
+      }
       parent_module = Senkyoshi::Module.new(title, identifier).canvas_conversion
       course.canvas_modules << parent_module
 
@@ -135,7 +208,15 @@ describe "ModuleConverter" do
       file = "res00020"
       parent = "res00019"
       indent = -1
-      data = { title: title, target_type: type, original_file: file, internal_handle: "content", file_name: file, parent_id: parent, indent: indent }
+      data = {
+        title: title,
+        target_type: type,
+        original_file: file,
+        internal_handle: "content",
+        file_name: file,
+        parent_id: parent,
+        indent: indent,
+      }
       parent_module = Senkyoshi::Module.new(title, parent).canvas_conversion
       course.canvas_modules << parent_module
 
@@ -153,7 +234,15 @@ describe "ModuleConverter" do
       parent = "res00019"
       unknown_parent = "res00021"
       indent = -1
-      data = { title: title, target_type: type, original_file: file, internal_handle: "content", file_name: file, parent_id: unknown_parent, indent: indent }
+      data = {
+        title: title,
+        target_type: type,
+        original_file: file,
+        internal_handle: "content",
+        file_name: file,
+        parent_id: unknown_parent,
+        indent: indent,
+      }
       parent_module = Senkyoshi::Module.new(title, parent).canvas_conversion
       course.canvas_modules << parent_module
 
