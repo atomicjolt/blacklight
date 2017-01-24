@@ -1,5 +1,4 @@
 require "senkyoshi/models/resource"
-require "byebug"
 
 module Senkyoshi
   class Heirarchy
