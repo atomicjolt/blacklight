@@ -1,11 +1,12 @@
 require "senkyoshi/models/outcome_definition"
-require "senkyoshi/models/resource"
+require "senkyoshi/models/file_resource"
 
 module Senkyoshi
-  class Gradebook < Resource
+  class Gradebook < FileResource
     attr_reader(:outcome_definitions, :categories)
 
-    def initialize(categories = [], outcome_definitions = [])
+    def initialize(resource_id = nil, categories = [], outcome_definitions = [])
+      super(resource_id)
       @categories = categories
       @outcome_definitions = outcome_definitions
     end

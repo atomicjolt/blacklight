@@ -6,10 +6,15 @@ require_relative "../helpers.rb"
 require_relative "../../lib/senkyoshi/models/content"
 
 describe "Content" do
+  before do
+    @id = "res001"
+    @pre_data = { file_name: @id }
+    @xml = get_fixture_xml "content.xml"
+  end
+
   describe "from" do
     it "should return the right content type" do
-      xml = get_fixture_xml "content.xml"
-      result = Content.from(xml, {}, [])
+      result = Content.from(@xml, @pre_data, [])
       assert_equal (result.is_a? Object), true
       assert_equal (result.is_a? WikiPage), true
     end
@@ -17,20 +22,30 @@ describe "Content" do
 
   describe "iterate_xml" do
     it "should iterate_xml" do
-      xml = get_fixture_xml "content.xml"
-      content = Senkyoshi::Content.new
-      pre_data = {}
-      content.iterate_xml(xml, pre_data)
+      content = Senkyoshi::Content.new(@id)
+      content.iterate_xml(@xml, @pre_data)
 
-      content_title = xml.xpath("/CONTENT/TITLE/@value").first.text
-      content_body = xml.xpath("/CONTENT/BODY/TEXT").first.text
-      content_id = xml.xpath("/CONTENT/@id").first.text
+      content_title = @xml.xpath("/CONTENT/TITLE/@value").first.text
+      content_body = @xml.xpath("/CONTENT/BODY/TEXT").first.text
 
-      assert_equal(content.id, content_id)
+      assert_equal(content.id, @id)
       assert_equal(content.title, content_title)
       assert_equal(content.body, content_body)
       assert_equal(content.files.length, 1)
       assert_equal(content.files.first.id, "_2030185_1")
+    end
+  end
+
+  describe "get_pre_data" do
+    it "should return an object with values" do
+      result = Content.get_pre_data(@xml, @id)
+
+      parent_id = @xml.xpath("/CONTENT/PARENTID/@value").first.text
+      id = @xml.xpath("/CONTENT/@id").first.text
+
+      assert_equal(result[:id], id)
+      assert_equal(result[:parent_id], parent_id)
+      assert_equal(result[:file_name], @id)
     end
   end
 

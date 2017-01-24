@@ -54,6 +54,17 @@ module Senkyoshi
     ##
     def self.install_tasks
       namespace :senkyoshi do
+        desc "Convert a single given blackboard cartridge to a canvas cartridge"
+        task :imscc_single, [:file_path] do |_t, args|
+          file_path = args.file_path
+          if file_path
+            imscc_path = file_path.clone.ext(".imscc")
+            Senkyoshi.parse_and_process_single(file_path, imscc_path)
+          else
+            puts "No file given"
+          end
+        end
+
         desc "Convert blackboard cartridges to canvas cartridges"
         task imscc: SOURCE_FILES.pathmap(
           "%{^#{SOURCE_NAME}/,#{OUTPUT_DIR}/}X.imscc",
