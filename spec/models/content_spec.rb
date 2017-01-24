@@ -36,19 +36,6 @@ describe "Content" do
     end
   end
 
-  describe "get_pre_data" do
-    it "should return an object with values" do
-      result = Content.get_pre_data(@xml, @id)
-
-      parent_id = @xml.xpath("/CONTENT/PARENTID/@value").first.text
-      id = @xml.xpath("/CONTENT/@id").first.text
-
-      assert_equal(result[:id], id)
-      assert_equal(result[:parent_id], parent_id)
-      assert_equal(result[:file_name], @id)
-    end
-  end
-
   describe "set_module" do
     it "should return the converted module item" do
       xml = get_fixture_xml "content.xml"
