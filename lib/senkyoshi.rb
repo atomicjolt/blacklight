@@ -50,8 +50,8 @@ module Senkyoshi
       xml_organizations = xml.at("organizations")
 
       pre_data = Senkyoshi.pre_iterator(xml_organizations, xml_resources, file)
-      resources.add(Senkyoshi.
-        iterate_xml(xml_resources, file, resource_xids, pre_data))
+      resources.add(
+        Senkyoshi.iterate_xml(xml_resources, file, resource_xids, pre_data))
 
       course = create_canvas_course(resources, zip_path, pre_data)
       build_file(course, imscc_path, resources)
