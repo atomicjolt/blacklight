@@ -35,9 +35,6 @@ module Senkyoshi
       end
     end
 
-    # def find_or_create
-    # end
-
     ## TODO move to rule criteria
     ## then users override make_prereq and make_completion
     def canvas_conversion(course, content_id, _resources = nil)
@@ -52,14 +49,21 @@ module Senkyoshi
       mod = Module.find_module_from_item_id course.canvas_modules, content_id
 
       if is_completion
-        mod.completion_requirements << make_completion(mod)
+        add_if_unique(
+          mod.completion_requirements, make_completion(mod)
+        )
       elsif is_prereq
         prereq_module = Module.find_module_from_item_id(
           course.canvas_modules, @reviewed_content_id
         )
 
-        mod.prerequisites << make_prereq(prereq_module)
-        prereq_module.completion_requirements << make_completion(prereq_module)
+        add_if_unique(
+          mod.prerequisites, make_prereq(prereq_module)
+        ) { |a, b| a.identifierref == b.identifierref }
+
+        add_if_unique(
+          prereq_module.completion_requirements, make_completion(prereq_module)
+        ) { |a, b| a.identifierref == b.identifierref }
       end
 
       course

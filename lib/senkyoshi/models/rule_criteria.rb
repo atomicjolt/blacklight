@@ -17,6 +17,15 @@ module Senkyoshi
       @negated = negated
     end
 
+    def add_if_unique(collection, item)
+      if collection.detect do |collection_item|
+           yield(collection_item, item)
+         end.nil?
+        collection << item
+      end
+      collection
+    end
+
     def self.get_id(xml)
       xml.xpath("./@id").text
     end
