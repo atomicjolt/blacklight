@@ -16,8 +16,8 @@ require "senkyoshi/exceptions"
 module Senkyoshi
   FILE_BASE = "$IMS-CC-FILEBASE$".freeze
   DIR_BASE = "$CANVAS_COURSE_REFERENCE$/files/folder".freeze
-  MAIN_CANVAS_MODULE = "aj_main_module"
-  MASTER_MODULE = "master_module"
+  MAIN_CANVAS_MODULE = "aj_main_module".freeze
+  MASTER_MODULE = "master_module".freeze
 
   class << self
     attr_writer :configuration
@@ -51,7 +51,8 @@ module Senkyoshi
 
       pre_data = Senkyoshi.pre_iterator(xml_organizations, xml_resources, file)
       resources.add(
-        Senkyoshi.iterate_xml(xml_resources, file, resource_xids, pre_data))
+        Senkyoshi.iterate_xml(xml_resources, file, resource_xids, pre_data),
+      )
 
       course = create_canvas_course(resources, zip_path, pre_data)
       build_file(course, imscc_path, resources)
