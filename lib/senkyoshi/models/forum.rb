@@ -12,14 +12,14 @@ module Senkyoshi
     def iterate_xml(data, pre_data)
       @title = Senkyoshi.get_attribute_value(data, "TITLE")
       @text = Senkyoshi.get_text(data, "TEXT")
-      if !pre_data.empty?
+      if pre_data[:internal_handle]
         @module_item = ModuleItem.new(
           @title,
           "DiscussionTopic",
-          @identifier,
+          @id,
           nil,
           pre_data[:indent],
-          pre_data[:file_name],
+          @id,
         ).canvas_conversion
       end
       self
@@ -33,7 +33,7 @@ module Senkyoshi
       discussion.discussion_type = @discussion_type
       course.discussions << discussion
       if @module_item
-        course = create_module(course, @module_item)
+        course = create_module(course)
       end
       course
     end

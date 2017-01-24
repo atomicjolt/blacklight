@@ -95,7 +95,7 @@ module Senkyoshi
     end
 
     def create_module(course)
-      super(course, @module_item)
+      super(course)
     end
   end
 end
