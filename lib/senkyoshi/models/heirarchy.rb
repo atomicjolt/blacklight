@@ -73,7 +73,7 @@ module Senkyoshi
         reject { |x| x.to_i > item_id.to_i }.
         min_by { |x| (x.to_i - item_id.to_i).abs }
 
-      header_id ? "res" + header_id : nil
+      header_id ? "res#{header_id}" : nil
     end
 
     def self.get_headers(course_toc, target_type)
