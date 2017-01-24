@@ -53,8 +53,61 @@ module Senkyoshi
       in_same_module?(modules, content_id, resource_id) == true
     end
 
-    def canvas_conversion(course, _content_id, _resources)
+    def get_foreign_id; end
+
+    def get_completion_type; end
+
+    def make_completion(mod)
+      CanvasCc::CanvasCC::Models::ModuleCompletionRequirement.new.tap do |req|
+        mod_item = ModuleItem.find_item_from_id_ref(
+          mod.module_items, @reviewed_content_id
+        )
+
+        req.identifierref = mod_item.identifier if mod_item
+        req.type = get_completion_type
+      end
+    end
+
+    def make_prereq(prereq_module)
+      CanvasCc::CanvasCC::Models::ModulePrerequisite.new.tap do |prereq|
+        prereq.identifierref = prereq_module.identifier
+        # prereq.title = "Howdy" #TODO
+        prereq.type = "context_module"
+      end
+    end
+
+
+    def canvas_conversion(course, content_id, _resources = nil)
+      is_completion = RuleCriteria.module_completion_requirement?(
+        course.canvas_modules, content_id, get_foreign_id
+      )
+
+      is_prereq = RuleCriteria.module_prerequisite?(
+        course.canvas_modules, content_id, get_foreign_id
+      )
+
+      mod = Module.find_module_from_item_id course.canvas_modules, content_id
+
+      if is_completion
+        add_if_unique(
+          mod.completion_requirements, make_completion(mod)
+        )
+      elsif is_prereq
+        prereq_module = Module.find_module_from_item_id(
+          course.canvas_modules, get_foreign_id
+        )
+
+        add_if_unique(
+          mod.prerequisites, make_prereq(prereq_module)
+        ) { |a, b| a.identifierref == b.identifierref }
+
+        add_if_unique(
+          prereq_module.completion_requirements, make_completion(prereq_module)
+        ) { |a, b| a.identifierref == b.identifierref }
+      end
+
       course
     end
+
   end
 end

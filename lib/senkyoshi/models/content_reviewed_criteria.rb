@@ -16,57 +16,12 @@ module Senkyoshi
       ContentReviewedCriteria.new(id, negated, reviewed_content_id)
     end
 
-    def make_completion(mod)
-      CanvasCc::CanvasCC::Models::ModuleCompletionRequirement.new.tap do |req|
-        mod_item = ModuleItem.find_item_from_id_ref(
-          mod.module_items, @reviewed_content_id
-        )
-
-        req.identifierref = mod_item.identifier if mod_item
-        req.type = COMPLETION_TYPES[:must_view]
-      end
+    def get_foreign_id
+      @reviewed_content_id
     end
 
-    def make_prereq(prereq_module)
-      CanvasCc::CanvasCC::Models::ModulePrerequisite.new.tap do |prereq|
-        prereq.identifierref = prereq_module.identifier
-        prereq.title = "Howdy"
-        prereq.type = "context_module"
-      end
-    end
-
-    ## TODO move to rule criteria
-    ## then users override make_prereq and make_completion
-    def canvas_conversion(course, content_id, _resources = nil)
-      is_completion = RuleCriteria.module_completion_requirement?(
-        course.canvas_modules, content_id, @reviewed_content_id
-      )
-
-      is_prereq = RuleCriteria.module_prerequisite?(
-        course.canvas_modules, content_id, @reviewed_content_id
-      )
-
-      mod = Module.find_module_from_item_id course.canvas_modules, content_id
-
-      if is_completion
-        add_if_unique(
-          mod.completion_requirements, make_completion(mod)
-        )
-      elsif is_prereq
-        prereq_module = Module.find_module_from_item_id(
-          course.canvas_modules, @reviewed_content_id
-        )
-
-        add_if_unique(
-          mod.prerequisites, make_prereq(prereq_module)
-        ) { |a, b| a.identifierref == b.identifierref }
-
-        add_if_unique(
-          prereq_module.completion_requirements, make_completion(prereq_module)
-        ) { |a, b| a.identifierref == b.identifierref }
-      end
-
-      course
+    def get_completion_type
+      COMPLETION_TYPES[:must_view]
     end
   end
 end
