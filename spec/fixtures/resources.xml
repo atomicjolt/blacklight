@@ -104,7 +104,7 @@
    bb:title="coursey" identifier="res00066" type="resource/x-mhhe-course-cx" xml:base="res00066"/><resource
    bb:file="res00067.dat" bb:title="BB_EWS_RULE_" identifier="res00067" type="resource/x-bb-retention"
    xml:base="res00067"/><resource bb:file="res00068.dat" bb:title="collab" identifier="res00068"
-   type="resource/x-x-vpresentation-wimba" xml:base="res00068"><file href="wimba_vp.txt"/></resource><resource
+   type="resource/x-x-vpresentation-wimba" xml:base="res00068"><file href="wimba_vp.txt"/></resource><resource bb:file="res00119.dat" bb:title="Seminar 6" identifier="res00068" type="resource/x-bb-discussionboard" xml:base="res00068"/><resource
    bb:file="res00069.dat" bb:title="_10622326_1" identifier="res00069" type="resource/x-plugin-scormengine"
     xml:base="res00069"><file href="adlcp_rootv1p2.xsd"/><file href="Etiquette/Course.html"/><file
     href="Etiquette/course.jpg"/><file href="Etiquette/Distracting.html"/><file href="Etiquette/distracting.jpg"/><file
