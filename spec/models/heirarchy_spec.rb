@@ -15,7 +15,6 @@ describe Senkyoshi do
       item = organizations.at("organization").children[3]
       target_type = "CONTENT_ITEM"
       original_file = "res00008"
-      file_name = "res00119"
       internal_handle = "content"
       course_toc = [
         {
@@ -97,7 +96,6 @@ describe Senkyoshi do
     end
 
     it "should add the discussion board with right file name" do
-      discussion_name = "res00119"
       file_name = "res00005"
       toc_item = {
         title: "Seminar 6",
