@@ -4,6 +4,10 @@ Senkyoshi converts exported Blackboard packages into Canvas .imscc packages. It 
 
 ## Installation
 
+#### Canvas
+See [Senkyoshi Canvas Plugin](https://github.com/atomicjolt/senkyoshi_canvas_plugin) if you want to enable this in your canvas app.
+
+#### CLI
 Add this line to your application's Gemfile:
 
 ```ruby
