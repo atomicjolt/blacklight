@@ -34,6 +34,7 @@ describe "ContentReviewedCriteria" do
       CanvasCc::CanvasCC::Models::ModuleItem.new.tap do |item|
         item.content_type = "WikiPage"
         item.identifierref = id
+        item.identifier = id
       end
     end
 

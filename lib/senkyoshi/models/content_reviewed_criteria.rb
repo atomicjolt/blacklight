@@ -16,18 +16,18 @@ module Senkyoshi
       ContentReviewedCriteria.new(id, negated, reviewed_content_id)
     end
 
-    def make_completion
+    def make_completion(mod)
       CanvasCc::CanvasCC::Models::ModuleCompletionRequirement.new.tap do |req|
-        req.identifierref = @reviewed_content_id
+        mod_item = ModuleItem.find_item_from_id_ref(
+          mod.module_items, @reviewed_content_id
+        )
+
+        req.identifierref = mod_item.identifier if mod_item
         req.type = COMPLETION_TYPES[:must_view]
       end
     end
 
-    def make_prereq(canvas_modules)
-      prereq_module = Module.find_module_from_item_id(
-        canvas_modules, @reviewed_content_id
-      )
-
+    def make_prereq(prereq_module)
       CanvasCc::CanvasCC::Models::ModulePrerequisite.new.tap do |prereq|
         prereq.identifierref = prereq_module.identifier
         prereq.title = "Howdy"
@@ -35,6 +35,11 @@ module Senkyoshi
       end
     end
 
+    # def find_or_create
+    # end
+
+    ## TODO move to rule criteria
+    ## then users override make_prereq and make_completion
     def canvas_conversion(course, content_id, _resources = nil)
       is_completion = RuleCriteria.module_completion_requirement?(
         course.canvas_modules, content_id, @reviewed_content_id
@@ -47,9 +52,14 @@ module Senkyoshi
       mod = Module.find_module_from_item_id course.canvas_modules, content_id
 
       if is_completion
-        mod.completion_requirements << make_completion
+        mod.completion_requirements << make_completion(mod)
       elsif is_prereq
-        mod.prerequisites << make_prereq(course.canvas_modules)
+        prereq_module = Module.find_module_from_item_id(
+          course.canvas_modules, @reviewed_content_id
+        )
+
+        mod.prerequisites << make_prereq(prereq_module)
+        prereq_module.completion_requirements << make_completion(prereq_module)
       end
 
       course

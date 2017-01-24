@@ -5,8 +5,10 @@ require "senkyoshi/models/grade_range_criteria"
 require "senkyoshi/models/grade_range_percent_criteria"
 require "senkyoshi/models/resource"
 
+
+require "byebug"
 module Senkyoshi
-  class Rule < Resource
+  class Rule < FileResource
     attr_reader(:title, :content_id, :criteria_list, :id)
 
     CRITERIA_MAP = {
@@ -17,7 +19,8 @@ module Senkyoshi
       grade_range_percent_criteria: GradeRangePercentCriteria,
     }.freeze
 
-    def initialize
+    def initialize(resource_id)
+      super(resource_id)
       @criteria_list = []
     end
 
@@ -28,7 +31,7 @@ module Senkyoshi
         end
     end
 
-    def iterate_xml(xml, _ = nil)
+    def iterate_xml(xml, _pre_data = nil)
       @title = xml.xpath("./TITLE/@value").text
       @content_id = xml.xpath("./CONTENT_ID/@value").text
       @id = xml.xpath("./@id").text

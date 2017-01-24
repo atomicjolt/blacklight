@@ -25,7 +25,9 @@ module Senkyoshi
       xml.xpath("./NEGATED/@value").text
     end
 
-    def self.from_xml(_xml); end
+    def self.from_xml(xml)
+      new(RuleCriteria.get_id(xml), RuleCriteria.get_negated(xml))
+    end
 
     def self.in_same_module?(modules, content_id, resource_id)
       content_module = Module.find_module_from_item_id(modules, content_id)
