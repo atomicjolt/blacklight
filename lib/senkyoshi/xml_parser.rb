@@ -20,30 +20,32 @@ require "senkyoshi/models/assessment"
 require "senkyoshi/models/question_bank"
 require "senkyoshi/models/survey"
 
+require "senkyoshi/models/heirarchy"
+
 require "senkyoshi/models/announcement"
 require "senkyoshi/models/answer"
-require "senkyoshi/models/qti"
 require "senkyoshi/models/assignment"
 require "senkyoshi/models/assignment_group"
+require "senkyoshi/models/attachment"
 require "senkyoshi/models/blog"
 require "senkyoshi/models/content"
 require "senkyoshi/models/content_file"
 require "senkyoshi/models/course"
 require "senkyoshi/models/course_toc"
+require "senkyoshi/models/external_url"
 require "senkyoshi/models/file"
 require "senkyoshi/models/forum"
 require "senkyoshi/models/gradebook"
 require "senkyoshi/models/group"
 require "senkyoshi/models/module"
 require "senkyoshi/models/module_item"
+require "senkyoshi/models/qti"
 require "senkyoshi/models/question"
 require "senkyoshi/models/quiz"
 require "senkyoshi/models/resource"
 require "senkyoshi/models/scorm_package"
 require "senkyoshi/models/staff_info"
 require "senkyoshi/models/wikipage"
-require "senkyoshi/models/attachment"
-require "senkyoshi/models/external_url"
 
 require "senkyoshi/exceptions"
 
@@ -142,81 +144,8 @@ module Senkyoshi
     discussion_boards = resources.
       search("resource[type=\"resource/x-bb-discussionboard\"]")
     organizations.at("organization").children.flat_map do |item|
-      item_iterator(item, course_toc, discussion_boards)
+      Heirarchy.item_iterator(item, course_toc, discussion_boards)
     end
-  end
-
-  def self.item_iterator(item, course_toc, discussion_boards)
-    if item.search("item").count.zero?
-      toc_item = setup_item(item, item.parent, course_toc)
-      toc_item[:indent] = 0
-      set_discussion_boards(discussion_boards, toc_item)
-    else
-      item.search("item").flat_map do |internal_item|
-        toc_item = setup_item(internal_item, item, course_toc)
-        negative_indent = -2
-        toc_item[:indent] = get_indent(internal_item, negative_indent)
-        toc_item = set_discussion_boards(discussion_boards, toc_item)
-        toc_item
-      end
-    end
-  end
-
-  def self.get_indent(item, indent)
-    return indent if item.parent.name == "organization"
-    indent += 1
-    get_indent(item.parent, indent)
-  end
-
-  def self.set_discussion_boards(discussion_boards, toc_item)
-    if toc_item[:internal_handle] == "discussion_board_entry"
-      resource = discussion_boards.
-        select { |db| db.attributes["title"].value == toc_item[:title] }
-      if resource.count == 1
-        toc_item[:file_name] = resource[0].
-          attributes["file"].value.gsub(".dat", "")
-      end
-    end
-    toc_item
-  end
-
-  def self.setup_item(item, parent_item, course_toc)
-    if item.attributes["identifierref"]
-      title = item.at("title").text
-      if title == "--TOP--"
-        file_name = item.parent.attributes["identifierref"].value
-        title = item.parent.at("title").text
-        item_id = item.parent.attributes["identifierref"].value.gsub("res", "")
-      else
-        file_name = item.attributes["identifierref"].value
-        if parent_item.attributes["identifierref"]
-          item_id = parent_item.attributes["identifierref"].
-            value.gsub("res", "")
-        else
-          item_id = item.attributes["identifierref"].value.gsub("res", "")
-        end
-      end
-      toc_item = course_toc.
-        detect { |ct| ct[:original_file] == file_name } || {}
-      toc_item[:file_name] = file_name
-      toc_item[:title] = title
-      toc_item[:parent_id] = get_parent_id(course_toc, item_id)
-      toc_item
-    end
-  end
-
-  def self.get_parent_id(course_toc, item_id)
-    header_ids = course_toc.select { |ct| ct[:target_type] == "SUBHEADER" }.
-      map { |sh| sh[:original_file].gsub("res", "") }
-    if header_ids.empty?
-      header_ids = course_toc.select { |ct| ct[:target_type] == "CONTENT" }.
-        map { |sh| sh[:original_file].gsub("res", "") }
-    end
-    header_id = header_ids.
-      reject { |x| x.to_i > item_id.to_i }.
-      min_by { |x| (x.to_i - item_id.to_i).abs }
-
-    header_id ? "res" + header_id : nil
   end
 
   ##
