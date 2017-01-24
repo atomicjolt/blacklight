@@ -19,5 +19,20 @@ module Senkyoshi
     def iterate_xml(_xml, _pre_data)
       self
     end
+
+    def create_module(course, module_item)
+      course.canvas_modules ||= []
+      cc_module = course.canvas_modules.
+        detect { |a| a.title == MASTER_MODULE }
+      if cc_module
+        cc_module.module_items << @module_item
+      else
+        cc_module = Module.new(MASTER_MODULE, MASTER_MODULE)
+        cc_module = cc_module.canvas_conversion
+        cc_module.module_items << @module_item
+        course.canvas_modules << cc_module
+      end
+      course
+    end
   end
 end

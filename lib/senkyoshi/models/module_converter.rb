@@ -2,7 +2,7 @@ module Senkyoshi
   class ModuleConverter
     def self.set_modules(course, pre_data)
       master_module = course.canvas_modules.
-        detect { |a| a.title == "master_module" }
+        detect { |a| a.title == MASTER_MODULE }
       subheaders = get_subheaders(pre_data)
       pre_data.each do |data|
         if check_module_header(data, subheaders)
@@ -52,7 +52,7 @@ module Senkyoshi
     def self.add_canvas_module_item(course, module_item, data)
       parent_module = get_subheader_parent(course, data)
       if !parent_module
-        parent_module = Module.new(course.title, "aj_main_module").
+        parent_module = Module.new(course.title, MAIN_CANVAS_MODULE).
           canvas_conversion
         course.canvas_modules << parent_module
       end
@@ -64,13 +64,13 @@ module Senkyoshi
     def self.get_subheader_parent(course, data)
       if !data[:parent_id]
         parent_module = course.canvas_modules.
-          detect { |a| a.identifier == "aj_main_module" }
+          detect { |a| a.identifier == MAIN_CANVAS_MODULE }
       else
         parent_module = course.canvas_modules.
           detect { |a| a.identifier == data[:parent_id] }
         if !parent_module
           course.canvas_modules.
-            reject { |a| a.title == "master_module" }.
+            reject { |a| a.title == MASTER_MODULE }.
             each do |cc_module|
             if cc_module.module_items
               items = cc_module.module_items.flatten

@@ -182,7 +182,7 @@ describe "ModuleConverter" do
       file = "res00020"
       parent = nil
       indent = -1
-      identifier = "aj_main_module"
+      identifier = MAIN_CANVAS_MODULE
       data = {
         title: title,
         target_type: type,

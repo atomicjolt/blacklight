@@ -24,6 +24,6 @@ describe "Attachment" do
 
     result = attachment.canvas_conversion(course, nil)
     assert_equal(result.canvas_modules.size, 1)
-    assert_equal(result.canvas_modules.first.title, "master_module")
+    assert_equal(result.canvas_modules.first.title, MASTER_MODULE)
   end
 end

@@ -33,16 +33,7 @@ module Senkyoshi
       discussion.discussion_type = @discussion_type
       course.discussions << discussion
       if @module_item
-        master_module = course.canvas_modules.
-          detect { |a| a.title == "master_module" }
-        if master_module
-          master_module.module_items << @module_item
-        else
-          master_module = Module.new("master_module", "master_module")
-          master_module = master_module.canvas_conversion
-          master_module.module_items << @module_item
-          course.canvas_modules << master_module
-        end
+        course = create_module(course, @module_item)
       end
       course
     end

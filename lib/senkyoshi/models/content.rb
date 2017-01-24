@@ -95,18 +95,7 @@ module Senkyoshi
     end
 
     def create_module(course)
-      course.canvas_modules ||= []
-      cc_module = course.canvas_modules.
-        detect { |a| a.title == "master_module" }
-      if cc_module
-        cc_module.module_items << @module_item
-      else
-        cc_module = Module.new("master_module", "master_module")
-        cc_module = cc_module.canvas_conversion
-        cc_module.module_items << @module_item
-        course.canvas_modules << cc_module
-      end
-      course
+      super(course, @module_item)
     end
   end
 end

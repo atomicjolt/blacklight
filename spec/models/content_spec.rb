@@ -59,7 +59,7 @@ describe "Content" do
       xml = get_fixture_xml "content.xml"
       content = Senkyoshi::Content.new
       pre_data = {
-        parent_id: "master_module",
+        parent_id: MASTER_MODULE,
       }
       content = content.iterate_xml(xml, pre_data)
       course = CanvasCc::CanvasCC::Models::Course.new

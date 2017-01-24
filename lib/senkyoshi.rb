@@ -16,6 +16,8 @@ require "senkyoshi/exceptions"
 module Senkyoshi
   FILE_BASE = "$IMS-CC-FILEBASE$".freeze
   DIR_BASE = "$CANVAS_COURSE_REFERENCE$/files/folder".freeze
+  MAIN_CANVAS_MODULE = "aj_main_module"
+  MASTER_MODULE = "master_module"
 
   class << self
     attr_writer :configuration
