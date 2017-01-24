@@ -22,8 +22,7 @@ module Senkyoshi
 
     def create_module(course)
       course.canvas_modules ||= []
-      cc_module = course.canvas_modules.
-        detect { |a| a.title == MASTER_MODULE }
+      cc_module = Course.master_module(course)
       if cc_module
         cc_module.module_items << @module_item
       else

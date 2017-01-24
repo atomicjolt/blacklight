@@ -34,5 +34,9 @@ module Senkyoshi
       course.conclude_at = @conclude_at
       course
     end
+
+    def self.master_module(course)
+      course.canvas_modules.detect { |a| a.title == MASTER_MODULE }
+    end
   end
 end

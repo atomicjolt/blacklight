@@ -30,8 +30,8 @@ module Senkyoshi
           title_attribute.value == toc_item[:title]
         end
         if resource.count == 1
-          file_attribute = resource[0].attributes["file"] ||
-            resource[0].attributes["bb:file"]
+          file_attribute = resource.first.attributes["file"] ||
+            resource.first.attributes["bb:file"]
           toc_item[:file_name] = file_attribute.value.gsub(".dat", "")
         end
       end
@@ -65,17 +65,20 @@ module Senkyoshi
     end
 
     def self.get_parent_id(course_toc, item_id)
-      header_ids = course_toc.select { |ct| ct[:target_type] == "SUBHEADER" }.
-        map { |sh| sh[:original_file].gsub("res", "") }
+      header_ids = get_headers(course_toc, "SUBHEADER")
       if header_ids.empty?
-        header_ids = course_toc.select { |ct| ct[:target_type] == "CONTENT" }.
-          map { |sh| sh[:original_file].gsub("res", "") }
+        header_ids = get_headers(course_toc, "CONTENT")
       end
       header_id = header_ids.
         reject { |x| x.to_i > item_id.to_i }.
         min_by { |x| (x.to_i - item_id.to_i).abs }
 
       header_id ? "res" + header_id : nil
+    end
+
+    def self.get_headers(course_toc, target_type)
+      course_toc.select { |ct| ct[:target_type] == target_type }.
+        map { |sh| sh[:original_file].gsub("res", "") }
     end
   end
 end

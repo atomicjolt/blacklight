@@ -1,8 +1,7 @@
 module Senkyoshi
   class ModuleConverter
     def self.set_modules(course, pre_data)
-      master_module = course.canvas_modules.
-        detect { |a| a.title == MASTER_MODULE }
+      master_module = Course.master_module(course)
       subheaders = get_subheaders(pre_data)
       pre_data.each do |data|
         if check_module_header(data, subheaders)
