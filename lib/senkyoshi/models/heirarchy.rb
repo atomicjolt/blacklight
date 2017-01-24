@@ -18,7 +18,7 @@ module Senkyoshi
       end
     end
 
-    def self.get_indent(item, indent=-2)
+    def self.get_indent(item, indent = -2)
       return indent if item.parent.name == "organization"
       indent += 1
       get_indent(item.parent, indent)
