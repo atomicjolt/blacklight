@@ -5,7 +5,6 @@ require "senkyoshi/models/grade_range_criteria"
 require "senkyoshi/models/grade_range_percent_criteria"
 require "senkyoshi/models/resource"
 
-
 require "byebug"
 module Senkyoshi
   class Rule < FileResource
