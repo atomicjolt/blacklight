@@ -20,29 +20,32 @@ require "senkyoshi/models/assessment"
 require "senkyoshi/models/question_bank"
 require "senkyoshi/models/survey"
 
+require "senkyoshi/models/heirarchy"
+
 require "senkyoshi/models/announcement"
 require "senkyoshi/models/answer"
-require "senkyoshi/models/qti"
 require "senkyoshi/models/assignment"
 require "senkyoshi/models/assignment_group"
+require "senkyoshi/models/attachment"
 require "senkyoshi/models/blog"
 require "senkyoshi/models/content"
 require "senkyoshi/models/content_file"
 require "senkyoshi/models/course"
+require "senkyoshi/models/course_toc"
+require "senkyoshi/models/external_url"
 require "senkyoshi/models/file"
 require "senkyoshi/models/forum"
 require "senkyoshi/models/gradebook"
 require "senkyoshi/models/group"
 require "senkyoshi/models/module"
 require "senkyoshi/models/module_item"
+require "senkyoshi/models/qti"
 require "senkyoshi/models/question"
 require "senkyoshi/models/quiz"
 require "senkyoshi/models/resource"
 require "senkyoshi/models/scorm_package"
 require "senkyoshi/models/staff_info"
 require "senkyoshi/models/wikipage"
-require "senkyoshi/models/attachment"
-require "senkyoshi/models/external_url"
 
 require "senkyoshi/exceptions"
 
@@ -60,25 +63,16 @@ module Senkyoshi
   }.freeze
 
   PRE_RESOURCE_TYPE = {
-    content: "Content",
+    coursetoc: "CourseToc",
     gradebook: "Gradebook",
     courseassessment: "QTI",
   }.freeze
 
-  def self.parse_manifest(zip_file, manifest, resource_xids)
-    doc = Nokogiri::XML.parse(manifest)
-    resources = doc.at("resources")
-    organizations = doc.at("organizations")
-    iterate_xml(organizations, resources, zip_file, resource_xids).
-      flatten - ["", nil]
-  end
-
-  def self.iterate_xml(organizations, resources, zip_file, resource_xids)
-    pre_data = pre_iterator(organizations, resources, zip_file)
+  def self.iterate_xml(resources, zip_file, resource_xids, pre_data)
     staff_info = StaffInfo.new
     iterator_master(resources, zip_file) do |xml_data, type, file|
       if RESOURCE_TYPE[type.to_sym]
-        single_pre_data = get_single_pre_data(pre_data, file)
+        single_pre_data = get_single_pre_data(pre_data, file) || {}
         res_class = Senkyoshi.const_get RESOURCE_TYPE[type.to_sym]
         case type
         when "staffinfo"
@@ -87,7 +81,7 @@ module Senkyoshi
           res_class.from(xml_data, single_pre_data, resource_xids)
         end
       end
-    end
+    end.flatten - ["", nil]
   end
 
   def self.get_single_pre_data(pre_data, file)
@@ -119,8 +113,9 @@ module Senkyoshi
         pre_data[type].push(data) if data
       end
     end
+    pre_data["content"] = build_heirarchy(organizations, resources,
+                                          pre_data["coursetoc"]) - ["", nil]
     pre_data = connect_content(pre_data)
-    build_heirarchy(organizations, pre_data)
   end
 
   def self.connect_content(pre_data)
@@ -139,30 +134,12 @@ module Senkyoshi
     pre_data["content"]
   end
 
-  def self.build_heirarchy(organizations, pre_data)
-    unset_id = "{unset id}"
-    parents = pre_data.
-      select { |p| p[:parent_id] == unset_id }
-    parents_ids = parents.map { |u| u[:id] }
-    pre_data.each do |content|
-      parent_id = content[:parent_id]
-      parent = pre_data.detect { |p| p[:id] == parent_id }
-      if parent_id == unset_id
-        content[:title] = get_title(organizations, content)
-      elsif parent[:parent_id] == unset_id
-        content[:parent_title] = parent[:title]
-      end
-      next if parents_ids.include?(content[:id])
-      next if parents_ids.include?(parent_id)
-      parents_ids << parent_id
-      parent[:parent_id] = parent[:id]
-      parent[:parent_title] = nil
+  def self.build_heirarchy(organizations, resources, course_toc)
+    discussion_boards = resources.
+      search("resource[type=\"resource/x-bb-discussionboard\"]")
+    organizations.at("organization").children.flat_map do |item|
+      Heirarchy.item_iterator(item, course_toc, discussion_boards)
     end
-  end
-
-  def self.get_title(organizations, content)
-    item = organizations.at("item[@identifierref=#{content[:file_name]}]")
-    item.parent.at("title").text
   end
 
   ##

@@ -10,6 +10,8 @@ module Senkyoshi
         @module_type,
         @files.first.name,
         @url,
+        @indent,
+        @file_name,
       ).canvas_conversion
       self
     end

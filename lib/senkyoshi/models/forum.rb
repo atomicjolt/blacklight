@@ -9,9 +9,19 @@ module Senkyoshi
       @discussion_type = "threaded"
     end
 
-    def iterate_xml(data, _)
+    def iterate_xml(data, pre_data)
       @title = Senkyoshi.get_attribute_value(data, "TITLE")
       @text = Senkyoshi.get_text(data, "TEXT")
+      if pre_data[:internal_handle]
+        @module_item = ModuleItem.new(
+          @title,
+          "DiscussionTopic",
+          @id,
+          nil,
+          pre_data[:indent],
+          @id,
+        ).canvas_conversion
+      end
       self
     end
 
@@ -22,6 +32,9 @@ module Senkyoshi
       discussion.identifier = @id
       discussion.discussion_type = @discussion_type
       course.discussions << discussion
+      if @module_item
+        course = create_module(course)
+      end
       course
     end
   end
