@@ -1,6 +1,6 @@
-require "senkyoshi/models/rule_criteria"
+require "senkyoshi/models/grade_criteria"
 
 module Senkyoshi
-  class GradeRangeCriteria < RuleCriteria
+  class GradeRangeCriteria < GradeCriteria
   end
 end

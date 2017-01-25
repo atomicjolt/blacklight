@@ -9,6 +9,10 @@ module Senkyoshi
       @content_id = nil
     end
 
+    def get_foreign_id
+      @content_id
+    end
+
     def self.from_xml(xml)
       id = RuleCriteria.get_id xml
       negated = Senkyoshi.true? RuleCriteria.get_negated xml
