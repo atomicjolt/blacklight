@@ -2,8 +2,8 @@ module Senkyoshi
   class Collection
     attr_reader :resources
 
-    def initialize
-      @resources = []
+    def initialize(resources = [])
+      @resources = resources
     end
 
     def add(resources)
@@ -14,6 +14,10 @@ module Senkyoshi
       @resources.detect do |resource|
         resource.matches_xid? xid
       end
+    end
+
+    def find_instances_of(class_name)
+      @resources.select { |res| res.class == class_name }
     end
 
     def each

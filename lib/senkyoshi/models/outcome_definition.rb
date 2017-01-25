@@ -10,7 +10,10 @@ module Senkyoshi
       outcome_definition.iterate_xml(xml)
     end
 
-    def initialize(category)
+    def initialize(category, id = nil, content_id = nil, asidataid = nil)
+      @id = id
+      @content_id = content_id
+      @asidataid = asidataid
       @category = category
     end
 

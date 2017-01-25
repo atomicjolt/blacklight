@@ -60,7 +60,7 @@ module Senkyoshi
     def make_completion(mod)
       CanvasCc::CanvasCC::Models::ModuleCompletionRequirement.new.tap do |req|
         mod_item = ModuleItem.find_item_from_id_ref(
-          mod.module_items, @reviewed_content_id
+          mod.module_items, get_foreign_id
         )
 
         req.identifierref = mod_item.identifier if mod_item
@@ -75,7 +75,6 @@ module Senkyoshi
         prereq.type = "context_module"
       end
     end
-
 
     def canvas_conversion(course, content_id, _resources = nil)
       is_completion = RuleCriteria.module_completion_requirement?(
@@ -108,6 +107,5 @@ module Senkyoshi
 
       course
     end
-
   end
 end

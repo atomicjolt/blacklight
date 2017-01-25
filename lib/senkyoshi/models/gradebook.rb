@@ -57,6 +57,12 @@ module Senkyoshi
       end
     end
 
+    def find_outcome_def(outcome_def_id)
+      @outcome_definitions.detect do |outcome_def|
+        outcome_def.id == outcome_def_id
+      end
+    end
+
     def canvas_conversion(course, resources = nil)
       convert_categories(course)
       @outcome_definitions.
