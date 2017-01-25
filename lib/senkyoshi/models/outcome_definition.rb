@@ -40,7 +40,7 @@ module Senkyoshi
     def canvas_conversion(course, _ = nil)
       assignment_group = AssignmentGroup.find_or_create(course, @category)
       assignment = CanvasCc::CanvasCC::Models::Assignment.new
-      assignment.identifier = Senkyoshi.create_random_hex
+      assignment.identifier = @id
       assignment.assignment_group_identifier_ref = assignment_group.identifier
       assignment.title = @title
       assignment.position = 1
