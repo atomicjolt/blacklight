@@ -36,24 +36,24 @@ Create a `senkyoshi.yml` and add credentials:
 # Generally looks like https://< mycanvas_instance >/api
 :canvas_url: <canvas instance api url>
 
-# Canvas tokens can be generated at <my_canvas_url>/profile/setting provided
-# that the user has the required priviledges
+# Canvas tokens can be generated at <my_canvas_url>/profile/settings provided
+# that the user has the required privileges
 :canvas_token: <canvas token>
 
-# Url of scorm manager. This could the the adhesion app
+# URL of SCORM manager. This could be the Adhesion app
 # [https://github.com/atomicjolt/adhesion]
 :scorm_url: <scorm manager url>
 
-# This should be the endpoint to launch a given scorm course, in the case of
-# adhesion this will look like https://<adhesion url>/scorm_course
+# This should be the endpoint to launch a given SCORM course. In the case of
+# Adhesion, this will look like https://<adhesion url>/scorm_course
 :scorm_launch_url: <scorm launch url>
 
-# This is the secret to authenticate requests to the scorm manager. In the case
-# of adhesion you can generate a shared secret by logging into the server and
+# This is the secret to authenticate requests to the SCORM manager. In the case
+# of Adhesion, you can generate a shared secret by logging into the server and
 # running rake shared_auth, which will generate and save a token
 :scorm_shared_auth: <scorm manager token>
 
-# The account or sub-account id. This can be :self, :default, or an id
+# The account or sub-account ID. This can be :self, :default, or an ID
 :account_id: <id>
 ```
 
@@ -67,7 +67,7 @@ This will take all your files in your source folder and convert them to your out
 
 Run converting files in parallel:
 ```sh
-time rake senkyoshi:imscc -m
+time rake senkyoshi:imscc -m # The `time` command is optional.
 ```
 
 Delete entire outputs folder:
@@ -94,7 +94,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/atomic
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
-
-### Things Not Quite Implemented
-People, Groups, Sets, Blogs
