@@ -11,6 +11,7 @@ QTI_TYPE = {
 
 module Senkyoshi
   class QTI < FileResource
+    attr_reader(:points_possible)
     def self.from(data, pre_data, _resource_xids = nil)
       type = data.at("bbmd_assessmenttype").text
       qti_class = Senkyoshi.const_get QTI_TYPE[type]
