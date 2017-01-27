@@ -12,9 +12,9 @@ describe Senkyoshi do
       link_xml = get_fixture_xml "link.xml"
       link_pre_data = Link.get_pre_data(link_xml, nil)
 
-      assert_equal("/Content/Test Test", link_pre_data[:title])
       assert_equal("res00053", link_pre_data[:referrer])
       assert_equal("res00030", link_pre_data[:referred_to])
+      assert_equal("/Content/Test Test", link_pre_data[:referred_to_title])
     end
   end
 end

@@ -127,19 +127,24 @@ module Senkyoshi
           detect { |g| g[:content_id] == content[:file_name] }
         content.merge!(gradebook) if gradebook
       end
+
       if pre_data["courseassessment"]
         course_assessment = pre_data["courseassessment"].
           detect { |ca| ca[:original_file_name] == content[:assignment_id] }
         content.merge!(course_assessment) if course_assessment
       end
+
       if pre_data["link"]
         matching_link = pre_data["link"].detect do |link|
           link[:referrer] == content[:file_name]
         end
 
-        content[:referred_to_title] = matching_link[:title] if matching_link
+        if matching_link
+          content[:referred_to_title] = matching_link[:referred_to_title]
+        end
       end
     end
+
     pre_data["content"]
   end
 

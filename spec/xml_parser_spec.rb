@@ -94,9 +94,9 @@ describe Senkyoshi do
 
       pre_data["link"] = [
         {
-          title: "/Content/Test Item",
           referrer: file_name_one,
           referred_to: file_name_two,
+          referred_to_title: "/Content/Test Item",
         },
       ]
 
