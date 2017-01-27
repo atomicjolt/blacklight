@@ -20,6 +20,7 @@ module Senkyoshi
       "x-bb-module-page" => "WikiPage",
       "x-bb-lesson-plan" => "WikiPage",
       "x-bb-syllabus" => "WikiPage",
+      "x-bb-courselink" => "WikiPage",
     }.freeze
 
     MODULE_TYPES = {
@@ -67,6 +68,7 @@ module Senkyoshi
       @type = xml.xpath("/CONTENT/RENDERTYPE/@value").first.text
       @parent_id = pre_data[:parent_id]
       @module_type = MODULE_TYPES[self.class.name]
+      @referred_to_title = pre_data[:referred_to_title]
 
       if pre_data[:assignment_id] && !pre_data[:assignment_id].empty?
         @id = pre_data[:assignment_id]
