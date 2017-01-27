@@ -39,7 +39,7 @@ describe Senkyoshi do
         @opinion_scale = @opinion_scale.iterate_xml(xml.children.first)
 
         answers = @opinion_scale.instance_variable_get :@answers
-        assert_equal (answers.first.instance_variable_get :@fraction), 0.0
+        assert_equal (answers.first.instance_variable_get :@fraction), 1.0
       end
     end
   end

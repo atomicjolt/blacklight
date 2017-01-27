@@ -51,7 +51,11 @@ module Senkyoshi
           end
 
           answers << answer
-          @matches << { id: id, question_text: question, answer_text: answer }
+          @matches << {
+            id: Senkyoshi.create_random_hex,
+            question_text: question,
+            answer_text: answer,
+          }
         end
       end
       @distractors = matches_array.reject { |i| answers.include?(i) }
