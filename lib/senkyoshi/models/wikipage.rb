@@ -35,10 +35,19 @@ module Senkyoshi
 
     def _set_body(original_body, url, extendeddata)
       body = original_body.dup
+
       if !url.empty?
         body = %{
           <a href="#{url}">
             #{url}
+          </a>
+          #{body}
+        }
+      end
+      if @referred_to_title.present?
+        body = %{
+          <a href="$CANVAS_COURSE_REFERENCE$#{@referred_to_title}">
+            Course Link: #{@referred_to_title}
           </a>
           #{body}
         }
@@ -49,6 +58,7 @@ module Senkyoshi
           #{_extendeddata(extendeddata)}
         }
       end
+
       body
     end
 

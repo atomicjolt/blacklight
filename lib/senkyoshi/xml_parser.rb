@@ -37,6 +37,7 @@ require "senkyoshi/models/file"
 require "senkyoshi/models/forum"
 require "senkyoshi/models/gradebook"
 require "senkyoshi/models/group"
+require "senkyoshi/models/link"
 require "senkyoshi/models/module"
 require "senkyoshi/models/module_item"
 require "senkyoshi/models/qti"
@@ -65,6 +66,7 @@ module Senkyoshi
   PRE_RESOURCE_TYPE = {
     coursetoc: "CourseToc",
     gradebook: "Gradebook",
+    link: "Link",
     courseassessment: "QTI",
   }.freeze
 
@@ -85,8 +87,8 @@ module Senkyoshi
   end
 
   def self.get_single_pre_data(pre_data, file)
-    pre_data.detect do |d|
-      d[:file_name] == file || d[:assignment_id] == file
+    pre_data.detect do |data_item|
+      data_item[:file_name] == file || data_item[:assignment_id] == file
     end || { file_name: file }
   end
 
@@ -129,6 +131,13 @@ module Senkyoshi
         course_assessment = pre_data["courseassessment"].
           detect { |ca| ca[:original_file_name] == content[:assignment_id] }
         content.merge!(course_assessment) if course_assessment
+      end
+      if pre_data["link"]
+        matching_link = pre_data["link"].detect do |link|
+          link[:referrer] == content[:file_name]
+        end
+
+        content[:referred_to_title] = matching_link[:title] if matching_link
       end
     end
     pre_data["content"]
