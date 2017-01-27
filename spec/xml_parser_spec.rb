@@ -82,6 +82,29 @@ describe Senkyoshi do
       assert_equal data[:parent_id], parent_id
     end
 
+    it "should return a merged content object with links" do
+      file_name_one = "res00028"
+      file_name_two = "res00036"
+      pre_data = {}
+
+      pre_data["content"] = [
+        { file_name: file_name_one },
+        { file_name: file_name_two },
+      ]
+
+      pre_data["link"] = [
+        {
+          title: "/Content/Test Item",
+          referrer: file_name_one,
+          referred_to: file_name_two,
+        },
+      ]
+
+      results = Senkyoshi.connect_content(pre_data)
+      content = results.detect { |result| result[:file_name] == file_name_one }
+      assert_equal(content[:referred_to_title], "/Content/Test Item")
+    end
+
     it "should return a merged content object" do
       file_name = "res00003"
       parent_id = "res00002"
