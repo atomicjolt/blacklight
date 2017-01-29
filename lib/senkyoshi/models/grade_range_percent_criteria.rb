@@ -22,8 +22,6 @@ module Senkyoshi
     end
 
     def canvas_conversion(course, content_id, resources)
-      gradebook = resources.find_instances_of(Gradebook).first
-      @asidata_id = get_asi_data_id(gradebook) if gradebook
       @points_possible = get_points_possible(resources, @asidata_id)
 
       super(course, content_id, resources)

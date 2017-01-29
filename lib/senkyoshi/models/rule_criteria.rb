@@ -3,7 +3,7 @@ require "senkyoshi"
 module Senkyoshi
   class RuleCriteria
     include Senkyoshi
-    attr_reader(:id, :negated)
+    attr_reader(:id, :negated, :content_id, :asidata_id)
 
     COMPLETION_TYPES = {
       must_view: "must_view",
@@ -53,6 +53,14 @@ module Senkyoshi
       in_same_module?(modules, content_id, resource_id) == true
     end
 
+    ##
+    # Returns the most applicable id. If we have an assignment id return that,
+    # otherwise return the content id.
+    ##
+    def get_id
+      @asidata_id || @content_id
+    end
+
     def get_foreign_id; end
 
     def get_completion_type; end
@@ -76,16 +84,23 @@ module Senkyoshi
       end
     end
 
-    def canvas_conversion(course, content_id, _resources = nil)
+    def canvas_conversion(course, content_id, resources = nil)
+      @content_id = content_id
+      gradebook = resources.find_instances_of(Gradebook).first
+      outcome_def = gradebook.outcome_definitions.detect do |out_def|
+        out_def.content_id == content_id
+      end
+      @asidata_id = outcome_def.asidataid if outcome_def
+
+      mod = Module.find_module_from_item_id course.canvas_modules, get_id
+
       is_completion = RuleCriteria.module_completion_requirement?(
-        course.canvas_modules, content_id, get_foreign_id
+        course.canvas_modules, get_id, get_foreign_id
       )
 
       is_prereq = RuleCriteria.module_prerequisite?(
-        course.canvas_modules, content_id, get_foreign_id
+        course.canvas_modules, get_id, get_foreign_id
       )
-
-      mod = Module.find_module_from_item_id course.canvas_modules, content_id
 
       if is_completion
         add_if_unique(

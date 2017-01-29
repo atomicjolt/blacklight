@@ -6,11 +6,11 @@ module Senkyoshi
     def initialize(id, outcome_def_id, negated)
       super(id, negated)
       @outcome_def_id = outcome_def_id
-      @content_id = nil
+      @foreign_content_id = nil
     end
 
     def get_foreign_id
-      @asidata_id || @content_id
+      @foreign_asidata_id || @foreign_content_id
     end
 
     def self.get_outcome_def_id(xml)
@@ -31,8 +31,8 @@ module Senkyoshi
 
       outcome = gradebook.find_outcome_def(@outcome_def_id)
       if outcome
-        @content_id = outcome.content_id
-        @asidata_id = outcome.asidataid
+        @foreign_content_id = outcome.content_id
+        @foreign_asidata_id = outcome.asidataid
       end
 
       super(course, content_id, resources)
