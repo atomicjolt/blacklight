@@ -25,18 +25,4 @@ describe "Rule" do
   it "implements canvas_conversion" do
 
   end
-
-  # it "should add module prerequisites" do
-  # end
-
-  # it "should add module completion requirements" do
-  # end
-
-  # describe "Rule criteria" do
-  #   it "should handle <CONTENT_REVIEWED_CRITERIA>" do
-  #   end
-  #
-  #   it "should handle </GRADE_COMPLETED_CRITERIA>" do
-  #   end
-  # end
 end
