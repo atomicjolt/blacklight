@@ -26,6 +26,12 @@ module Senkyoshi
       collection
     end
 
+    def add_to_module_if_unique(items, item)
+      add_if_unique(
+        items, item
+      ) { |a, b| a.identifierref == b.identifierref }
+    end
+
     def self.get_id(xml)
       xml.xpath("./@id").text
     end
@@ -38,6 +44,8 @@ module Senkyoshi
       new(RuleCriteria.get_id(xml), RuleCriteria.get_negated(xml))
     end
 
+    ##
+    # Determine two identifierrefs are pointed to by items in the same module
     def self.in_same_module?(modules, content_id, resource_id)
       content_module = Module.find_module_from_item_id(modules, content_id)
       resource_module = Module.find_module_from_item_id(modules, resource_id)
@@ -61,10 +69,10 @@ module Senkyoshi
       @asidata_id || @content_id
     end
 
-    def get_foreign_id; end
-
-    def get_completion_type; end
-
+    ##
+    # Factory method to construct a completion requirement. Should be passed
+    # the module that the completion requirement should belong to
+    ##
     def make_completion(mod)
       CanvasCc::CanvasCC::Models::ModuleCompletionRequirement.new.tap do |req|
         mod_item = ModuleItem.find_item_from_id_ref(
@@ -76,15 +84,21 @@ module Senkyoshi
       end
     end
 
+    ##
+    # Factory method to construct a module prerequisite. Should be passed the
+    # prerequisite module
+    ##
     def make_prereq(prereq_module)
       CanvasCc::CanvasCC::Models::ModulePrerequisite.new.tap do |prereq|
         prereq.identifierref = prereq_module.identifier
-        # prereq.title = "Howdy" #TODO
         prereq.type = "context_module"
       end
     end
 
-    def canvas_conversion(course, content_id, resources = nil)
+    ##
+    # Use gradebook to find assignment id if applicable
+    ##
+    def set_ids(content_id, resources)
       @content_id = content_id
       gradebook = resources.find_instances_of(Gradebook).first
       if gradebook
@@ -93,6 +107,10 @@ module Senkyoshi
         end
         @asidata_id = outcome_def.asidataid if outcome_def
       end
+    end
+
+    def canvas_conversion(course, content_id, resources)
+      set_ids(content_id, resources)
 
       mod = Module.find_module_from_item_id course.canvas_modules, get_id
 
@@ -105,21 +123,21 @@ module Senkyoshi
       )
 
       if is_completion
-        add_if_unique(
+        add_to_module_if_unique(
           mod.completion_requirements, make_completion(mod)
-        ) { |a, b| a.identifierref == b.identifierref }
+        )
       elsif is_prereq
         prereq_module = Module.find_module_from_item_id(
           course.canvas_modules, get_foreign_id
         )
 
-        add_if_unique(
+        add_to_module_if_unique(
           mod.prerequisites, make_prereq(prereq_module)
-        ) { |a, b| a.identifierref == b.identifierref }
+        )
 
-        add_if_unique(
+        add_to_module_if_unique(
           prereq_module.completion_requirements, make_completion(prereq_module)
-        ) { |a, b| a.identifierref == b.identifierref }
+        )
       end
 
       course
