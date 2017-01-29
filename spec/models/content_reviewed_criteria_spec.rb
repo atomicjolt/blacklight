@@ -65,7 +65,7 @@ describe "ContentReviewedCriteria" do
     it "should create completion requirement
       for content_reviewed in same module" do
         result = @content_reviewed.canvas_conversion(
-          @courses[0], @page_ids.first
+          @courses[0], @page_ids.first, Collection.new
         )
 
         assert_equal result.canvas_modules.size, 1
@@ -77,7 +77,9 @@ describe "ContentReviewedCriteria" do
       end
 
     it "should create prereq for content_reviewed in different module" do
-      result = @content_reviewed.canvas_conversion(@courses[1], @page_ids.first)
+      result = @content_reviewed.canvas_conversion(
+        @courses[1], @page_ids.first, Collection.new
+      )
 
       assert_equal result.canvas_modules.size, 2
       assert_equal result.canvas_modules.first.completion_requirements.size, 0
