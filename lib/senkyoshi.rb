@@ -1,5 +1,6 @@
 require "senkyoshi/version"
 require "senkyoshi/xml_parser"
+require "senkyoshi/models/module_converter"
 require "senkyoshi/canvas_course"
 require "senkyoshi/collection"
 require "senkyoshi/configuration"
@@ -15,6 +16,8 @@ require "senkyoshi/exceptions"
 module Senkyoshi
   FILE_BASE = "$IMS-CC-FILEBASE$".freeze
   DIR_BASE = "$CANVAS_COURSE_REFERENCE$/files/folder".freeze
+  MAIN_CANVAS_MODULE = "aj_main_module".freeze
+  MASTER_MODULE = "master_module".freeze
 
   class << self
     attr_writer :configuration
@@ -41,8 +44,17 @@ module Senkyoshi
       resource_xids = resources.resources.
         map(&:xid).
         select { |r| r.include?("xid-") }
-      resources.add(Senkyoshi.parse_manifest(file, manifest, resource_xids))
-      course = create_canvas_course(resources, zip_path)
+
+      xml = Nokogiri::XML.parse(manifest)
+      xml_resources = xml.at("resources")
+      xml_organizations = xml.at("organizations")
+
+      pre_data = Senkyoshi.pre_iterator(xml_organizations, xml_resources, file)
+      resources.add(
+        Senkyoshi.iterate_xml(xml_resources, file, resource_xids, pre_data),
+      )
+
+      course = create_canvas_course(resources, zip_path, pre_data)
       build_file(course, imscc_path, resources)
     end
   end
@@ -72,12 +84,19 @@ module Senkyoshi
     resources.each(&:cleanup)
   end
 
-  def self.create_canvas_course(resources, zip_name)
+  def self.create_canvas_course(resources, zip_name, pre_data)
     course = CanvasCc::CanvasCC::Models::Course.new
     course.course_code = zip_name
-    resources.each do |resource|
+    resources.resources.select { |r| r.class != Rule}.each do |resource|
       course = resource.canvas_conversion(course, resources)
     end
+
+    course = ModuleConverter.set_modules(course, pre_data)
+
+    resources.resources.select { |r| r.class == Rule }.each do |rule|
+      course = rule.canvas_conversion(course, resources)
+    end
+
     course
   end
 

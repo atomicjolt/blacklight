@@ -25,14 +25,6 @@ describe Senkyoshi do
         assert_equal matches.count, 4
       end
 
-      it "should iterate through xml and write content to id" do
-        xml = get_fixture_xml "matching.xml"
-        @matching = @matching.iterate_xml(xml.children.first)
-        matches = @matching.instance_variable_get :@matches
-
-        assert_equal matches.first[:id], "6d0161a74fec47128b7b4d30ef4be242"
-      end
-
       it "should iterate through xml and write content to question text" do
         xml = get_fixture_xml "matching.xml"
         @matching = @matching.iterate_xml(xml.children.first)

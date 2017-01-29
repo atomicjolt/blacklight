@@ -20,6 +20,7 @@ module Senkyoshi
       "x-bb-module-page" => "WikiPage",
       "x-bb-lesson-plan" => "WikiPage",
       "x-bb-syllabus" => "WikiPage",
+      "x-bb-courselink" => "WikiPage",
     }.freeze
 
     MODULE_TYPES = {
@@ -55,6 +56,8 @@ module Senkyoshi
     def iterate_xml(xml, pre_data)
       @points = pre_data[:points] || 0
       @parent_title = pre_data[:parent_title]
+      @indent = pre_data[:indent]
+      @file_name = pre_data[:file_name]
       @title = xml.xpath("/CONTENT/TITLE/@value").first.text
       @url = xml.at("URL")["value"]
       @body = xml.xpath("/CONTENT/BODY/TEXT").first.text
@@ -65,6 +68,7 @@ module Senkyoshi
       @type = xml.xpath("/CONTENT/RENDERTYPE/@value").first.text
       @parent_id = pre_data[:parent_id]
       @module_type = MODULE_TYPES[self.class.name]
+      @referred_to_title = pre_data[:referred_to_title]
 
       if pre_data[:assignment_id] && !pre_data[:assignment_id].empty?
         @id = pre_data[:assignment_id]
@@ -78,18 +82,14 @@ module Senkyoshi
     end
 
     def set_module
-      module_item = ModuleItem.new(@title, @module_type, @id, @url)
-      module_item.canvas_conversion
-    end
-
-    def self.get_pre_data(xml, file_name)
-      id = xml.xpath("/CONTENT/@id").first.text
-      parent_id = xml.xpath("/CONTENT/PARENTID/@value").first.text
-      {
-        id: id,
-        parent_id: parent_id,
-        file_name: file_name,
-      }
+      ModuleItem.new(
+        @title,
+        @module_type,
+        @id,
+        @url,
+        @indent,
+        @file_name,
+      ).canvas_conversion
     end
 
     def canvas_conversion(course, _resources = nil)
@@ -97,19 +97,7 @@ module Senkyoshi
     end
 
     def create_module(course)
-      course.canvas_modules ||= []
-      cc_module = course.canvas_modules.
-        detect { |a| a.identifier == @parent_id }
-      if cc_module
-        cc_module.module_items << @module_item
-      else
-        title = @parent_title || @title
-        cc_module = Module.new(title, @parent_id)
-        cc_module = cc_module.canvas_conversion
-        cc_module.module_items << @module_item
-        course.canvas_modules << cc_module
-      end
-      course
+      super(course)
     end
   end
 end

@@ -20,7 +20,7 @@ module Senkyoshi
 
     def self._config
       @config ||= if File.exists? "senkyoshi.yml"
-                    YAML::load(File.read("senkyoshi.yml"))
+                    YAML::safe_load(File.read("senkyoshi.yml"), [Symbol])
                   else
                     {}
                   end

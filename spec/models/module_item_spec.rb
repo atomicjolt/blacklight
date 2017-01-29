@@ -11,8 +11,16 @@ describe "ModuleItem" do
     @content_type = "Assignment"
     @identifierref = Senkyoshi.create_random_hex
     @url = "fake/url"
-    @module_item = Senkyoshi::ModuleItem.new(@title, @content_type,
-                                             @identifierref, @url)
+    @indent = 2
+    @id = "res00003"
+    @module_item = Senkyoshi::ModuleItem.new(
+      @title,
+      @content_type,
+      @identifierref,
+      @url,
+      @indent,
+      @id,
+    )
   end
 
   describe "initialize" do

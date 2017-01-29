@@ -2,11 +2,12 @@ require "senkyoshi/models/resource"
 
 module Senkyoshi
   class ModuleItem < Resource
-    def initialize(title, type, identifierref, url)
+    def initialize(title, type, identifierref, url, indent, id)
       @title = title
-      @identifier = Senkyoshi.create_random_hex
+      @identifier = id || Senkyoshi.create_random_hex
       @content_type = type
       @identifierref = identifierref
+      @indent = indent
       @workflow_state = "active"
       @url = url
     end
@@ -22,6 +23,7 @@ module Senkyoshi
         item.content_type = @content_type
         item.identifierref = @identifierref
         item.workflow_state = @workflow_state
+        item.indent = @indent
         item.url = @url
       end
     end

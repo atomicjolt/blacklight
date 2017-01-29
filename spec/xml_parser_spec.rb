@@ -25,24 +25,6 @@ describe Senkyoshi do
     end
   end
 
-  describe "build_heirarchy" do
-    it "should return the correct parents to the contents" do
-      id = "res00023"
-      parent_id = "res00028"
-      master_parent_id = "res00036"
-      organizations = get_fixture_xml "organizations.xml"
-      pre_data = [{ id: id, parent_id: parent_id, file_name: "res00002" },
-                  { id: parent_id, parent_id: parent_id,
-                    file_name: "res00003" },
-                  { id: master_parent_id, parent_id: "{unset id}",
-                    file_name: "res00004" }]
-      results = Senkyoshi.build_heirarchy(organizations, pre_data)
-      assert_equal(results.first[:parent_id], parent_id)
-      assert_nil(results.first[:title])
-      assert_equal(results.last[:title], "Home Page")
-    end
-  end
-
   describe "connect_content" do
     it "should return a merged content object" do
       file_name = "res00003"
@@ -100,6 +82,29 @@ describe Senkyoshi do
       assert_equal data[:parent_id], parent_id
     end
 
+    it "should return a merged content object with links" do
+      file_name_one = "res00028"
+      file_name_two = "res00036"
+      pre_data = {}
+
+      pre_data["content"] = [
+        { file_name: file_name_one },
+        { file_name: file_name_two },
+      ]
+
+      pre_data["link"] = [
+        {
+          referrer: file_name_one,
+          referred_to: file_name_two,
+          referred_to_title: "/Content/Test Item",
+        },
+      ]
+
+      results = Senkyoshi.connect_content(pre_data)
+      content = results.detect { |result| result[:file_name] == file_name_one }
+      assert_equal(content[:referred_to_title], "/Content/Test Item")
+    end
+
     it "should return a merged content object" do
       file_name = "res00003"
       parent_id = "res00002"
@@ -139,6 +144,38 @@ describe Senkyoshi do
       assert_equal data[:assignment_id], assignment_id
       assert_equal data[:parent_id], parent_id
       assert_equal data[:time_limit], time_limit
+    end
+  end
+
+  describe "build_heirarchy" do
+    it "should return the correct parents to the contents" do
+      parent_id = "res00007"
+      organizations = get_fixture_xml "organizations.xml"
+      resources = get_fixture_xml "resources.xml"
+      pre_data = [
+        {
+          title: "Course Material",
+          target_type: "CONTENT",
+          original_file: "res00007",
+          internal_handle: "content",
+          file_name: parent_id,
+          parent_id: parent_id,
+          indent: -1,
+        },
+        {
+          title: "Discussion Board",
+          target_type: "CONTENT",
+          original_file: "res00006",
+          internal_handle: "discussion_board_entry",
+          file_name: "res00006",
+          parent_id: nil,
+          indent: 0,
+        },
+      ]
+      results = Senkyoshi.build_heirarchy(organizations, resources, pre_data)
+      assert_equal(results.last[:parent_id], parent_id)
+      assert_equal(results.last[:title], "Help")
+      assert_equal(results.last[:indent], 0)
     end
   end
 

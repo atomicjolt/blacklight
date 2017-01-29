@@ -102,7 +102,7 @@ module Senkyoshi
     end
 
     def get_fraction(answer_text)
-      if @correct_answers && answer_text == @correct_answers["name"]
+      if @correct_answers && answer_text.to_s == @correct_answers["name"].to_s
         @correct_answers["fraction"].to_f
       else
         @incorrect_answers["fraction"].to_f
@@ -125,7 +125,8 @@ module Senkyoshi
         if score_number > 0
           @correct_answers["fraction"] = score_number.to_f / @max_score.to_f
         else
-          @correct_answers["fraction"] = 0
+          # mark as correct when there is no score for the answer
+          @correct_answers["fraction"] = 1
         end
       end
     end
