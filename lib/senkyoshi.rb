@@ -87,13 +87,15 @@ module Senkyoshi
   def self.create_canvas_course(resources, zip_name, pre_data)
     course = CanvasCc::CanvasCC::Models::Course.new
     course.course_code = zip_name
-    resources.resources.select { |r| r.class != Rule}.each do |resource|
+
+    # Wait until after we set modules to convert Rules
+    resources.find_instances_not_of([Rule]).each do |resource|
       course = resource.canvas_conversion(course, resources)
     end
 
     course = ModuleConverter.set_modules(course, pre_data)
 
-    resources.resources.select { |r| r.class == Rule }.each do |rule|
+    resources.find_instances_of(Rule).each do |rule|
       course = rule.canvas_conversion(course, resources)
     end
 

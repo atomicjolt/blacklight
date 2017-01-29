@@ -28,6 +28,12 @@ module Senkyoshi
       @resources.select { |res| res.class == class_name }
     end
 
+    def find_instances_not_of(types)
+      @resources.select do |res|
+        types.each { |type| res.class != type }
+      end
+    end
+
     def each
       @resources.each do |resource|
         yield resource
