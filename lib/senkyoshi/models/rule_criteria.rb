@@ -90,7 +90,7 @@ module Senkyoshi
       if is_completion
         add_if_unique(
           mod.completion_requirements, make_completion(mod)
-        )
+        ) { |a, b| a.identifierref == b.identifierref }
       elsif is_prereq
         prereq_module = Module.find_module_from_item_id(
           course.canvas_modules, get_foreign_id
