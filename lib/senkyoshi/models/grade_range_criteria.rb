@@ -25,26 +25,10 @@ module Senkyoshi
       COMPLETION_TYPES[:min_score]
     end
 
-    def get_foreign_id
-      @asidata_id
-    end
-
-    def get_asi_data_id(gradebook)
-      outcome = gradebook.find_outcome_def(@outcome_def_id)
-      outcome.asidataid if outcome
-    end
-
     def make_completion(mod)
       super(mod).tap do |completion_requirement|
         completion_requirement.min_score = @min_score
       end
-    end
-
-    def canvas_conversion(course, content_id, resources)
-      gradebook = resources.find_instances_of(Gradebook).first
-      @asidata_id = get_asi_data_id(gradebook) if gradebook
-
-      super(course, content_id, resources)
     end
   end
 end
