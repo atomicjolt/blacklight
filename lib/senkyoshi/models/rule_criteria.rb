@@ -87,10 +87,12 @@ module Senkyoshi
     def canvas_conversion(course, content_id, resources = nil)
       @content_id = content_id
       gradebook = resources.find_instances_of(Gradebook).first
-      outcome_def = gradebook.outcome_definitions.detect do |out_def|
-        out_def.content_id == content_id
+      if gradebook
+        outcome_def = gradebook.outcome_definitions.detect do |out_def|
+          out_def.content_id == content_id
+        end
+        @asidata_id = outcome_def.asidataid if outcome_def
       end
-      @asidata_id = outcome_def.asidataid if outcome_def
 
       mod = Module.find_module_from_item_id course.canvas_modules, get_id
 
