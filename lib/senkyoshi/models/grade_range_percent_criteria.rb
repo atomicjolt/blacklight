@@ -19,7 +19,8 @@ module Senkyoshi
     end
 
     def canvas_conversion(course, content_id, resources)
-      @points_possible = get_points_possible(resources, @asidata_id)
+      set_foreign_ids(resources, @outcome_def_id)
+      @points_possible = get_points_possible(resources, get_foreign_id)
 
       super(course, content_id, resources)
     end

@@ -24,17 +24,22 @@ module Senkyoshi
       new(id, outcome_def_id, negated)
     end
 
-    def canvas_conversion(course, content_id, resources)
-      # use gradebook to match outcome_definition_id to the
-      # assignment content id
+    ##
+    # use gradebook to match outcome_definition_id to the
+    # assignment content id
+    ##
+    def set_foreign_ids(resources, outcome_def_id)
       gradebook = resources.find_instances_of(Gradebook).first
 
-      outcome = gradebook.find_outcome_def(@outcome_def_id)
+      outcome = gradebook.find_outcome_def(outcome_def_id)
       if outcome
         @foreign_content_id = outcome.content_id
         @foreign_asidata_id = outcome.asidataid
       end
+    end
 
+    def canvas_conversion(course, content_id, resources)
+      set_foreign_ids(resources, @outcome_def_id)
       super(course, content_id, resources)
     end
   end
