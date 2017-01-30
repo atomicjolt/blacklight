@@ -4,10 +4,8 @@ module Senkyoshi
   class GradeRangePercentCriteria < GradeRangeCriteria
     def make_completion(mod)
       super(mod).tap do |completion_requirement|
-        completion_requirement.min_score = get_percentage(
-          @min_score,
-          @points_possible,
-        )
+        completion_requirement.min_score = GradeRangePercentCriteria.
+          get_percentage(@min_score, @points_possible)
       end
     end
 
@@ -16,9 +14,8 @@ module Senkyoshi
       resource.points_possible if resource
     end
 
-    def get_percentage(min_score, points_possible)
-      possible = points_possible.to_f
-      (min_score.to_f / possible) * possible
+    def self.get_percentage(min_score, points_possible)
+      (min_score.to_f / 100) * points_possible.to_f
     end
 
     def canvas_conversion(course, content_id, resources)

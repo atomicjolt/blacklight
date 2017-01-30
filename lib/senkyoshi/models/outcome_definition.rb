@@ -11,7 +11,7 @@ module Senkyoshi
     end
 
     def initialize(category, id = nil, content_id = nil, asidataid = nil)
-      @id = id
+      @id = id || Senkyoshi.create_random_hex
       @content_id = content_id
       @asidataid = asidataid
       @category = category

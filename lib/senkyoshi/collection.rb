@@ -17,11 +17,7 @@ module Senkyoshi
     end
 
     def find_by_id(id)
-      @resources.detect do |item|
-        if item.respond_to? :id
-          item.id == id
-        end
-      end
+      @resources.detect { |item| item.respond_to?(:id) && item.id == id }
     end
 
     def find_instances_of(class_name)

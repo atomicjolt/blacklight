@@ -19,4 +19,9 @@ describe "GradeRangePercentCriteria" do
     assert_equal result.outcome_def_id, "_468265_1"
     assert_equal result.min_score, "100.0"
   end
+
+  it "should calculate percentages" do
+    assert_equal(GradeRangePercentCriteria.get_percentage("50", "12"), 6.0)
+    assert_equal(GradeRangePercentCriteria.get_percentage("0", "12"), 0.0)
+  end
 end
