@@ -5,13 +5,13 @@ module Senkyoshi
   class OutcomeDefinition < Resource
     include Senkyoshi
     attr_reader :id, :content_id, :asidataid, :is_user_created
-    def self.from(xml, category)
-      outcome_definition = OutcomeDefinition.new(category)
+    def self.from(xml, category, id = nil)
+      outcome_definition = OutcomeDefinition.new(category, id)
       outcome_definition.iterate_xml(xml)
     end
 
-    def initialize(category, id = nil, content_id = nil, asidataid = nil)
-      @id = id || Senkyoshi.create_random_hex
+    def initialize(category, id, content_id = nil, asidataid = nil)
+      @id = id
       @content_id = content_id
       @asidataid = asidataid
       @category = category

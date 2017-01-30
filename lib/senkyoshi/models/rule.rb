@@ -23,7 +23,8 @@ module Senkyoshi
     def get_criteria_list(xml)
       xml.children.select { |child_xml| !child_xml.blank? }.
         map do |child_xml|
-          CRITERIA_MAP[child_xml.name.downcase.to_sym]&.from_xml(child_xml)
+          criteria = CRITERIA_MAP[child_xml.name.downcase.to_sym]
+          criteria.from_xml(child_xml) if !criteria.nil?
         end.compact
     end
 
