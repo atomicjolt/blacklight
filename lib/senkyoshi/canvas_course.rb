@@ -220,13 +220,10 @@ module Senkyoshi
           timeout: TIMEOUT,
         ) do |response|
           # Post to Canvas
-          RestClient::Request.execute(
-            method: :post,
-            url: response.headers[:location],
-            timeout: TIMEOUT,
-            headers: {
-              Authorization: "Bearer #{Senkyoshi.configuration.canvas_token}",
-            },
+          RestClient.post(
+            response.headers[:location],
+            nil,
+            Authorization: "Bearer #{Senkyoshi.configuration.canvas_token}",
           )
         end
       end
