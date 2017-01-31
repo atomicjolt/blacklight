@@ -6,6 +6,8 @@ module Senkyoshi
   ##
   # This class represents a canvas course for which we are uploading data to
   ##
+
+  TIMEOUT = -1 # Disable timeout
   class CanvasCourse
     attr_reader :scorm_packages
 
@@ -211,15 +213,20 @@ module Senkyoshi
         upload_params[:file] = file
 
         # Post to S3
-        RestClient.post(
-          upload_url,
-          upload_params,
+        RestClient::Request.execute(
+          method: :post,
+          url: upload_url,
+          payload: upload_params,
+          timeout: TIMEOUT,
         ) do |response|
           # Post to Canvas
-          RestClient.post(
-            response.headers[:location],
-            nil,
-            Authorization: "Bearer #{Senkyoshi.configuration.canvas_token}",
+          RestClient::Request.execute(
+            method: :post,
+            url: response.headers[:location],
+            timeout: TIMEOUT,
+            headers: {
+              Authorization: "Bearer #{Senkyoshi.configuration.canvas_token}",
+            },
           )
         end
       end
