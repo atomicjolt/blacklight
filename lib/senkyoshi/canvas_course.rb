@@ -7,7 +7,7 @@ module Senkyoshi
   # This class represents a canvas course for which we are uploading data to
   ##
 
-  TIMEOUT = -1 # Disable timeout
+  TIMEOUT = nil # Disable timeout
   class CanvasCourse
     attr_reader :scorm_packages
 
