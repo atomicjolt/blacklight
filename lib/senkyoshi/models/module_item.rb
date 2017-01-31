@@ -12,6 +12,10 @@ module Senkyoshi
       @url = url
     end
 
+    def self.find_item_from_id_ref(module_items, id_ref)
+      module_items.detect { |item| item.identifierref == id_ref }
+    end
+
     def canvas_conversion(*)
       CanvasCc::CanvasCC::Models::ModuleItem.new.tap do |item|
         item.title = @title

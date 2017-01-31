@@ -47,7 +47,9 @@ require "senkyoshi/models/resource"
 require "senkyoshi/models/scorm_package"
 require "senkyoshi/models/staff_info"
 require "senkyoshi/models/wikipage"
-
+require "senkyoshi/models/attachment"
+require "senkyoshi/models/external_url"
+require "senkyoshi/models/rule"
 require "senkyoshi/exceptions"
 
 module Senkyoshi
@@ -61,6 +63,7 @@ module Senkyoshi
     content: "Content",
     staffinfo: "StaffInfo",
     gradebook: "Gradebook",
+    rule: "Rule",
   }.freeze
 
   PRE_RESOURCE_TYPE = {

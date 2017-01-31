@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RULE id="_370337_1">
+  <TITLE value="Rule 1"/>
+  <RULE_TYPE  value="blackboard.data.content.avlrule.AvailabilityRule$Type:USER"/>
+  <CONTENT_ID   value="res00054"/>
+  <CRITERIA_LIST>
+    <GRADE_RANGE_PERCENT_CRITERIA id="_453959_1">
+      <OUTCOME_DEFINITION_ID    value="_468265_1"/>
+      <MAX_SCORE value="100.0"/>
+      <MIN_SCORE value="100.0"/>
+      <NEGATED value="false"/>
+    </GRADE_RANGE_PERCENT_CRITERIA>
+  </CRITERIA_LIST>
+</RULE>

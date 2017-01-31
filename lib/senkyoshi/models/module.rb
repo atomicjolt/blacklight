@@ -10,6 +10,12 @@ module Senkyoshi
       @module_items = []
     end
 
+    def self.find_module_from_item_id(modules, id)
+      modules.detect do |mod|
+        mod.module_items.detect { |item| item.identifierref == id }
+      end
+    end
+
     def canvas_conversion(*)
       CanvasCc::CanvasCC::Models::CanvasModule.new.tap do |cc_module|
         cc_module.identifier = @identifier

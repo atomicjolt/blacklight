@@ -32,9 +32,11 @@ module Senkyoshi
     def set_order_answers(resprocessing)
       order_answers = {}
       correct = resprocessing.at("respcondition[title=correct]")
-      correct.at("and").children.each_with_index do |varequal, index|
-        id = varequal.text
-        order_answers[id] = index + 1
+      if correct
+        correct.at("and").children.each_with_index do |varequal, index|
+          id = varequal.text
+          order_answers[id] = index + 1
+        end
       end
       order_answers
     end
