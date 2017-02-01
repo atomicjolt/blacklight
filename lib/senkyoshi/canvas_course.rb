@@ -210,7 +210,7 @@ module Senkyoshi
         upload_url = pre_attachment["upload_url"]
         upload_params = pre_attachment["upload_params"]
         upload_params[:file] = file
-        
+
         # Post to S3
         RestClient::Request.execute(
           method: :post,

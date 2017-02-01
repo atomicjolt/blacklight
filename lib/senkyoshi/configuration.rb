@@ -17,7 +17,9 @@ module Senkyoshi
       @scorm_url = Configuration._config[:scorm_url]
       @scorm_launch_url = Configuration._config[:scorm_launch_url]
       @scorm_shared_auth = Configuration._config[:scorm_shared_auth]
-      @request_timeout = Configuration._config[:request_timeout]
+
+      # Default timeout is 30 minutes
+      @request_timeout = Configuration._config[:request_timeout] || 1800
     end
 
     def self._config
