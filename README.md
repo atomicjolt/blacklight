@@ -55,6 +55,9 @@ Create a `senkyoshi.yml` and add credentials:
 
 # The account or sub-account ID. This can be :self, :default, or an ID
 :account_id: <id>
+
+# The number of seconds before uploads timeout. Defaults to 1800 (30 minutes)
+:request_timeout: <request timeout seconds>
 ```
 
 ## Usage
