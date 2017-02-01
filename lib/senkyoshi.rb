@@ -11,6 +11,8 @@ require "ostruct"
 require "nokogiri"
 require "zip"
 
+Zip.write_zip64_support = true
+
 require "senkyoshi/exceptions"
 
 module Senkyoshi
