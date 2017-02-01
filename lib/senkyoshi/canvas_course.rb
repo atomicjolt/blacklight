@@ -6,6 +6,7 @@ module Senkyoshi
   ##
   # This class represents a canvas course for which we are uploading data to
   ##
+
   class CanvasCourse
     attr_reader :scorm_packages
 
@@ -211,9 +212,11 @@ module Senkyoshi
         upload_params[:file] = file
 
         # Post to S3
-        RestClient.post(
-          upload_url,
-          upload_params,
+        RestClient::Request.execute(
+          method: :post,
+          url: upload_url,
+          payload: upload_params,
+          timeout: Senkyoshi.configuration.request_timeout,
         ) do |response|
           # Post to Canvas
           RestClient.post(

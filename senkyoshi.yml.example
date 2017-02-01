@@ -3,3 +3,4 @@
 :scorm_url: <scorm manager url>
 :scorm_launch_url: <scorm launch url>
 :scorm_shared_auth: <scorm manager token>
+:request_timeout: <request timeout seconds>
