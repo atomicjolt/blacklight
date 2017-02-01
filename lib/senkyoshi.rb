@@ -96,7 +96,6 @@ module Senkyoshi
     end
 
     course = ModuleConverter.set_modules(course, pre_data)
-
     resources.find_instances_of(Rule).each do |rule|
       course = rule.canvas_conversion(course, resources)
     end

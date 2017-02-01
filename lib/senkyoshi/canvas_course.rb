@@ -7,7 +7,6 @@ module Senkyoshi
   # This class represents a canvas course for which we are uploading data to
   ##
 
-  TIMEOUT = nil # Disable timeout
   class CanvasCourse
     attr_reader :scorm_packages
 
@@ -211,13 +210,13 @@ module Senkyoshi
         upload_url = pre_attachment["upload_url"]
         upload_params = pre_attachment["upload_params"]
         upload_params[:file] = file
-
+        
         # Post to S3
         RestClient::Request.execute(
           method: :post,
           url: upload_url,
           payload: upload_params,
-          timeout: TIMEOUT,
+          timeout: Senkyoshi.configuration.request_timeout,
         ) do |response|
           # Post to Canvas
           RestClient.post(

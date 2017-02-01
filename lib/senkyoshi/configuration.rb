@@ -8,6 +8,7 @@ module Senkyoshi
     attr_accessor :scorm_url
     attr_accessor :scorm_launch_url
     attr_accessor :scorm_shared_auth
+    attr_accessor :request_timeout
 
     def initialize
       @canvas_url = Configuration._config[:canvas_url]
@@ -16,6 +17,7 @@ module Senkyoshi
       @scorm_url = Configuration._config[:scorm_url]
       @scorm_launch_url = Configuration._config[:scorm_launch_url]
       @scorm_shared_auth = Configuration._config[:scorm_shared_auth]
+      @request_timeout = Configuration._config[:request_timeout]
     end
 
     def self._config

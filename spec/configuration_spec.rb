@@ -101,5 +101,22 @@ describe Senkyoshi do
         assert_equal(config.scorm_shared_auth, "12345")
       end
     end
+ 
+    describe "#request_timeout" do
+      it "default value is nil" do
+        Configuration.stub(:_config, {}) do
+          request_timeout = Configuration.new.request_timeout
+          assert_nil request_timeout
+        end
+      end
+    end
+
+    describe "#request_timeout=" do
+      it "can set value" do
+        config = Configuration.new
+        config.request_timeout = "12345"
+        assert_equal(config.request_timeout, "12345")
+      end
+    end
   end
 end
