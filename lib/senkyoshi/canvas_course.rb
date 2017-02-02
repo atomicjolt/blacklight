@@ -145,8 +145,9 @@ module Senkyoshi
           result = nil
           begin
             result = JSON.parse(resp.body)["response"]
+            raise Exceptions::BadResponse.new if result.nil?
             result["points_possible"] = scorm_package.points_possible
-          rescue JSON::ParserError => e
+          rescue Exceptions::BadResponse, JSON::ParserError => e
             STDERR.puts(
               "Error: Invalid response from Scorm Manager: #{e.to_s[0..50]}",
             )
