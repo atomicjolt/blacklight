@@ -24,4 +24,13 @@ describe Senkyoshi::CanvasCourse do
       end
     end
   end
+
+  describe "create_scorm_assignments" do
+    it "should not call upload for nil package" do
+      subject = CanvasCourse.new(nil, nil, nil)
+      assert_equal(
+        subject.create_scorm_assignments([nil], "fake_id", false), [nil]
+      )
+    end
+  end
 end
