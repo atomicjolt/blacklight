@@ -18,10 +18,6 @@ module Senkyoshi
     end
 
     def setup_question_bank(question_bank, resources)
-      if @items.count.zero?
-        question_bank.description += "Empty Quiz -- No questions
-          were contained in the blackboard quiz bank"
-      end
       question_bank = create_items(question_bank, resources)
       question_bank
     end
