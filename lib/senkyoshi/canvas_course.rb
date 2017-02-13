@@ -149,7 +149,7 @@ module Senkyoshi
             result["points_possible"] = scorm_package.points_possible
           rescue Exceptions::BadResponse, JSON::ParserError => e
             STDERR.puts(
-              "Error: Invalid response from Scorm Manager: #{e.to_s[0..50]}",
+              "Error: Invalid response from Scorm Manager: #{e}",
             )
           end
 
