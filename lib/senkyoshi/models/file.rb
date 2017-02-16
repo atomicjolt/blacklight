@@ -10,10 +10,16 @@ module Senkyoshi
     ].freeze
 
     def initialize(zip_entry)
-      @path = strip_xid zip_entry.name.force_encoding("UTF-8")
+      begin
+        entry_name = zip_entry.name.encode("UTF-8")
+      rescue Encoding::UndefinedConversionError
+        entry_name = zip_entry.name.force_encoding("UTF-8")
+      end
+
+      @path = strip_xid entry_name
       @location = extract_file(zip_entry) # Location of file on local filesystem
 
-      base_name = File.basename(zip_entry.name.force_encoding("UTF-8"))
+      base_name = File.basename(entry_name)
       @xid = base_name[/__(xid-[0-9]+_[0-9]+)/, 1] ||
         Senkyoshi.create_random_hex
     end
