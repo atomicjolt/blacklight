@@ -25,6 +25,20 @@ describe Senkyoshi do
     end
   end
 
+  describe "iterator_master" do
+    it "should assign type of 'empty' to empty .dat files" do
+      xml = '<resources><resource file="empty.dat" title="Emtpy dat file." ' \
+        'identifier="empty" type="resource/x-bb-document"/></resources>'
+
+      xml_resources = Nokogiri::XML.parse(xml).at("resources")
+      zip = get_zip_fixture("empty_dat.zip") { |file| file }
+
+      Senkyoshi.iterator_master(xml_resources, zip) do |_xml_data, type, _file|
+        assert_equal("empty", type)
+      end
+    end
+  end
+
   describe "connect_content" do
     it "should return a merged content object" do
       file_name = "res00003"

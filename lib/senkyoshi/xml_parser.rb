@@ -102,7 +102,8 @@ module Senkyoshi
       if zip_file.find_entry(file_name)
         data_file = Senkyoshi.read_file(zip_file, file_name)
         xml_data = Nokogiri::XML.parse(data_file).children.first
-        type = xml_data.name.downcase
+        type = xml_data ? xml_data.name.downcase : "empty"
+
         yield xml_data, type, file
       end
     end
