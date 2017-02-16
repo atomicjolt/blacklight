@@ -10,10 +10,10 @@ module Senkyoshi
     ].freeze
 
     def initialize(zip_entry)
-      @path = strip_xid zip_entry.name
+      @path = strip_xid zip_entry.name.force_encoding("UTF-8")
       @location = extract_file(zip_entry) # Location of file on local filesystem
 
-      base_name = File.basename(zip_entry.name)
+      base_name = File.basename(zip_entry.name.force_encoding("UTF-8"))
       @xid = base_name[/__(xid-[0-9]+_[0-9]+)/, 1] ||
         Senkyoshi.create_random_hex
     end

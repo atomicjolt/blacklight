@@ -12,6 +12,17 @@ describe "SenkyoshiFile" do
     @file = Senkyoshi::SenkyoshiFile.new(entry)
   end
 
+  it "should force UTF-8 encoding for @xid and @path" do
+    # ASCII encoding from zip_entry.
+    zip_entry = get_zip_fixture("empty_dat.zip") { |zip| zip.entries.first }
+    assert_equal("ASCII-8BIT", zip_entry.name.encoding.to_s)
+
+    # UTF-8 encoding forced by SenkyoshiFile#initialize.
+    file = Senkyoshi::SenkyoshiFile.new(zip_entry)
+    assert_equal("UTF-8", file.xid.encoding.to_s)
+    assert_equal("UTF-8", file.path.encoding.to_s)
+  end
+
   it "should iterate_xml" do
     assert_equal(@file.xid, "xid-1234_1")
     assert_equal(@file.path, "fake/path/to/file.txt")
