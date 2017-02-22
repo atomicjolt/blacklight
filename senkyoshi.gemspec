@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "webmock", "~> 2.1"
 
   [
-    ["rake", "~> 12.0"],
+    ["rake", ">= 11.3"],
     ["rubyzip", "~> 1.1"],
     ["nokogiri", "~> 1.6.6"],
     ["pandarus", "~> 0.6"],
