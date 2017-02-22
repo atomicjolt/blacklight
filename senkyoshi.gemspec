@@ -7,7 +7,7 @@ require "time"
 Gem::Specification.new do |spec|
   spec.name          = "senkyoshi"
   spec.version       = Senkyoshi::VERSION
-  spec.date        	 = Time.new.strftime("%Y-%m-%d")
+  spec.date          = Time.new.strftime("%Y-%m-%d")
   spec.authors       = "Atomic Jolt"
 
   spec.summary       = "Converts Blackboard zip file to Canvas Common Cartridge"
@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "webmock", "~> 2.1"
 
   [
-    ["rake", "~> 11.3"],
+    ["rake", ">= 11.3"],
     ["rubyzip", "~> 1.1"],
     ["nokogiri", "~> 1.6.6"],
     ["pandarus", "~> 0.6"],
