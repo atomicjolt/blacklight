@@ -13,12 +13,12 @@ Gem::Specification.new do |spec|
   spec.summary       = "Converts Blackboard zip file to Canvas Common Cartridge"
   spec.description   = "Commandline tool for converting blackboard to canvas"
   spec.homepage      = "https://github.com/atomicjolt/senkyoshi"
-  spec.license       = "MIT"
+  spec.license       = "AGPL-3.0"
   spec.extra_rdoc_files = ["README.md"]
 
   spec.required_ruby_version = ">= 2.0"
 
-  spec.files = Dir["LICENSE.txt", "README.md", "lib/**/*", "bin/*"]
+  spec.files = Dir["LICENSE", "README.md", "lib/**/*", "bin/*"]
   spec.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
 
   spec.add_development_dependency "pry-byebug", "~> 3.4"
