@@ -14,5 +14,5 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module Senkyoshi
-  VERSION = "1.0.7".freeze
+  VERSION = "1.0.8".freeze
 end
