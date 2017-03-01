@@ -25,6 +25,7 @@ require "optparse"
 require "ostruct"
 require "nokogiri"
 require "zip"
+require "fileutils"
 
 Zip.write_zip64_support = true
 
@@ -87,9 +88,8 @@ module Senkyoshi
   end
 
   def self.build_file(course, imscc_path, resources)
-    folder = File.dirname(imscc_path)
-    file = CanvasCc::CanvasCC::CartridgeCreator.new(course).create(folder)
-    File.rename(file, imscc_path)
+    file = CanvasCc::CanvasCC::CartridgeCreator.new(course).create(Dir.tmpdir)
+    FileUtils.mv(file, imscc_path, force: true)
     cleanup resources
     puts "Created a file #{imscc_path}"
   end
