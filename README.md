@@ -8,15 +8,15 @@ Senkyoshi converts Blackboard course exports as well as Instructure's converter 
 
 | Feature  | Instructure Blackboard Converter | Senkyoshi |
 |:---------|----------------------------------|-----------|
-| Announcements | Partial Conversion, links embedded or otherwise are not converted/broken | Converts all announcements including all links |
-|Assignments|All assignments lumped into one big group.  No separations from quizzes, surveys, and assignments, some broken links in content| Separates the assignments into a few categories based on Blackboard structure: Tests, Assignments, Surveys, Practicums, and Quizzes. A few courses have broken links to files that did not exist in the Blackboard course file. All links in content work appropriately. |
-|Discussions|Basic conversion supported, some discussions missing| All discussions, including Blackboard Seminar Discussions, are imported with topic content.|
-|Pages|Basic conversion supported, some pages missing or content links broken|Creates pages for most all module items and separates them per assignment and lesson page from Blackboard structure.  Creates additional pages for Blackboard attachments that have content descriptions.|
-|Files|Basic support, flattened file directories into a single top level with all files | Keeps folder/file structure from Blackboard when importing to Canvas Files |
+| Announcements | Partial Conversion, links embedded or otherwise are not converted/broken. | Converts all announcements including all links. |
+|Assignments|All assignments lumped into one big group.  No separations from quizzes, surveys, and assignments, some broken links in content.| Separates the assignments into a few categories based on Blackboard structure: Tests, Assignments, Surveys, Practicums, and Quizzes. A few courses have broken links to files that did not exist in the Blackboard course file. All links in content work appropriately. |
+|Discussions|Basic conversion supported, some discussions missing.| All discussions, including Blackboard Seminar Discussions, are imported with topic content.|
+|Pages|Basic conversion supported, some pages missing or content links broken.|Creates pages for most all module items and separates them per assignment and lesson page from Blackboard structure.  Creates additional pages for Blackboard attachments that have content descriptions.|
+|Files|Basic support, flattened file directories into a single top level with all files. | Keeps folder/file structure from Blackboard when importing to Canvas Files. |
 |Quizzes|Basic support, unable to convert quiz answers in certain formats and converts an incorrect number of quizzes from the quiz banks.| Converts the correct amount of quizzes and is able to determine all the correct answers for each quiz. Changes Blackboard formats that Canvas doesn't support into correct formats.|
-|Modules|Basic support, modules created at a single level and category | Converts Blackboard Lesson Category structure into Canvas Modules with indented structure for sub-content. |
-|Pre-requisites|No support for Blackboard Adaptive Release| Converts Blackboard Adaptive Release content into Canvas Pre-Requisite requirements to view certain class material. Follows same format that was used in Blackboard.|
-|SCORM|No support for SCORM content|*(Optional)* Uploads SCORM packages to a SCORM management system tool in Canvas as well as place them into Canvas Files. Will find any SCORM packages that exist in a Blackboard course export.|
+|Modules|Basic support, modules created at a single level and category. | Converts Blackboard Lesson Category structure into Canvas Modules with indented structure for sub-content. |
+|Pre-requisites|No support for Blackboard Adaptive Release.| Converts Blackboard Adaptive Release content into Canvas Pre-Requisite requirements to view certain class material. Follows same format that was used in Blackboard.|
+|SCORM|No support for SCORM content.|*(Optional)* Uploads SCORM packages to a SCORM management system tool in Canvas as well as place them into Canvas Files. Will find any SCORM packages that exist in a Blackboard course export.|
 
 ## Installation
 
