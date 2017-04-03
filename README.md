@@ -2,6 +2,22 @@
 
 Senkyoshi converts exported Blackboard packages into Canvas .imscc packages. It also allows you to upload those converted packages to a Canvas instance.
 
+##Feature Comparison
+
+Senkyoshi converts Blackboard course exports as well as Instructure's converter with several improvements detailed in the table below:
+
+| Feature  | Instructure Blackboard Converter | Senkyoshi |
+|:---------|----------------------------------|-----------|
+| Announcements | Partial Conversion, links embedded or otherwise are not converted/broken | Converts all announcements including all links |
+|Assignments|All assignments lumped into one big group.  No separations from quizzes, surveys, and assignments, some broken links in content| Separates the assignments into a few categories based on Blackboard structure: Tests, Assignments, Surveys, Practicums, and Quizzes. A few courses have broken links to files that did not exist in the Blackboard course file. All links in content work appropriately. |
+|Discussions|Basic conversion supported, some discussions missing| All discussions, including Blackboard Seminar Discussions, are imported with topic content.|
+|Pages|Basic conversion supported, some pages missing or content links broken|Creates pages for most all module items and separates them per assignment and lesson page from Blackboard structure.  Creates additional pages for Blackboard attachments that have content descriptions.|
+|Files|Basic support, flattened file directories into a single top level with all files | Keeps folder/file structure from Blackboard when importing to Canvas Files |
+|Quizzes|Basic support, unable to convert quiz answers in certain formats and converts an incorrect number of quizzes from the quiz banks.| Converts the correct amount of quizzes and is able to determine all the correct answers for each quiz. Changes Blackboard formats that Canvas doesn't support into correct formats.|
+|Modules|Basic support, modules created at a single level and category | Converts Blackboard Lesson Category structure into Canvas Modules with indented structure for sub-content. |
+|Pre-requisites|No support for Blackboard Adaptive Release| Converts Blackboard Adaptive Release content into Canvas Pre-Requisite requirements to view certain class material. Follows same format that was used in Blackboard.|
+|SCORM|No support for SCORM content|*(Optional)* Uploads SCORM packages to a SCORM management system tool in Canvas as well as place them into Canvas Files. Will find any SCORM packages that exist in a Blackboard course export.|
+
 ## Installation
 
 #### Canvas
@@ -40,6 +56,9 @@ Create a `senkyoshi.yml` and add credentials:
 # that the user has the required privileges
 :canvas_token: <canvas token>
 
+# The account or sub-account ID. This can be :self, :default, or an ID
+:account_id: <id>
+
 # URL of SCORM manager. This could be the Adhesion app
 # [https://github.com/atomicjolt/adhesion]
 :scorm_url: <scorm manager url>
@@ -53,33 +72,34 @@ Create a `senkyoshi.yml` and add credentials:
 # running rake shared_auth, which will generate and save a token
 :scorm_shared_auth: <scorm manager token>
 
-# The account or sub-account ID. This can be :self, :default, or an ID
-:account_id: <id>
-
 # The number of seconds before uploads timeout. Defaults to 1800 (30 minutes)
 :request_timeout: <request timeout seconds>
 ```
 
-## Usage
+## CLI Usage
+
+Senkyoshi rake tasks can be used to batch convert Blackboard Courses to Canvas Courses and optionally upload them to a Canvas instance.
+
+It expects all Blackboard courses to be converted to be in a folder called `sources`, and outputs to a folder
 
 Run the rake task to convert from .zip to .imscc:
-```sh
+```bash
 rake senkyoshi:imscc
 ```
 This will take all your files in your source folder and convert them to your outputs folder.
 
 Run converting files in parallel:
-```sh
+```bash
 time rake senkyoshi:imscc -m # The `time` command is optional.
 ```
 
 Delete entire outputs folder:
-```sh
+```bash
 rake clean
 ```
 
 Upload to Canvas to process:
-```sh
+```bash
 rake senkyoshi:upload
 ```
 
