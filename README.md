@@ -2,7 +2,7 @@
 
 Senkyoshi converts exported Blackboard packages into Canvas .imscc packages. It also allows you to upload those converted packages to a Canvas instance.
 
-##Feature Comparison
+## Feature Comparison
 
 Senkyoshi converts Blackboard course exports as well as Instructure's converter with several improvements detailed in the table below:
 
