@@ -157,8 +157,17 @@ module Senkyoshi
           },
           SharedAuthorization: Senkyoshi.configuration.scorm_shared_auth,
         ) do |resp|
-          result = JSON.parse(resp.body)["response"]
-          result["points_possible"] = scorm_package.points_possible
+          result = nil
+          begin
+            result = JSON.parse(resp.body)["response"]
+            raise Exceptions::BadResponse.new if result.nil?
+            result["points_possible"] = scorm_package.points_possible
+          rescue Exceptions::BadResponse, JSON::ParserError => e
+            STDERR.puts(
+              "Error: Invalid response from Scorm Manager: #{e}",
+            )
+          end
+
           result
         end
       end
@@ -168,8 +177,8 @@ module Senkyoshi
     # Creates assignments from all previously uploaded scorm packages
     ##
     def create_scorm_assignments(scorm_packages, course_id, local)
-      scorm_packages.each do |pack|
-        create_scorm_assignment(pack, course_id, local)
+      scorm_packages.map do |pack|
+        create_scorm_assignment(pack, course_id, local) if !pack.nil?
       end
     end
 

@@ -25,4 +25,10 @@ module Exceptions
       super(msg)
     end
   end
+
+  class BadResponse < StandardError
+    def initialize(msg = "Bad Response")
+      super(msg)
+    end
+  end
 end
