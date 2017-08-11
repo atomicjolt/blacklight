@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   [
     ["rake", "~> 11.3"],
     ["rubyzip", "~> 1.1"],
-    ["nokogiri", "~> 1.6.6"],
+    ["nokogiri", "~> 1.6"],
     ["fileutils", "~> 0.7"],
     ["pandarus", "~> 0.6"],
     ["activesupport", "~> 4.2"],
