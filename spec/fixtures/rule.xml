@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RULE id="_351459_1">
+  <TITLE value="Rule 1"/>
+  <RULE_TYPE  value="blackboard.data.content.avlrule.AvailabilityRule$Type:USER"/>
+  <CONTENT_ID   value="res002"/>
+  <CRITERIA_LIST>
+    <GRADE_COMPLETED_CRITERIA id="_422757_1">
+      <OUTCOME_DEFINITION_ID    value="_438488_1"/>
+      <NEGATED value="false"/>
+    </GRADE_COMPLETED_CRITERIA>
+    <CONTENT_REVIEWED_CRITERIA    id="_452522_1">
+      <REVIEWED_CONTENT_ID value="res001"/>
+      <NEGATED value="false"/>
+    </CONTENT_REVIEWED_CRITERIA>
+  </CRITERIA_LIST>
+</RULE>

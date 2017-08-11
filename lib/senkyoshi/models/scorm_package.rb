@@ -1,3 +1,18 @@
+# Copyright (C) 2016, 2017 Atomic Jolt
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 module Senkyoshi
   class ScormPackage
     attr_accessor(:entries, :manifest, :points_possible)
@@ -99,9 +114,9 @@ module Senkyoshi
     # location of temporary file
     ##
     def write_zip(export_name)
-      @@dir ||= Dir.mktmpdir
+      @dir ||= Dir.mktmpdir
       scorm_path = File.dirname @manifest.name
-      path = "#{@@dir}/#{export_name}"
+      path = "#{@dir}/#{export_name}"
       Zip::File.open path, Zip::File::CREATE do |zip|
         @entries.each do |entry|
           if entry.file?
@@ -119,9 +134,8 @@ module Senkyoshi
     ##
     # Removes all temp files if they exist
     ##
-    def self.cleanup
-      @@dir ||= nil
-      FileUtils.rm_r @@dir unless @@dir.nil?
+    def cleanup
+      FileUtils.rm_r @dir unless @dir.nil?
     end
   end
 end

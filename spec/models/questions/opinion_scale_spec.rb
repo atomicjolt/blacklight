@@ -1,3 +1,18 @@
+# Copyright (C) 2016, 2017 Atomic Jolt
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 require "minitest/autorun"
 require "senkyoshi"
 require "pry"
@@ -39,7 +54,7 @@ describe Senkyoshi do
         @opinion_scale = @opinion_scale.iterate_xml(xml.children.first)
 
         answers = @opinion_scale.instance_variable_get :@answers
-        assert_equal (answers.first.instance_variable_get :@fraction), 0.0
+        assert_equal (answers.first.instance_variable_get :@fraction), 1.0
       end
     end
   end

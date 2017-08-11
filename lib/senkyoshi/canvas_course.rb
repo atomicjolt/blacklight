@@ -1,5 +1,19 @@
+# Copyright (C) 2016, 2017 Atomic Jolt
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 require "pandarus"
-require "senkyoshi/config"
 require "senkyoshi/models/scorm_package"
 require "rest-client"
 
@@ -7,7 +21,10 @@ module Senkyoshi
   ##
   # This class represents a canvas course for which we are uploading data to
   ##
+
   class CanvasCourse
+    attr_reader :scorm_packages
+
     ##
     # A new canvas course accepts the metadata for a course
     # and the pandarus course resourse
@@ -38,8 +55,8 @@ module Senkyoshi
     ##
     def self.client
       @client ||= Pandarus::Client.new(
-        prefix: Senkyoshi.canvas_url,
-        token: Senkyoshi.canvas_token,
+        prefix: Senkyoshi.configuration.canvas_url,
+        token: Senkyoshi.configuration.canvas_token,
       )
     end
 
@@ -48,14 +65,12 @@ module Senkyoshi
     ##
     def self.from_metadata(metadata, blackboard_export = nil)
       course_name = metadata[:name] || metadata[:title]
-      courses = client.list_active_courses_in_account(Senkyoshi.account_id)
-      canvas_course = courses.detect { |course| course.name == course_name } ||
-        client.create_new_course(
-          Senkyoshi.account_id,
-          course: {
-            name: course_name,
-          },
-        )
+      canvas_course = client.create_new_course(
+        Senkyoshi.configuration.account_id,
+        course: {
+          name: course_name,
+        },
+      )
       CanvasCourse.new(metadata, canvas_course, blackboard_export)
     end
 
@@ -63,9 +78,49 @@ module Senkyoshi
     # Creates a canvas assignment from a scorm package that has already been
     # uploaded to a scorm manager
     ##
-    def create_scorm_assignment(scorm_package, course_id)
-      url = Senkyoshi.scorm_launch_url +
-        "?course_id=#{scorm_package['package_id']}"
+    def create_scorm_assignment(scorm_package, course_id, local)
+      if local
+        _create_scorm_assignment_local(scorm_package)
+      else
+        _create_scorm_assignment_external(scorm_package, course_id)
+      end
+    end
+
+    ##
+    # Assembles the launch url with the course_id
+    ##
+    def _scorm_launch_url(package_id)
+      "#{Senkyoshi.configuration.scorm_launch_url}?course_id=#{package_id}"
+    end
+
+    ##
+    # Creates a scorm assignment from a Canvas course object
+    ##
+    def _create_scorm_assignment_local(scorm_package)
+      url = _scorm_launch_url(scorm_package["package_id"])
+
+      payload = {
+        title: scorm_package["title"],
+        submission_types: "external_tool",
+        integration_id: scorm_package["package_id"],
+        integration_data: {
+          provider: "atomic-scorm",
+        },
+        external_tool_tag_attributes: {
+          url: url,
+        },
+        points_possible: scorm_package["points_possible"],
+      }
+
+      # @course_resource in this case is a Canvas course object
+      @course_resource.assignments.create(payload)
+    end
+
+    ##
+    # Creates a scorm assignment using the Canvas api
+    ##
+    def _create_scorm_assignment_external(scorm_package, course_id)
+      url = _scorm_launch_url(scorm_package["package_id"])
 
       payload = {
         assignment__submission_types__: ["external_tool"],
@@ -94,13 +149,13 @@ module Senkyoshi
       zip = scorm_package.write_zip tmp_name
       File.open(zip, "rb") do |file|
         RestClient.post(
-          "#{Senkyoshi.scorm_url}/api/scorm_courses",
+          "#{Senkyoshi.configuration.scorm_url}/api/scorm_courses",
           {
             oauth_consumer_key: "scorm-player",
             lms_course_id: course_id,
             file: file,
           },
-          SharedAuthorization: Senkyoshi.scorm_shared_auth,
+          SharedAuthorization: Senkyoshi.configuration.scorm_shared_auth,
         ) do |resp|
           result = JSON.parse(resp.body)["response"]
           result["points_possible"] = scorm_package.points_possible
@@ -112,8 +167,10 @@ module Senkyoshi
     ##
     # Creates assignments from all previously uploaded scorm packages
     ##
-    def create_scorm_assignments(scorm_packages, course_id)
-      scorm_packages.each { |pack| create_scorm_assignment(pack, course_id) }
+    def create_scorm_assignments(scorm_packages, course_id, local)
+      scorm_packages.each do |pack|
+        create_scorm_assignment(pack, course_id, local)
+      end
     end
 
     ##
@@ -127,6 +184,14 @@ module Senkyoshi
         tmp_name = "#{@metadata[:name]}_#{package_index}.zip"
         upload_scorm_package(pack, @course_resource.id, tmp_name)
       end
+    end
+
+    def process_scorm(local: false)
+      create_scorm_assignments(
+        upload_scorm_packages(@scorm_packages),
+        @course_resource.id,
+        local,
+      )
     end
 
     ##
@@ -149,10 +214,7 @@ module Senkyoshi
       puts "Done uploading: #{name}"
 
       puts "Creating Scorm: #{name}"
-      create_scorm_assignments(
-        upload_scorm_packages(@scorm_packages),
-        @course_resource.id,
-      )
+      process_scorm
       puts "Done creating scorm: #{name}"
     end
 
@@ -165,15 +227,17 @@ module Senkyoshi
         upload_params[:file] = file
 
         # Post to S3
-        RestClient.post(
-          upload_url,
-          upload_params,
+        RestClient::Request.execute(
+          method: :post,
+          url: upload_url,
+          payload: upload_params,
+          timeout: Senkyoshi.configuration.request_timeout,
         ) do |response|
           # Post to Canvas
           RestClient.post(
             response.headers[:location],
             nil,
-            Authorization: "Bearer #{Senkyoshi.canvas_token}",
+            Authorization: "Bearer #{Senkyoshi.configuration.canvas_token}",
           )
         end
       end

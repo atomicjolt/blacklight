@@ -1,3 +1,18 @@
+# Copyright (C) 2016, 2017 Atomic Jolt
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 require "senkyoshi/models/resource"
 
 module Senkyoshi
@@ -81,9 +96,10 @@ module Senkyoshi
       self
     end
 
-    def canvas_conversion(assessment, resources)
+    def canvas_conversion(_, resources)
       @question.identifier = Senkyoshi.create_random_hex
       @question.title = @title
+      @question.original_identifier = @original_identifier
       @question.points_possible = @points_possible
       @question.material = fix_html(@material, resources)
       @question.general_feedback = fix_html(@general_feedback, resources)
@@ -97,12 +113,11 @@ module Senkyoshi
       @answers.each do |answer|
         @question = answer.canvas_conversion(@question, resources)
       end
-      assessment.items << @question
-      assessment
+      @question
     end
 
     def get_fraction(answer_text)
-      if @correct_answers && answer_text == @correct_answers["name"]
+      if @correct_answers && answer_text.to_s == @correct_answers["name"].to_s
         @correct_answers["fraction"].to_f
       else
         @incorrect_answers["fraction"].to_f
@@ -125,7 +140,8 @@ module Senkyoshi
         if score_number > 0
           @correct_answers["fraction"] = score_number.to_f / @max_score.to_f
         else
-          @correct_answers["fraction"] = 0
+          # mark as correct when there is no score for the answer
+          @correct_answers["fraction"] = 1
         end
       end
     end

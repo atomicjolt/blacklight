@@ -12,6 +12,7 @@
 /pkg/
 /doc/
 .byebug_history
+.tag*
 
 /canvas/
 /sources/
@@ -21,3 +22,5 @@
 .idea/
 senkyoshi.iml
 senkyoshi.yml
+
+npm-debug.log

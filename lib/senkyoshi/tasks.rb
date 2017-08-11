@@ -1,3 +1,18 @@
+# Copyright (C) 2016, 2017 Atomic Jolt
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 require "rake"
 require "rake/clean"
 require "senkyoshi"
@@ -54,6 +69,17 @@ module Senkyoshi
     ##
     def self.install_tasks
       namespace :senkyoshi do
+        desc "Convert a single given blackboard cartridge to a canvas cartridge"
+        task :imscc_single, [:file_path] do |_t, args|
+          file_path = args.file_path
+          if file_path
+            imscc_path = file_path.clone.ext(".imscc")
+            Senkyoshi.parse_and_process_single(file_path, imscc_path)
+          else
+            puts "No file given"
+          end
+        end
+
         desc "Convert blackboard cartridges to canvas cartridges"
         task imscc: SOURCE_FILES.pathmap(
           "%{^#{SOURCE_NAME}/,#{OUTPUT_DIR}/}X.imscc",

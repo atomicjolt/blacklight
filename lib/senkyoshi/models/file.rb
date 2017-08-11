@@ -1,25 +1,42 @@
+# Copyright (C) 2016, 2017 Atomic Jolt
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 require "senkyoshi/models/resource"
 require "senkyoshi/exceptions"
 
 module Senkyoshi
   class SenkyoshiFile < Resource
-    attr_accessor(:id, :location, :name)
-    @@dir = nil
+    attr_accessor(:xid, :location, :path)
 
     FILE_BLACKLIST = [
       "*.dat",
     ].freeze
 
     def initialize(zip_entry)
-      path = zip_entry.name
-      id = File.basename(path)
-      xid = id[/__(xid-[0-9]+_[0-9]+)/, 1]
-      name = id.gsub(/__xid-[0-9]+_[0-9]+/, "")
+      begin
+        entry_name = zip_entry.name.encode("UTF-8")
+      rescue Encoding::UndefinedConversionError
+        entry_name = zip_entry.name.force_encoding("UTF-8")
+      end
 
+      @path = strip_xid entry_name
       @location = extract_file(zip_entry) # Location of file on local filesystem
-      @name = name
-      @id = id
-      @xid = xid
+
+      base_name = File.basename(entry_name)
+      @xid = base_name[/__(xid-[0-9]+_[0-9]+)/, 1] ||
+        Senkyoshi.create_random_hex
     end
 
     def matches_xid?(xid)
@@ -27,9 +44,9 @@ module Senkyoshi
     end
 
     def extract_file(entry)
-      @@dir ||= Dir.mktmpdir
+      @dir ||= Dir.mktmpdir
 
-      name = "#{@@dir}/#{entry.name}"
+      name = "#{@dir}/#{entry.name}"
       path = File.dirname(name)
       FileUtils.mkdir_p path unless Dir.exist? path
       entry.extract(name)
@@ -38,9 +55,9 @@ module Senkyoshi
 
     def canvas_conversion(course, _resources = nil)
       file = CanvasCc::CanvasCC::Models::CanvasFile.new
-      file.identifier = @id
+      file.identifier = @xid
       file.file_location = @location
-      file.file_path = "#{IMPORTED_FILES_DIRNAME}/#{@name}"
+      file.file_path = @path
       file.hidden = false
 
       course.files << file
@@ -50,8 +67,8 @@ module Senkyoshi
     ##
     # Remove temporary files
     ##
-    def self.cleanup
-      FileUtils.rm_r @@dir unless @@dir.nil?
+    def cleanup
+      FileUtils.rm_r @dir unless @dir.nil?
     end
 
     ##
@@ -64,14 +81,15 @@ module Senkyoshi
     ##
     # Determine whether or not a file is a metadata file or not
     ##
-    def self.metadata_file?(file_names, file)
+    def self.metadata_file?(entry_names, file)
       if File.extname(file.name) == ".xml"
         # Detect and skip metadata files.
-        concrete_file = File.join(
+        non_meta_file = File.join(
           File.dirname(file.name),
           File.basename(file.name, ".xml"),
         )
-        file_names.include?(concrete_file)
+
+        entry_names.include?(non_meta_file)
       else
         false
       end
@@ -89,9 +107,9 @@ module Senkyoshi
     ##
     # Determine if a file should be included in course files or not
     ##
-    def self.valid_file?(file_names, scorm_paths, file)
+    def self.valid_file?(entry_names, scorm_paths, file)
       return false if SenkyoshiFile.blacklisted? file
-      return false if SenkyoshiFile.metadata_file? file_names, file
+      return false if SenkyoshiFile.metadata_file? entry_names, file
       return false if SenkyoshiFile.belongs_to_scorm_package? scorm_paths, file
       true
     end

@@ -1,3 +1,18 @@
+# Copyright (C) 2016, 2017 Atomic Jolt
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 require "senkyoshi/models/questions/calculated"
 require "senkyoshi/models/questions/either_or"
 require "senkyoshi/models/questions/essay"
@@ -16,28 +31,40 @@ require "senkyoshi/models/questions/quiz_bowl"
 require "senkyoshi/models/questions/short_response"
 require "senkyoshi/models/questions/true_false"
 
+require "senkyoshi/models/assessment"
+require "senkyoshi/models/question_bank"
+require "senkyoshi/models/survey"
+
+require "senkyoshi/models/heirarchy"
+
 require "senkyoshi/models/announcement"
 require "senkyoshi/models/answer"
-require "senkyoshi/models/assessment"
 require "senkyoshi/models/assignment"
 require "senkyoshi/models/assignment_group"
+require "senkyoshi/models/attachment"
 require "senkyoshi/models/blog"
 require "senkyoshi/models/content"
 require "senkyoshi/models/content_file"
 require "senkyoshi/models/course"
+require "senkyoshi/models/course_toc"
+require "senkyoshi/models/external_url"
 require "senkyoshi/models/file"
 require "senkyoshi/models/forum"
 require "senkyoshi/models/gradebook"
 require "senkyoshi/models/group"
+require "senkyoshi/models/link"
 require "senkyoshi/models/module"
 require "senkyoshi/models/module_item"
+require "senkyoshi/models/qti"
 require "senkyoshi/models/question"
 require "senkyoshi/models/quiz"
 require "senkyoshi/models/resource"
 require "senkyoshi/models/scorm_package"
 require "senkyoshi/models/staff_info"
 require "senkyoshi/models/wikipage"
-
+require "senkyoshi/models/attachment"
+require "senkyoshi/models/external_url"
+require "senkyoshi/models/rule"
 require "senkyoshi/exceptions"
 
 module Senkyoshi
@@ -47,42 +74,40 @@ module Senkyoshi
     announcement: "Announcement",
     forum: "Forum",
     course: "Course",
-    questestinterop: "Assessment",
+    questestinterop: "QTI",
     content: "Content",
     staffinfo: "StaffInfo",
+    gradebook: "Gradebook",
+    rule: "Rule",
   }.freeze
 
   PRE_RESOURCE_TYPE = {
-    content: "Content",
+    coursetoc: "CourseToc",
     gradebook: "Gradebook",
+    link: "Link",
+    courseassessment: "QTI",
   }.freeze
 
-  def self.parse_manifest(zip_file, manifest)
-    doc = Nokogiri::XML.parse(manifest)
-    resources = doc.at("resources")
-    iterate_xml(resources, zip_file).flatten - ["", nil]
-  end
-
-  def self.iterate_xml(resources, zip_file)
-    pre_data = pre_iterator(resources, zip_file)
+  def self.iterate_xml(resources, zip_file, resource_xids, pre_data)
+    staff_info = StaffInfo.new
     iterator_master(resources, zip_file) do |xml_data, type, file|
       if RESOURCE_TYPE[type.to_sym]
-        single_pre_data = get_single_pre_data(pre_data, file)
+        single_pre_data = get_single_pre_data(pre_data, file) || {}
         res_class = Senkyoshi.const_get RESOURCE_TYPE[type.to_sym]
-        if type == "content"
-          Content.from(xml_data, single_pre_data)
+        case type
+        when "staffinfo"
+          staff_info.iterate_xml(xml_data, single_pre_data)
         else
-          resource = res_class.new
-          resource.iterate_xml(xml_data, single_pre_data)
+          res_class.from(xml_data, single_pre_data, resource_xids)
         end
       end
-    end
+    end.flatten - ["", nil]
   end
 
   def self.get_single_pre_data(pre_data, file)
-    pre_data.detect do |d|
-      d[:file_name] == file || d[:assignment_id] == file
-    end
+    pre_data.detect do |data_item|
+      data_item[:file_name] == file || data_item[:assignment_id] == file
+    end || { file_name: file }
   end
 
   def self.iterator_master(resources, zip_file)
@@ -92,57 +117,61 @@ module Senkyoshi
       if zip_file.find_entry(file_name)
         data_file = Senkyoshi.read_file(zip_file, file_name)
         xml_data = Nokogiri::XML.parse(data_file).children.first
-        type = xml_data.name.downcase
+        type = xml_data ? xml_data.name.downcase : "empty"
+
         yield xml_data, type, file
       end
     end
   end
 
-  def self.pre_iterator(resources, zip_file)
+  def self.pre_iterator(organizations, resources, zip_file)
     pre_data = {}
     iterator_master(resources, zip_file) do |xml_data, type, file|
       if PRE_RESOURCE_TYPE[type.to_sym]
         res_class = Senkyoshi.const_get PRE_RESOURCE_TYPE[type.to_sym]
-        resource_class = res_class.new
         pre_data[type] ||= []
-        pre_data[type].push(resource_class.get_pre_data(xml_data, file))
+        data = res_class.get_pre_data(xml_data, file)
+        pre_data[type].push(data) if data
       end
     end
+    pre_data["content"] = build_heirarchy(organizations, resources,
+                                          pre_data["coursetoc"]) - ["", nil]
     pre_data = connect_content(pre_data)
-    build_heirarchy(pre_data)
   end
 
   def self.connect_content(pre_data)
     pre_data["content"].each do |content|
-      gradebook = pre_data["gradebook"].first.
-        detect { |g| g[:content_id] == content[:file_name] }
-      if gradebook
-        content[:points] = gradebook[:points] || ""
-        content[:assignment_id] = gradebook[:assignment_id] || ""
+      if pre_data["gradebook"]
+        gradebook = pre_data["gradebook"].first.
+          detect { |g| g[:content_id] == content[:file_name] }
+        content.merge!(gradebook) if gradebook
+      end
+
+      if pre_data["courseassessment"]
+        course_assessment = pre_data["courseassessment"].
+          detect { |ca| ca[:original_file_name] == content[:assignment_id] }
+        content.merge!(course_assessment) if course_assessment
+      end
+
+      if pre_data["link"]
+        matching_link = pre_data["link"].detect do |link|
+          link[:referrer] == content[:file_name]
+        end
+
+        if matching_link
+          content[:referred_to_title] = matching_link[:referred_to_title]
+        end
       end
     end
+
     pre_data["content"]
   end
 
-  def self.build_heirarchy(pre_data)
-    parents_ids = pre_data.
-      select { |p| p[:parent_id] == "{unset id}" }.
-      map { |u| u[:id] }
-    pre_data.each do |content|
-      next if parents_ids.include?(content[:id])
-      next if parents_ids.include?(content[:parent_id])
-      parent_id = get_master_parent(pre_data, parents_ids,
-                                    content[:parent_id])
-      content[:parent_id] = parent_id
-    end
-  end
-
-  def self.get_master_parent(pre_data, parents_ids, parent_id)
-    parent = pre_data.detect { |p| p[:id] == parent_id }
-    if parents_ids.include? parent[:id]
-      parent[:id]
-    else
-      get_master_parent(pre_data, parents_ids, parent[:parent_id])
+  def self.build_heirarchy(organizations, resources, course_toc)
+    discussion_boards = resources.
+      search("resource[type=\"resource/x-bb-discussionboard\"]")
+    organizations.at("organization").children.flat_map do |item|
+      Heirarchy.item_iterator(item, course_toc, discussion_boards)
     end
   end
 
@@ -153,17 +182,25 @@ module Senkyoshi
   def self.iterate_files(zipfile)
     files = zipfile.entries.select(&:file?)
 
+    dir_names = zipfile.entries.map { |entry| File.dirname(entry.name) }.uniq
     file_names = files.map(&:name)
+    entry_names = dir_names + file_names
+
     scorm_paths = ScormPackage.find_scorm_paths(zipfile)
 
     files.select do |file|
-      SenkyoshiFile.valid_file?(file_names, scorm_paths, file)
+      SenkyoshiFile.valid_file?(entry_names, scorm_paths, file)
     end.
       map { |file| SenkyoshiFile.new(file) }
   end
 
+  ##
+  # Create a random hex prepended with aj_
+  # This is because the instructure qti migration tool requires
+  # the first character to be a letter.
+  ##
   def self.create_random_hex
-    SecureRandom.hex
+    "aj_" + SecureRandom.hex(32)
   end
 
   def self.get_attribute_value(xml_data, type)

@@ -1,3 +1,18 @@
+# Copyright (C) 2016, 2017 Atomic Jolt
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 require "minitest/autorun"
 require "senkyoshi"
 require "pry"
@@ -15,7 +30,7 @@ describe Senkyoshi do
 
     describe "initialize" do
       it "should initialize question" do
-        assert_equal (@question.is_a? Object), true
+        assert_equal (@question.is_a? Senkyoshi::Question), true
       end
 
       it "should initialize with parameters" do
@@ -61,7 +76,7 @@ describe Senkyoshi do
 
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.items = []
-        @question.canvas_conversion(assessment, @resources)
+        assessment.items << @question.canvas_conversion(assessment, @resources)
         assert_equal assessment.items.count, 1
       end
 
@@ -72,7 +87,7 @@ describe Senkyoshi do
 
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.items = []
-        @question.canvas_conversion(assessment, @resources)
+        assessment.items << @question.canvas_conversion(assessment, @resources)
         assert_equal assessment.items.first.title, title
         assert_equal assessment.items.first.answers.count, 0
       end
@@ -85,7 +100,7 @@ describe Senkyoshi do
 
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
         assessment.items = []
-        question.canvas_conversion(assessment, @resources)
+        assessment.items << question.canvas_conversion(assessment, @resources)
         assert_equal assessment.items.first.answers.count, 2
       end
     end

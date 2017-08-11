@@ -7,18 +7,18 @@ require "time"
 Gem::Specification.new do |spec|
   spec.name          = "senkyoshi"
   spec.version       = Senkyoshi::VERSION
-  spec.date        	 = Time.new.strftime("%Y-%m-%d")
+  spec.date          = Time.new.strftime("%Y-%m-%d")
   spec.authors       = "Atomic Jolt"
 
   spec.summary       = "Converts Blackboard zip file to Canvas Common Cartridge"
   spec.description   = "Commandline tool for converting blackboard to canvas"
   spec.homepage      = "https://github.com/atomicjolt/senkyoshi"
-  spec.license       = "MIT"
+  spec.license       = "AGPL-3.0"
   spec.extra_rdoc_files = ["README.md"]
 
   spec.required_ruby_version = ">= 2.0"
 
-  spec.files = Dir["LICENSE.txt", "README.md", "lib/**/*", "bin/*"]
+  spec.files = Dir["LICENSE", "README.md", "lib/**/*", "bin/*"]
   spec.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
 
   spec.add_development_dependency "pry-byebug", "~> 3.4"
@@ -26,10 +26,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "webmock", "~> 2.1"
 
   [
-    ["rake", "~> 11.3"],
+    ["rake", ">= 11.3"],
     ["rubyzip", "~> 1.1"],
-    ["nokogiri", "~> 1.6"],
-    ["fileutils", "~> 0.7"],
+    ["nokogiri", "~> 1.6.6"],
     ["pandarus", "~> 0.6"],
     ["activesupport", "~> 4.2"],
     ["rest-client", "~> 2.0"],

@@ -1,107 +1,25 @@
-require "senkyoshi/models/assignment_group"
-require "senkyoshi/models/assignment"
-require "senkyoshi/models/question"
-require "senkyoshi/models/resource"
+# Copyright (C) 2016, 2017 Atomic Jolt
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+require "senkyoshi/models/qti"
 
 module Senkyoshi
-  class Assessment < Resource
-    def initialize
-      @title = ""
-      @description = ""
-      @quiz_type = "assignment"
-      @points_possible = 0
-      @items = []
-      @group_name = ""
-      @workflow_state = "published"
-      @available = true
-    end
-
+  class Assessment < QTI
     def iterate_xml(data, pre_data)
-      pre_data ||= {}
-      @id = pre_data[:assignment_id] || Senkyoshi.create_random_hex
-      @title = data.at("assessment").attributes["title"].value
-      @points_possible = data.at("qmd_absolutescore_max").text
-
-      description = data.at("presentation_material").
-        at("mat_formattedtext").text
-      instructions = data.at("rubric").
-        at("mat_formattedtext").text
-      @description = %{
-        #{description}
-        #{instructions}
-      }
-
-      @group_name = data.at("bbmd_assessmenttype").text
-      case @group_name.downcase
-      when "survey"
-        @quiz_type = "survey"
-      end
-      data.at("section").children.map do |item|
-        @items.push(item) if item.name == "item"
-      end
-      self
-    end
-
-    def canvas_conversion(course, resources)
-      if @items.count > 0
-        assessment = CanvasCc::CanvasCC::Models::Assessment.new
-        assessment.identifier = @id
-        course = create_assignment_group(course, resources)
-        assignment = create_assignment
-        assignment.quiz_identifier_ref = assessment.identifier
-        course.assignments << assignment
-        assessment = setup_assessment(assessment, assignment, resources)
-        course.assessments << assessment
-      end
-      course
-    end
-
-    def setup_assessment(assessment, assignment, resources)
-      assessment.title = @title
-      assessment.description = fix_html(@description, resources)
-      assessment.available = @available
-      assessment.quiz_type = @quiz_type
-      assessment.points_possible = @points_possible
-      assessment = create_items(assessment, resources)
-      assessment.assignment = assignment
-      assessment
-    end
-
-    def create_items(assessment, resources)
-      @items = @items - ["", nil]
-      questions = @items.map do |item|
-        Question.from(item)
-      end
-      assessment.items = []
-      questions.each do |item|
-        assessment = item.canvas_conversion(assessment, resources)
-      end
-      assessment
-    end
-
-    def create_assignment_group(course, resources)
-      group = course.assignment_groups.detect { |a| a.title == @group_name }
-      if group
-        @group_id = group.identifier
-      else
-        @group_id = Senkyoshi.create_random_hex
-        assignment_group = AssignmentGroup.new(@group_name, @group_id)
-        course = assignment_group.canvas_conversion(course, resources)
-      end
-      course
-    end
-
-    def create_assignment
-      assignment = CanvasCc::CanvasCC::Models::Assignment.new
-      assignment.identifier = Senkyoshi.create_random_hex
-      assignment.assignment_group_identifier_ref = @group_id
-      assignment.title = @title
-      assignment.position = 1
-      assignment.submission_types << "online_quiz"
-      assignment.grading_type = "points"
-      assignment.workflow_state = @workflow_state
-      assignment.points_possible = @points_possible
-      assignment
+      @quiz_type = "assignment"
+      super
     end
   end
 end

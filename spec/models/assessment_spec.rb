@@ -1,3 +1,18 @@
+# Copyright (C) 2016, 2017 Atomic Jolt
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 require "minitest/autorun"
 require "senkyoshi"
 require "pry"
@@ -11,11 +26,12 @@ describe Senkyoshi do
     before do
       @assessment = Assessment.new
       @resources = Senkyoshi::Collection.new
+      @assignment_group_id = "fake_assn_id_123"
     end
 
     describe "initialize" do
       it "should initialize assessment" do
-        assert_equal (@assessment.is_a? Object), true
+        assert_equal (@assessment.is_a? Senkyoshi::Assessment), true
       end
     end
 
@@ -28,10 +44,12 @@ describe Senkyoshi do
         title = "Just a test"
         points_possible = "120.0"
         group_name = "Test"
+        quiz_type = "assignment"
         description = "<p>Do this test with honor</p>"
         instructions = "<p>Don't forget your virtue</p>"
 
         assert_equal (@assessment.instance_variable_get :@title), title
+        assert_equal (@assessment.instance_variable_get :@quiz_type), quiz_type
         assert_equal (@assessment.
           instance_variable_get :@points_possible), points_possible
         assert_equal (@assessment.
@@ -67,7 +85,7 @@ describe Senkyoshi do
         description = "<p>Do this test with honor</p>"
         instructions = "<p>Don't forget your virtue</p>"
 
-        assignment = @assessment.create_assignment
+        assignment = @assessment.create_assignment(@assignment_group_id)
         assessment =
           @assessment.setup_assessment(assessment, assignment, @resources)
         assert_equal assessment.title, title
@@ -81,9 +99,10 @@ describe Senkyoshi do
         xml = get_fixture_xml "assessment.xml"
         pre_data = {}
         @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
+        course = CanvasCc::CanvasCC::Models::Course.new
         assessment = CanvasCc::CanvasCC::Models::Assessment.new
 
-        assessment = @assessment.create_items(assessment, @resources)
+        assessment = @assessment.create_items(course, assessment, @resources)
         assert_equal assessment.items.count, 12
       end
     end
@@ -93,10 +112,9 @@ describe Senkyoshi do
         xml = get_fixture_xml "assessment.xml"
         pre_data = {}
         @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
-        course = CanvasCc::CanvasCC::Models::Course.new
 
-        course = @assessment.create_assignment_group(course, @resources)
-        assert_equal course.assignment_groups.count, 1
+        result = AssignmentGroup.create_assignment_group(@assignment_group_id)
+        assert_equal result.class, CanvasCc::CanvasCC::Models::AssignmentGroup
       end
     end
 
@@ -104,13 +122,13 @@ describe Senkyoshi do
       it "should create an assignment" do
         xml = get_fixture_xml "assessment.xml"
         pre_data = {}
+        quiz_type = "assignment"
         @assessment = @assessment.iterate_xml(xml.children.first, pre_data)
 
-        assignment = @assessment.create_assignment
+        assignment = @assessment.create_assignment(@assignment_group_id)
         assert_equal assignment.title,
                      (@assessment.instance_variable_get :@title)
-        assert_equal assignment.assignment_group_identifier_ref,
-                     (@assessment.instance_variable_get :@group_id)
+        assert_equal (@assessment.instance_variable_get :@quiz_type), quiz_type
         assert_equal assignment.workflow_state,
                      (@assessment.instance_variable_get :@workflow_state)
         assert_equal assignment.points_possible,

@@ -1,3 +1,18 @@
+# Copyright (C) 2016, 2017 Atomic Jolt
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 require "minitest/autorun"
 require "senkyoshi"
 require "pry"
@@ -26,16 +41,16 @@ describe Senkyoshi do
 
     describe "canvas_conversion" do
       it "should create a canvas assignment_group" do
-        course = CanvasCc::CanvasCC::Models::Course.new
-        @assignment_group.canvas_conversion(course)
-        assert_equal course.assignment_groups.count, 1
+        result = @assignment_group.canvas_conversion
+        assert_equal(
+          result.class, CanvasCc::CanvasCC::Models::AssignmentGroup
+        )
       end
 
       it "should create a canvas assignment_group with correct details" do
-        course = CanvasCc::CanvasCC::Models::Course.new
-        @assignment_group.canvas_conversion(course)
-        assert_equal course.assignment_groups.first.title, @title
-        assert_equal course.assignment_groups.first.identifier, @group_id
+        result = @assignment_group.canvas_conversion
+        assert_equal result.title, @title
+        assert_equal result.identifier, @group_id
       end
     end
   end
