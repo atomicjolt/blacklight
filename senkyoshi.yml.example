@@ -2,5 +2,6 @@
 :canvas_token: <canvas token>
 :scorm_url: <scorm manager url>
 :scorm_launch_url: <scorm launch url>
+:scorm_oauth_consumer_key: <scorm oauth consumer key>
 :scorm_shared_auth: <scorm manager token>
 :request_timeout: <request timeout seconds>

@@ -147,15 +147,16 @@ module Senkyoshi
     ##
     def upload_scorm_package(scorm_package, course_id, tmp_name)
       zip = scorm_package.write_zip tmp_name
+      config = Senkyoshi.configuration
       File.open(zip, "rb") do |file|
         RestClient.post(
           "#{Senkyoshi.configuration.scorm_url}/api/scorm_courses",
           {
-            oauth_consumer_key: "scorm-player",
+            oauth_consumer_key: config.scorm_oauth_consumer_key,
             lms_course_id: course_id,
             file: file,
           },
-          SharedAuthorization: Senkyoshi.configuration.scorm_shared_auth,
+          SharedAuthorization: config.scorm_shared_auth,
         ) do |resp|
           result = JSON.parse(resp.body)["response"]
           result["points_possible"] = scorm_package.points_possible

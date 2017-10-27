@@ -67,6 +67,10 @@ Create a `senkyoshi.yml` and add credentials:
 # Adhesion, this will look like https://<adhesion url>/scorm_course
 :scorm_launch_url: <scorm launch url>
 
+# This should be the oauth_consumer_key for scorm. In the case of
+# Adhesion, it would just be `scorm`.
+:scorm_oauth_consumer_key: <scorm oauth consumer key>
+
 # This is the secret to authenticate requests to the SCORM manager. In the case
 # of Adhesion, you can generate a shared secret by logging into the server and
 # running rake shared_auth, which will generate and save a token
