@@ -151,7 +151,7 @@ module Senkyoshi
         RestClient.post(
           "#{Senkyoshi.configuration.scorm_url}/api/scorm_courses",
           {
-            oauth_consumer_key: "scorm-player",
+            oauth_consumer_key: Senkyoshi.configuration.scorm_oauth_consumer_key,
             lms_course_id: course_id,
             file: file,
           },
