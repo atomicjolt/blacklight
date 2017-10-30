@@ -71,9 +71,11 @@ Create a `senkyoshi.yml` and add credentials:
 # Adhesion, it would just be `scorm`.
 :scorm_oauth_consumer_key: <scorm oauth consumer key>
 
-# This is the secret to authenticate requests to the SCORM manager. In the case
-# of Adhesion, you can generate a shared secret by logging into the server and
-# running rake shared_auth, which will generate and save a token
+# This is the shared id for the jwt aud. In the case of Adhesion it
+# will be `adhesion`.
+:scorm_shared_id: <scorm shared id>
+
+# This is the secret used to create a jwt to communicate with the SCORM manager.
 :scorm_shared_auth: <scorm manager token>
 
 # The number of seconds before uploads timeout. Defaults to 1800 (30 minutes)

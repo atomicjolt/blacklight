@@ -100,6 +100,23 @@ describe Senkyoshi do
       end
     end
 
+    describe "#scorm_shared_id" do
+      it "default value is nil" do
+        Configuration.stub(:_config, {}) do
+          scorm_shared_id = Configuration.new.scorm_shared_id
+          assert_nil scorm_shared_id
+        end
+      end
+    end
+
+    describe "#scorm_shared_id=" do
+      it "can set value" do
+        config = Configuration.new
+        config.scorm_shared_id = "12345"
+        assert_equal(config.scorm_shared_id, "12345")
+      end
+    end
+
     describe "#scorm_shared_auth" do
       it "default value is nil" do
         Configuration.stub(:_config, {}) do
@@ -114,6 +131,23 @@ describe Senkyoshi do
         config = Configuration.new
         config.scorm_shared_auth = "12345"
         assert_equal(config.scorm_shared_auth, "12345")
+      end
+    end
+
+    describe "#scorm_oauth_consumer_key" do
+      it "default value is nil" do
+        Configuration.stub(:_config, {}) do
+          scorm_oauth_consumer_key = Configuration.new.scorm_oauth_consumer_key
+          assert_nil scorm_oauth_consumer_key
+        end
+      end
+    end
+
+    describe "#scorm_oauth_consumer_key=" do
+      it "can set value" do
+        config = Configuration.new
+        config.scorm_oauth_consumer_key = "12345"
+        assert_equal(config.scorm_oauth_consumer_key, "12345")
       end
     end
 

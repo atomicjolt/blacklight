@@ -28,9 +28,10 @@ Gem::Specification.new do |spec|
   [
     ["rake", ">= 11.3"],
     ["rubyzip", "~> 1.1"],
-    ["nokogiri", "~> 1.6"],
+    ["nokogiri", "~> 1.8"],
     ["pandarus", "~> 0.6"],
     ["activesupport", ">= 4.2"],
     ["rest-client", "~> 2.0"],
+    ["jwt", "~> 2.1"],
   ].each { |d| spec.add_runtime_dependency(*d) }
 end
