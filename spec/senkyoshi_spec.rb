@@ -37,7 +37,9 @@ describe Senkyoshi do
           config.account_id = 42
           config.scorm_url = "example.com"
           config.scorm_launch_url = "example.com/launch"
+          config.scorm_shared_id = "adhesion"
           config.scorm_shared_auth = "12345"
+          config.scorm_oauth_consumer_key = "scorm"
         end
         Senkyoshi.reset
         config = Senkyoshi.configuration
@@ -46,7 +48,9 @@ describe Senkyoshi do
         assert_equal config.account_id, :self
         assert_nil config.scorm_url
         assert_nil config.scorm_launch_url
+        assert_nil config.scorm_shared_id
         assert_nil config.scorm_shared_auth
+        assert_nil config.scorm_oauth_consumer_key
       end
     end
   end
@@ -60,7 +64,9 @@ describe Senkyoshi do
           config.account_id = 42
           config.scorm_url = "example.com"
           config.scorm_launch_url = "example.com/launch"
+          config.scorm_shared_id = "adhesion"
           config.scorm_shared_auth = "12345"
+          config.scorm_oauth_consumer_key = "scorm"
         end
         config = Senkyoshi.configuration
         assert_equal config.canvas_url, "bfcoder.com"
@@ -68,7 +74,9 @@ describe Senkyoshi do
         assert_equal config.account_id, 42
         assert_equal config.scorm_url, "example.com"
         assert_equal config.scorm_launch_url, "example.com/launch"
+        assert_equal config.scorm_shared_id, "adhesion"
         assert_equal config.scorm_shared_auth, "12345"
+        assert_equal config.scorm_oauth_consumer_key, "scorm"
       end
     end
   end

@@ -16,6 +16,7 @@
 require "pandarus"
 require "senkyoshi/models/scorm_package"
 require "rest-client"
+require "auth_token"
 
 module Senkyoshi
   ##
@@ -148,15 +149,17 @@ module Senkyoshi
     def upload_scorm_package(scorm_package, course_id, tmp_name)
       zip = scorm_package.write_zip tmp_name
       config = Senkyoshi.configuration
+      url = "#{Senkyoshi.configuration.scorm_url}/api/scorm_courses"
       File.open(zip, "rb") do |file|
         RestClient.post(
-          "#{Senkyoshi.configuration.scorm_url}/api/scorm_courses",
+          url,
           {
             oauth_consumer_key: config.scorm_oauth_consumer_key,
             lms_course_id: course_id,
             file: file,
+            shared_auth: true,
           },
-          SharedAuthorization: config.scorm_shared_auth,
+          Authorization: "Bearer #{AuthToken.issue_token}",
         ) do |resp|
           result = JSON.parse(resp.body)["response"]
           result["points_possible"] = scorm_package.points_possible

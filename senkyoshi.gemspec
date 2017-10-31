@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.license       = "AGPL-3.0"
   spec.extra_rdoc_files = ["README.md"]
 
-  spec.required_ruby_version = ">= 2.0"
+  spec.required_ruby_version = ">= 2.1"
 
   spec.files = Dir["LICENSE", "README.md", "lib/**/*", "bin/*"]
   spec.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
@@ -28,9 +28,10 @@ Gem::Specification.new do |spec|
   [
     ["rake", ">= 11.3"],
     ["rubyzip", "~> 1.1"],
-    ["nokogiri", "~> 1.6"],
+    ["nokogiri", "~> 1.8"],
     ["pandarus", "~> 0.6"],
     ["activesupport", ">= 4.2"],
     ["rest-client", "~> 2.0"],
+    ["jwt", "~> 2.1"],
   ].each { |d| spec.add_runtime_dependency(*d) }
 end

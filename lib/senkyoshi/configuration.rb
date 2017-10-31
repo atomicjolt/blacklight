@@ -22,7 +22,9 @@ module Senkyoshi
     attr_accessor :account_id
     attr_accessor :scorm_url
     attr_accessor :scorm_launch_url
+    attr_accessor :scorm_shared_id
     attr_accessor :scorm_shared_auth
+    attr_accessor :scorm_oauth_consumer_key
     attr_accessor :request_timeout
 
     DEFAULT_TIMEOUT = 1_800 # 30 minutes
@@ -33,7 +35,10 @@ module Senkyoshi
       @account_id = Configuration._config[:account_id] || :self
       @scorm_url = Configuration._config[:scorm_url]
       @scorm_launch_url = Configuration._config[:scorm_launch_url]
+      @scorm_shared_id = Configuration._config[:scorm_shared_id]
       @scorm_shared_auth = Configuration._config[:scorm_shared_auth]
+      @scorm_oauth_consumer_key =
+        Configuration._config[:scorm_oauth_consumer_key]
       @request_timeout =
         Configuration._config[:request_timeout] || DEFAULT_TIMEOUT
     end
