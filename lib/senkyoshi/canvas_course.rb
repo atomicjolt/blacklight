@@ -135,10 +135,38 @@ module Senkyoshi
         assignment__points_possible__: scorm_package["points_possible"],
       }
 
-      CanvasCourse.client.create_assignment(
+      lms_assignment = CanvasCourse.client.create_assignment(
         course_id,
         scorm_package["title"],
         payload,
+      )
+
+      lms_assignment_id = lms_assignment["id"]
+      points_possible = lms_assignment["points_possible"]
+      update_scorm_package(
+        scorm_package["package_id"],
+        lms_assignment_id,
+        points_possible,
+      )
+    end
+
+    ##
+    # Updates scorm manager with lms data for scorm course
+    ##
+    def update_scorm_package(package_id, lms_assignment_id, points_possible)
+      config = Senkyoshi.configuration
+      url = "#{config.scorm_url}/api/scorm_courses/#{package_id}"
+      RestClient.put(
+        url,
+        {
+          oauth_consumer_key: config.scorm_oauth_consumer_key,
+          shared_auth: true,
+          scorm_course: {
+            lms_assignment_id: lms_assignment_id,
+            points_possible: points_possible,
+          },
+        },
+        Authorization: "Bearer #{AuthToken.issue_token}",
       )
     end
 
@@ -149,7 +177,7 @@ module Senkyoshi
     def upload_scorm_package(scorm_package, course_id, tmp_name)
       zip = scorm_package.write_zip tmp_name
       config = Senkyoshi.configuration
-      url = "#{Senkyoshi.configuration.scorm_url}/api/scorm_courses"
+      url = "#{config.scorm_url}/api/scorm_courses"
       File.open(zip, "rb") do |file|
         RestClient.post(
           url,
@@ -161,9 +189,11 @@ module Senkyoshi
           },
           Authorization: "Bearer #{AuthToken.issue_token}",
         ) do |resp|
-          result = JSON.parse(resp.body)["response"]
-          result["points_possible"] = scorm_package.points_possible
-          result
+          result = JSON.parse(resp.body)
+          response = result["response"]
+          response["points_possible"] = scorm_package.points_possible
+          response["package_id"] = result["package_id"]
+          response
         end
       end
     end
